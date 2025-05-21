@@ -11,51 +11,21 @@ const Signup = () => {
     const [username, setUsername] = useState("");
     const [error, setError] = useState("");
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-
-        // 비밀번호 확인 로직
         if (password !== confirmPassword) {
             setError("비밀번호가 일치하지 않습니다.");
             return;
         }
-        setError(""); // 기존 오류 메시지 초기화
-
-        try {
-            // FastAPI 요청 (회원가입 데이터를 백엔드로 전달)
-            const response = await fetch(
-                "https://ms-fom-back-g0gpfzfugrc8c7bp.canadacentral-01.azurewebsites.net/api/signup",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        username,
-                        email,
-                        password,
-                    }),
-                }
-            );
-
-            // 백엔드 응답 확인
-            if (response.ok) {
-                const data = await response.json();
-                console.log("회원가입 성공:", data);
-
-                // 홈 페이지로 이동
-                navigate("/login");
-            } else {
-                const errorData = await response.json();
-                console.error("회원가입 실패:", errorData);
-                setError(
-                    errorData.detail || "회원가입 중 문제가 발생했습니다."
-                );
-            }
-        } catch (err) {
-            console.error("네트워크 또는 서버 오류:", err);
-            setError("서버와 연결하지 못했습니다. 다시 시도 해주세요.");
-        }
+        setError(""); // 오류 메시지 초기화
+        console.log(
+            "Email:",
+            email,
+            "Username:",
+            username,
+            "Password:",
+            password
+        );
     };
 
     return (
