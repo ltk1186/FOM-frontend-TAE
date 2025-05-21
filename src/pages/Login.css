@@ -1,0 +1,197 @@
+/* 기본 박스 설정 및 박스 모델 적용 */
+.login-2,
+.login-2 * {
+    box-sizing: border-box;
+}
+
+/* 전체 로그인 페이지 배경 및 정렬 */
+.login-2 {
+    min-height: 100vh;
+    background-image: url("../assets/images/login-2.png");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    overflow: hidden;
+}
+
+/* 상단 아이콘 영역 */
+.nav-back {
+    width: 100%;
+    max-width: 360px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 8px;
+}
+
+.chevron-left,
+.home {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+}
+
+/* 로그인 박스 스타일 */
+.frame-12 {
+    background-color: rgba(255, 255, 255, 0.8); /* 더 좋은 투명 배경 */
+    border-radius: 24px; /* 조금 덜 둥글게 변경 */
+    padding: 40px 24px;
+    box-shadow: var(
+        --elevation-large-box-shadow,
+        0px 16px 32px rgba(0, 0, 0, 0.16)
+    );
+    border: 1px solid var(--outline-container, rgba(154, 168, 188, 0.2));
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 360px;
+}
+
+/* 로그인 타이틀 스타일 */
+.div2 {
+    color: #653d00;
+    text-align: center;
+    font-family: "Pretendard-Medium", sans-serif;
+    font-size: 28px; /* 작은 글꼴로 변경 */
+    line-height: 36px;
+    font-weight: 600; /* 폰트 두께 증가 */
+    align-self: stretch;
+}
+
+/* 로그인 폼 영역 */
+.frame-7 {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    align-self: stretch;
+}
+
+/* 이메일 / 비밀번호 입력 Label 스타일 */
+.label {
+    color: var(--text-secondary, #728197);
+    font-family: "Pretendard-Medium", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+/* 입력필드 스타일(직접 input 태그 스타일링) */
+.input input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--outline-input-enabled, #9aa8bc);
+    border-radius: 16px;
+    font-family: var(--body-large-font-family, "Lexend-Regular", sans-serif);
+    font-size: var(--body-large-font-size, 16px);
+    line-height: var(--body-large-line-height, 24px);
+    font-weight: var(--body-large-font-weight, 400);
+    outline: none;
+    background-color: var(--background-primary, #ffffff);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input input:focus {
+    border-color: #f3a93c;
+    box-shadow: 0 0 0 2px rgba(243, 169, 60, 0.2);
+}
+
+/* 로그인 버튼 스타일 */
+.button {
+    background: #f3a93c;
+    border-radius: 16px;
+    padding: 14px 0;
+    color: #ffffff;
+    font-family: "Pretendard-Bold", sans-serif;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background-color: #db9734;
+}
+
+/* "또는(OR)" 구분선 스타일 */
+.frame-9 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    align-self: stretch;
+}
+
+.horizontal-divider {
+    flex: 1;
+    height: 1px;
+    background-color: var(--outline-decorative, #cbd4e1);
+}
+
+.or {
+    font-family: var(--body-medium-font-family, "Lexend-Regular", sans-serif);
+    font-size: var(--body-medium-font-size, 14px);
+    line-height: var(--body-medium-line-height, 20px);
+    font-weight: var(--body-medium-font-weight, 400);
+    color: var(--text-secondary, #728197);
+    white-space: nowrap;
+}
+
+/* OAuth 로그인 버튼 추가 간격 기능 */
+.frame-10 {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.button2 {
+    background: var(--interactive-secondary-solid-enabled-background, #eceff4);
+    border-radius: 16px;
+    padding: 16px 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.2s;
+}
+
+.button2:hover {
+    background-color: #dde2eb;
+}
+
+.label3 {
+    color: var(--interactive-secondary-solid-enabled-foreground, #1a212b);
+    font-family: "Pretendard-Medium", sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 500;
+}
+
+.button2 + .button2 {
+    margin-top: 8px;
+}
+
+/* 아이콘 공통 스타일 (chevron-left, home 아이콘 외 SVG 등 공통으로 관리할 수 있습니다) */
+.icon,
+.icon2,
+.icon3,
+.eye-open {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    overflow: visible;
+}
