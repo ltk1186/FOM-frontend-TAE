@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
-import "./Login.css";
+import "./Login.css"; // CSS 적용됨
+import ChevronLeft from "../assets/images/chevron-left0.svg";
 
 const Record = () => {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
 
-    // 로그인 상태 체크
     useEffect(() => {
         if (!user) {
             alert("로그인 후 사용할 수 있습니다!");
@@ -44,17 +44,17 @@ const Record = () => {
         };
     }, []);
 
-    const handleSendMessage = () => {
-        if (message.trim() === "") return;
-        setChatList((prev) => [...prev, message]);
-        setMessage("");
-    };
-
     const handleSpeechInput = () => {
         if (recognition.current && !listening) {
             recognition.current.start();
             setListening(true);
         }
+    };
+
+    const handleSendMessage = () => {
+        if (message.trim() === "") return;
+        setChatList((prev) => [...prev, message]);
+        setMessage("");
     };
 
     useEffect(() => {
@@ -70,14 +70,16 @@ const Record = () => {
 
     return (
         <div className="login-2">
-            <div className="div">
-                <div
+            <div className="nav-back">
+                <img
+                    src={ChevronLeft}
+                    alt="뒤로가기"
                     className="chevron-left"
                     onClick={() => window.history.back()}
-                >
-                    ◀
-                </div>
-                <div className="home">🏠</div>
+                />
+            </div>
+            <div className="home" onClick={() => navigate("/")}>
+                🏠
             </div>
 
             <div className="frame-12">
@@ -106,19 +108,11 @@ const Record = () => {
                         onChange={(e) => setMessage(e.target.value)}
                     />
 
-                    <button
-                        className="button"
-                        onClick={() => {
-                            if (message.trim() !== "") {
-                                setChatList((prev) => [...prev, message]);
-                                setMessage("");
-                            }
-                        }}
-                    >
+                    <button className="button" onClick={handleSendMessage}>
                         <span className="label2">저장하기</span>
                     </button>
                     <button className="button2" onClick={handleSpeechInput}>
-                        {listening ? "🎙️ 듣는중..." : "🎤 음성 입력"}
+                        {listening ? "🎙️ 듣는 중..." : "🎤 음성 입력"}
                     </button>
                 </div>
             </div>
@@ -126,4 +120,4 @@ const Record = () => {
     );
 };
 
-export default Diarylist;
+export default Record;
