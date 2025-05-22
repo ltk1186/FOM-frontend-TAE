@@ -17,7 +17,8 @@ const Login = () => {
 
         try {
             const response = await axios.post(
-                "https://ms-fom-back-g0gpfzfugrc8c7bp.canadacentral-01.azurewebsites.net/api/login",
+                "http://localhost:8000/api/login",
+                // "https://ms-fom-back-g0gpfzfugrc8c7bp.canadacentral-01.azurewebsites.net/api/login",
                 {
                     email,
                     password,
