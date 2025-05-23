@@ -1,5 +1,5 @@
 // src/pages/RecordDiary.js
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RecordDiary.css";
 import PreviousArrow from "../components/PreviousArrow";
@@ -11,13 +11,46 @@ import WriteIcon from "../assets/images/write.png";
 
 const RecordDiary = () => {
   const navigate = useNavigate();
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
   const diaries = JSON.parse(localStorage.getItem("diaries") || "[]");
+
+  const toggleDeleteMode = () => {
+    setIsDeleteMode((prev) => !prev);
+    setSelectedIds([]);
+  };
+
+  const handleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((d) => d !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = () => {
+    const updated = diaries.filter((d) => !selectedIds.includes(d.id));
+    localStorage.setItem("diaries", JSON.stringify(updated));
+    setSelectedIds([]);
+    setIsDeleteMode(false);
+  };
 
   return (
     <div className="diary-page">
       <div className="top-buttons">
         <PreviousArrow />
+        {isDeleteMode && (
+          <div className="delete-controls">
+            <button className="delete-count-button" onClick={handleBulkDelete}>
+              {selectedIds.length}개 항목 삭제
+            </button>
+            <button className="cancel-delete-button" onClick={toggleDeleteMode}>
+              ❌
+            </button>
+          </div>
+        )}
         <div className="right-buttons">
+          <button className="trash-button" onClick={toggleDeleteMode}>
+            🗑
+          </button>
           <Settings />
           <HomeButton />
         </div>
@@ -32,9 +65,21 @@ const RecordDiary = () => {
               className="diary-card"
               key={diary.id}
               onClick={() =>
+                !isDeleteMode &&
                 navigate("/recordedit", { state: { id: diary.id } })
               }
             >
+              {isDeleteMode && (
+                <button
+                  className={`select-circle ${
+                    selectedIds.includes(diary.id) ? "selected" : ""
+                  }`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelect(diary.id);
+                  }}
+                />
+              )}
               <div className="diary-date">{diary.createdAt}</div>
               <div className="diary-title">{diary.title}</div>
               <div className="diary-content">{diary.content}</div>

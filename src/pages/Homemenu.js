@@ -14,7 +14,7 @@ const menuItems = [
         title: "일기작성",
         image: homemenu1,
         className: "diary-icon",
-        route: "/login",
+        route: "/recorddiary",
     },
     {
         id: 2,

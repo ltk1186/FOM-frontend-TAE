@@ -18,6 +18,7 @@ const Login = () => {
         try {
             const response = await axios.post(
                 //"http://localhost:8000/api/login",
+
                 "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/login",
                 {
                     email,
@@ -27,7 +28,7 @@ const Login = () => {
 
             if (response.data.success) {
                 loginUser({ email });
-                navigate("/"); // 홈 페이지로 이동
+                navigate("/homemenu"); // 홈 페이지로 이동
             } else {
                 alert(response.data.message);
             }
