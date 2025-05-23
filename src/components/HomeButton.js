@@ -1,7 +1,7 @@
 // src/components/HomeButton.js
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import homeIcon from "../assets/images/image-50.png";
+import homeIcon from "../assets/images/home0.svg";
 
 const HomeButton = () => {
   const navigate = useNavigate();
