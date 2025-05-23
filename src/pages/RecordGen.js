@@ -15,8 +15,20 @@ const RecordGen = () => {
   const [logTitle, setLogTitle] = useState("");
   const [logContent, setLogContent] = useState("");
   const [isRecording, setIsRecording] = useState(location.state?.mic || false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
   const recognitionRef = useRef(null);
   const isRecognizingRef = useRef(false);
+
+  // 키보드 상태 감지
+  useEffect(() => {
+    const handleResize = () => {
+      setIsKeyboardOpen(window.innerHeight < 500); // 높이 기준 조절 가능
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     textareaRef.current?.focus();
@@ -39,9 +51,6 @@ const RecordGen = () => {
 
     recog.onend = () => {
       isRecognizingRef.current = false;
-      if (isRecording) {
-        // 재시작은 사용자 명령에만 하도록 변경
-      }
     };
 
     recog.onresult = (event) => {
@@ -86,8 +95,6 @@ const RecordGen = () => {
         } catch (e) {
           console.warn("녹음 재시작 실패:", e.message);
         }
-      } else {
-        console.log("이미 녹음 중입니다.");
       }
     }
   };
@@ -119,7 +126,9 @@ const RecordGen = () => {
 
   return (
     <div
-      className="record-edit-container"
+      className={`record-edit-container ${
+        isKeyboardOpen ? "keyboard-open" : ""
+      }`}
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="top-buttons">
