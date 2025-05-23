@@ -7,10 +7,12 @@
   font-family: "Pretendard", sans-serif;
   color: #653d00;
   overflow-x: hidden;
+  padding-top: 140px;
 }
 
 /* 상단 헤더 */
 .calendar-header {
+  margin-top: 80px;
   display: flex;
   justify-content: space-between;
   align-items: center;
