@@ -24,7 +24,7 @@ const Signup = () => {
         try {
             // FastAPI 요청 (회원가입 데이터를 백엔드로 전달)
             const response = await fetch(
-                "https://ms-fom-back-g0gpfzfugrc8c7bp.canadacentral-01.azurewebsites.net/api/signup",
+                "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/signup",
                 {
                     method: "POST",
                     headers: {
