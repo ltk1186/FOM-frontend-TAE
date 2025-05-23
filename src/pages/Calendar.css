@@ -1,0 +1,211 @@
+.calendar-page {
+  background: url("../assets/images/login-2.png");
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  padding: 80px 24px 24px;
+  font-family: "Pretendard", sans-serif;
+  color: #653d00;
+  overflow-x: hidden;
+}
+
+/* 상단 헤더 */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar-header button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  padding: 8px;
+  color: #653d00;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.calendar-header button:hover {
+  transform: scale(1.1);
+  color: #f3a93c;
+}
+
+.calendar-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* 달력 테이블 */
+.calendar-table {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 32px;
+  overflow-x: hidden;
+}
+
+.calendar-table table {
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.calendar-table th,
+.calendar-table td {
+  padding: 8px;
+  font-size: 14px;
+  color: #333;
+  transition: background 0.2s;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calendar-table td:hover {
+  background-color: rgba(171, 171, 171, 0.4);
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.calendar-table button {
+  all: unset;
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+  list-style: none;
+}
+
+/* 감정 차트 */
+.emotion-chart {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  overflow-x: auto;
+}
+
+.chart-title {
+  font-weight: bold;
+  margin-bottom: 16px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.chart-bars {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 160px;
+  margin-bottom: 20px;
+  padding: 0 8px;
+  gap: 12px;
+}
+
+.chart-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 24px;
+}
+
+.bar {
+  width: 100%;
+  border-radius: 2px;
+  transition: height 0.3s ease;
+}
+
+/* ✅ 날짜 겹침 방지 */
+.day-label {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #444;
+  position: relative;
+  height: 16px;
+  z-index: 2;
+}
+
+/* 감정 범례 */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  justify-content: center;
+  padding-top: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #555;
+}
+
+.color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 480px) {
+  .calendar-title {
+    font-size: 16px;
+  }
+
+  .chart-title {
+    font-size: 14px;
+  }
+
+  .chart-bars {
+    height: 120px;
+    gap: 6px;
+    padding: 0 4px;
+  }
+
+  .chart-column {
+    min-width: 22px;
+    height: 120px;
+  }
+
+  .legend-item {
+    font-size: 11px;
+  }
+
+  .day-label {
+    font-size: 11px;
+  }
+}
+
+/* ✅ 빈 셀 점 제거 */
+.calendar-table td:empty,
+.calendar-table th:empty {
+  display: table-cell;
+  visibility: hidden;
+  line-height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+.calendar-empty {
+  display: inline-block;
+  width: 100%;
+  height: 1em;
+  visibility: hidden; /* 점이 보이지 않게 */
+}
+
+
