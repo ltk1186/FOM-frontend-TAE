@@ -1,0 +1,161 @@
+.record-edit-container {
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 🔼 상단 버튼 영역 */
+.top-buttons {
+  position: absolute;
+  top: 80px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+}
+
+.right-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* 📦 텍스트 박스 */
+.record-edit-box {
+  width: 80%;
+  max-width: 600px;
+  height: 60%;
+  margin-top: 100px;
+  background-color: #fff4d6;
+  border-radius: 15px;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.log-time {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.log-title {
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  background: transparent;
+  margin-bottom: 15px;
+  width: 100%;
+  outline: none;
+}
+
+.log-content {
+  font-size: 14px;
+  border: none;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  resize: none;
+  outline: none;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* ⬇️ 하단 버튼 */
+.record-edit-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: auto;
+  margin-bottom: 30px;
+}
+
+.save-button {
+  background-color: #ff9a9e;
+  border: none;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.delete-button {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 아이콘 버튼 스타일 공통 */
+.icon-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ✅ 반응형: 레이아웃 유지 + 크기만 조절 */
+@media (max-width: 768px) {
+  .record-edit-box {
+    width: 90%;
+    height: 55%;
+    padding: 16px;
+    font-size: 14px;
+  }
+
+  .log-title {
+    font-size: 15px;
+  }
+
+  .log-content {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .record-edit-footer {
+    flex-direction: row; /* ✅ 세로 정렬 제거 */
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .save-button {
+    width: auto;
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .delete-button {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .top-buttons {
+    top: 70px;
+    left: 16px;
+    right: 16px;
+  }
+
+  .top-buttons img,
+  .icon-button img {
+    width: 20px;
+    height: 20px;
+  }
+}

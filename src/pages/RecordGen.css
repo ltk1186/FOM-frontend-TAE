@@ -1,0 +1,167 @@
+.record-edit-container {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  padding: 100px 20px 60px;
+  font-family: "Pretendard", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.top-buttons {
+  position: absolute;
+  top: 80px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 20;
+}
+
+.right-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.record-edit-box {
+  background-color: #fff7e8;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  width: 90%;
+  max-width: 600px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-time-label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.log-title {
+  font-weight: 700;
+  font-size: 18px;
+  border: none;
+  margin-bottom: 16px;
+  background: transparent;
+  outline: none;
+}
+
+.log-content {
+  font-size: 15px;
+  height: 280px;
+  border: none;
+  resize: none;
+  background: transparent;
+  outline: none;
+}
+
+.record-edit-footer {
+  margin-top: 80px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.cancel-button,
+.save-button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.cancel-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.save-button {
+  background-color: #f3a93c;
+  color: white;
+}
+
+/* 🎤 마이크 토글 버튼 위치 */
+.record-toggle-btn {
+  position: absolute;
+  bottom: 140px; /* 텍스트 박스 침범 안 하도록 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  font-size: 24px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 30;
+}
+
+.record-toggle-btn.on {
+  background-color: #f44336;
+  color: white;
+}
+
+.record-toggle-btn.off {
+  background-color: #aaa;
+  color: white;
+}
+
+/* 📱 모바일 대응 */
+@media (max-width: 768px) {
+  .record-edit-container {
+    padding: 80px 16px 40px;
+  }
+
+  .record-edit-box {
+    padding: 20px;
+    min-height: 320px;
+  }
+
+  .log-title {
+    font-size: 16px;
+  }
+
+  .log-content {
+    font-size: 14px;
+    height: 220px;
+  }
+
+  .record-toggle-btn {
+    bottom: 120px;
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+
+  .cancel-button,
+  .save-button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+
+/* 📱 작은 화면 대응 (e.g. 아이폰 SE) */
+@media (max-width: 480px) {
+  .record-toggle-btn {
+    bottom: 110px;
+  }
+
+  .log-content {
+    height: 200px;
+  }
+
+  .record-edit-footer {
+    margin-top: 60px;
+    gap: 12px;
+  }
+}

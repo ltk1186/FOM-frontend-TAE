@@ -1,0 +1,26 @@
+/* 🎨 공통 색상 정의 */
+:root {
+  /* 기본 배경 색상 */
+  --background-primary: #fff4e0;
+
+  /* 버튼, 강조 컬러 */
+  --color-primary: #f3a93c;
+  --color-primary-dark: #94521d;
+
+  /* 텍스트 색상 */
+  --text-primary: #1a212b;
+  --text-secondary: #728197;
+  --text-placeholder: #cbd4e1;
+
+  /* 테두리 색상 */
+  --outline-input-enabled: #9aa8bc;
+  --outline-container: rgba(154, 168, 188, 0.2);
+  --outline-decorative: #cbd4e1;
+
+  /* 그림자 (카드, 박스 등) */
+  --elevation-large-box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.16);
+
+  /* 소셜 로그인 버튼 배경 */
+  --interactive-secondary-solid-enabled-background: #eceff4;
+  --interactive-secondary-solid-enabled-foreground: #1a212b;
+}

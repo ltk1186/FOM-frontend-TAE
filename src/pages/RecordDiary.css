@@ -1,0 +1,148 @@
+/* 🌄 전체 페이지 배경 및 기본 설정 */
+.diary-page {
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../assets/images/login-2.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: "Pretendard", sans-serif;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-top: 120px;
+  padding-bottom: 140px; /* 툴바 가림 방지용 여백 */
+  overflow: hidden;
+}
+
+/* 🔼 상단 버튼 */
+.top-buttons {
+  position: absolute;
+  top: 70px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 20;
+}
+
+.right-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+/* 📜 일기 리스트 */
+.diary-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.diary-card {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  word-break: break-word;
+}
+
+.diary-card:hover {
+  transform: scale(1.01);
+}
+
+.diary-date {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.diary-title {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 6px;
+  color: #422600;
+}
+
+.diary-content {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.4;
+}
+
+/* 🧠 일기 완성하기 버튼 */
+.add-diary-btn {
+  background-color: #f28b82;
+  color: white;
+  font-size: 15px;
+  padding: 12px 24px;
+  border-radius: 24px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: block;
+  margin: 0 auto 8px;
+}
+
+/* 🔽 하단 툴바 고정 */
+.bottom-icons {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  z-index: 30;
+}
+
+.fab-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #f3a93c;
+  padding: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s;
+  object-fit: contain;
+}
+
+.fab-button:hover {
+  transform: scale(1.1);
+}
+
+/* 📱 반응형 대응 */
+@media (max-width: 768px) {
+  .top-buttons {
+    top: 60px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .fab-button {
+    width: 48px;
+    height: 48px;
+    padding: 10px;
+  }
+
+  .add-diary-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .diary-title {
+    font-size: 15px;
+  }
+
+  .diary-content {
+    font-size: 13px;
+  }
+}

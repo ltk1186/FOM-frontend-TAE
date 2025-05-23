@@ -1,0 +1,78 @@
+.login-intro {
+  background-image: url("../assets/images/login-2.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 16px;
+}
+
+/* 🌟 캐릭터 애니메이션 */
+.bouncy-character {
+  width: 160px;
+  height: auto;
+  animation: bounce 2.4s ease-in-out infinite, breathe 4s ease-in-out infinite;
+  margin-bottom: 32px;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+/* ✨ 타이틀 문구 */
+.intro-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #653d00;
+  margin-bottom: 24px;
+}
+
+/* 🔘 로그인 버튼 */
+.intro-button {
+  background-color: #f3a93c;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-bottom: 20px;
+}
+
+.intro-button:hover {
+  background-color: #e0911d;
+}
+
+/* 👇 회원가입 안내 텍스트 */
+.signup-text {
+  font-size: 14px;
+  color: #444;
+  margin-top: 4px;
+}
+
+.signup-link {
+  color: #653d00;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
