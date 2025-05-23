@@ -1,4 +1,3 @@
-/* 🌄 전체 페이지 배경 및 기본 설정 */
 .diary-page {
   width: 100vw;
   height: 100vh;
@@ -11,11 +10,10 @@
   display: flex;
   flex-direction: column;
   padding-top: 120px;
-  padding-bottom: 140px; /* 툴바 가림 방지용 여백 */
+  padding-bottom: 140px;
   overflow: hidden;
 }
 
-/* 🔼 상단 버튼 */
 .top-buttons {
   position: absolute;
   top: 70px;
@@ -27,12 +25,37 @@
   z-index: 20;
 }
 
+.delete-controls {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.delete-count-button,
+.cancel-delete-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 .right-buttons {
   display: flex;
   gap: 12px;
 }
 
-/* 📜 일기 리스트 */
+.trash-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
 .diary-list {
   flex: 1;
   overflow-y: auto;
@@ -49,34 +72,25 @@
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
   cursor: pointer;
-  transition: transform 0.1s ease;
-  word-break: break-word;
+  position: relative;
 }
 
-.diary-card:hover {
-  transform: scale(1.01);
+.select-circle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  border: 3px solid red;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
-.diary-date {
-  font-size: 14px;
-  color: #888;
-  margin-bottom: 4px;
+.select-circle.selected {
+  background: red;
 }
 
-.diary-title {
-  font-weight: 700;
-  font-size: 16px;
-  margin-bottom: 6px;
-  color: #422600;
-}
-
-.diary-content {
-  font-size: 14px;
-  color: #444;
-  line-height: 1.4;
-}
-
-/* 🧠 일기 완성하기 버튼 */
 .add-diary-btn {
   background-color: #f28b82;
   color: white;
@@ -90,7 +104,6 @@
   margin: 0 auto 8px;
 }
 
-/* 🔽 하단 툴바 고정 */
 .bottom-icons {
   position: fixed;
   bottom: 20px;
@@ -111,7 +124,6 @@
   padding: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   cursor: pointer;
-  transition: transform 0.2s;
   object-fit: contain;
 }
 
@@ -119,7 +131,6 @@
   transform: scale(1.1);
 }
 
-/* 📱 반응형 대응 */
 @media (max-width: 768px) {
   .top-buttons {
     top: 60px;
