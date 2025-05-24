@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import "./Login.css";
 import ChevronLeft from "../assets/images/chevron-left0.svg";
+import backgroundImage from "../assets/images/login-1.png";
+import PreviousArrow from "../components/PreviousArrow";
+import HomeButton from "../components/HomeButton";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -39,18 +42,14 @@ const Login = () => {
     };
 
     return (
-        <div className="login-2">
-            <div className="div">
-                <div className="nav-back">
-                    <img
-                        src={ChevronLeft}
-                        alt="뒤로가기"
-                        className="chevron-left"
-                        onClick={() => navigate(-1)}
-                    />
-                </div>
-                <div className="home" onClick={() => navigate("/")}>
-                    🏠
+        <div
+            className="record-edit-container"
+            style={{ backgroundImage: `url(${backgroundImage})` }}
+        >
+            <div className="top-buttons">
+                <PreviousArrow />
+                <div className="right-buttons">
+                    <HomeButton />
                 </div>
             </div>
 
@@ -90,18 +89,19 @@ const Login = () => {
                             />
                         </div>
                     </div>
-
+                    <br></br>
                     <button type="submit" className="button">
                         <span className="label2">로그인</span>
                     </button>
-                    <p></p>
-                    <button
-                        type="submit"
-                        className="button"
-                        onClick={() => navigate("/signup")}
-                    >
-                        <span className="label2">회원가입</span>
-                    </button>
+                    <p className="signup-text">
+                        계정이 없으신가요?{" "}
+                        <span
+                            className="signup-link"
+                            onClick={() => navigate("/signup")}
+                        >
+                            회원가입
+                        </span>
+                    </p>
                 </form>
             </div>
         </div>

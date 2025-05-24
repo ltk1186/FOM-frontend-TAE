@@ -1,5 +1,33 @@
 /* 공통 스타일 및 변수 설정 */
 /* 박스 모델 기본 적용 */
+.record-edit-container {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    padding: 100px 20px 60px;
+    font-family: "Pretendard", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.top-buttons {
+    position: absolute;
+    top: 80px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 20;
+}
+
+.right-buttons {
+    display: flex;
+    gap: 12px;
+}
+
 .login-2,
 .login-2 * {
     box-sizing: border-box;
