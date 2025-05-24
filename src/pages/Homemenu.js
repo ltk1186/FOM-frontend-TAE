@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import "./Homemenu.css";
 import homemenu1 from "../assets/images/homemenu1.png";
@@ -55,6 +56,12 @@ const menuItems = [
 
 const Homemenu = () => {
     const navigate = useNavigate();
+    const { user } = useContext(UserContext);
+
+    if (!user) {
+        navigate("/login"); // 로그인을 하지 않았다면 로그인 화면으로 이동
+        return null;
+    }
     // 주간 날짜 데이터 (예시)
     const weekDays = [
         { day: "01", hasActivity: true },
@@ -127,7 +134,10 @@ const Homemenu = () => {
             <div className="emotion-index-container">
                 <div className="emotion-index-content">
                     <h3 className="emotion-question">
-                        오늘 포미사용자의 감정지수는?
+                        <p>
+                            <strong>{user.email}</strong>님 오늘 포미사용자의
+                            감정지수는?
+                        </p>
                     </h3>
                     <div className="emotion-result">
                         <span className="emotion-type">슬픔</span>
