@@ -94,6 +94,14 @@ const Login = () => {
                     <button type="submit" className="button">
                         <span className="label2">로그인</span>
                     </button>
+                    <p></p>
+                    <button
+                        type="submit"
+                        className="button"
+                        onClick={() => navigate("/signup")}
+                    >
+                        <span className="label2">회원가입</span>
+                    </button>
                 </form>
             </div>
         </div>

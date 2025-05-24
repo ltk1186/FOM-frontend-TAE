@@ -7,9 +7,9 @@ const Home = () => {
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
 
-    // 로그인을 하지 않았다면 로그인 화면으로 이동
     if (!user) {
-        navigate("/login");
+        //{user.email}통해 로그인 정보 참조
+        navigate("/login"); // 로그인을 하지 않았다면 로그인 화면으로 이동
         return null;
     }
 
