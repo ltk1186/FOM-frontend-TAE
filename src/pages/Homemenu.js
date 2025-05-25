@@ -135,7 +135,7 @@ const Homemenu = () => {
                 <div className="emotion-index-content">
                     <h3 className="emotion-question">
                         <p>
-                            <strong>{user.email}</strong>님 오늘 포미사용자의
+                            <strong>{user.user_id}</strong>님 오늘 포미사용자의
                             감정지수는?
                         </p>
                     </h3>

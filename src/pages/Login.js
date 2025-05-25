@@ -20,22 +20,16 @@ const Login = () => {
 
         try {
             const response = await axios.post(
-<<<<<<< Updated upstream
-                //"http://localhost:8000/api/login",
-
-=======
                 // "http://localhost:8000/api/login",
->>>>>>> Stashed changes
                 "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/login",
-                {
-                    email,
-                    password,
-                }
+                { email, password }
             );
 
             if (response.data.success) {
-                loginUser({ email });
-                navigate("/homemenu"); // 홈 페이지로 이동
+                const user_id = response.data.user_id;
+                loginUser({ user_id });
+
+                navigate("/homemenu");
             } else {
                 alert(response.data.message);
             }
