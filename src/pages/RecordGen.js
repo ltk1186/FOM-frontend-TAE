@@ -9,187 +9,197 @@ import Settings from "../components/Settings";
 import { UserContext } from "./UserContext";
 
 const RecordGen = () => {
-    const { user } = useContext(UserContext);
-    const navigate = useNavigate();
-    const location = useLocation();
-    const textareaRef = useRef(null);
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const textareaRef = useRef(null);
 
-    const [logTitle, setLogTitle] = useState("");
-    const [logContent, setLogContent] = useState("");
-    const [isRecording, setIsRecording] = useState(
-        location.state?.mic || false
-    );
-    const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [logTitle, setLogTitle] = useState("");
+  const [logContent, setLogContent] = useState("");
+  const [isRecording, setIsRecording] = useState(location.state?.mic || false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
-    const recognitionRef = useRef(null);
-    const isRecognizingRef = useRef(false);
+  const recognitionRef = useRef(null);
+  const isRecognizingRef = useRef(false);
 
-    // 키보드 상태 감지
-    useEffect(() => {
-        const handleResize = () => {
-            setIsKeyboardOpen(window.innerHeight < 500); // 높이 기준 조절 가능
-        };
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    useEffect(() => {
-        textareaRef.current?.focus();
-
-        const SpeechRecognition =
-            window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-            alert("이 브라우저는 음성 인식을 지원하지 않습니다.");
-            return;
-        }
-
-        const recog = new SpeechRecognition();
-        recog.lang = "ko-KR";
-        recog.continuous = true;
-        recog.interimResults = false;
-
-        recog.onstart = () => {
-            isRecognizingRef.current = true;
-        };
-
-        recog.onend = () => {
-            isRecognizingRef.current = false;
-        };
-
-        recog.onresult = (event) => {
-            let transcript = "";
-            for (let i = event.resultIndex; i < event.results.length; ++i) {
-                if (event.results[i].isFinal) {
-                    transcript += event.results[i][0].transcript.trim() + " ";
-                }
-            }
-            if (transcript.trim()) {
-                setLogContent(
-                    (prev) => prev + (prev ? " " : "") + transcript.trim()
-                );
-            }
-        };
-
-        recognitionRef.current = recog;
-
-        if (location.state?.mic) {
-            try {
-                recog.start();
-            } catch (e) {
-                console.warn("초기 STT 시작 실패:", e.message);
-            }
-        }
-
-        return () => {
-            recog.stop();
-        };
-    }, []);
-
-    const handleToggleMic = () => {
-        const recog = recognitionRef.current;
-        if (!recog) return;
-
-        if (isRecording) {
-            recog.stop();
-            setIsRecording(false);
-        } else {
-            if (!isRecognizingRef.current) {
-                try {
-                    recog.start();
-                    setIsRecording(true);
-                } catch (e) {
-                    console.warn("녹음 재시작 실패:", e.message);
-                }
-            }
-        }
+  useEffect(() => {
+    const handleResize = () => {
+      setIsKeyboardOpen(window.innerHeight < 500);
     };
 
-    const handleCancel = () => {
-        recognitionRef.current?.stop();
-        navigate("/recorddiary");
-    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-    const handleSave = () => {
-        const newDiary = {
-            id: Date.now().toString(),
-            createdAt: new Date().toLocaleString("ko-KR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                weekday: "short",
-                hour: "2-digit",
-                minute: "2-digit",
-            }),
-            title: logTitle || "제목 없음",
-            content: logContent || "내용 없음",
-        };
+  useEffect(() => {
+    textareaRef.current?.focus();
 
-        const existing = JSON.parse(localStorage.getItem("diaries") || "[]");
-        localStorage.setItem(
-            "diaries",
-            JSON.stringify([newDiary, ...existing])
-        );
-        navigate("/recorddiary");
-    };
-    if (!user) {
-        //{user.email}통해 로그인 정보 참조
-        navigate("/login"); // 로그인을 하지 않았다면 로그인 화면으로 이동
-        return null;
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("이 브라우저는 음성 인식을 지원하지 않습니다.");
+      return;
     }
-    return (
-        <div
-            className={`record-edit-container ${
-                isKeyboardOpen ? "keyboard-open" : ""
-            }`}
-            style={{ backgroundImage: `url(${backgroundImage})` }}
-        >
-            <div className="top-buttons">
-                <PreviousArrow />
-                <div className="right-buttons">
-                    <Settings />
-                    <HomeButton />
-                </div>
-            </div>
 
-            <div className="record-edit-box">
-                <div className="log-time-label">제목을 입력하세요</div>
-                <input
-                    className="log-title"
-                    placeholder="제목"
-                    value={logTitle}
-                    onChange={(e) => setLogTitle(e.target.value)}
-                />
-                <textarea
-                    className="log-content"
-                    ref={textareaRef}
-                    placeholder="일기 내용을 입력하세요"
-                    value={logContent}
-                    onChange={(e) => setLogContent(e.target.value)}
-                />
-            </div>
+    const recog = new SpeechRecognition();
+    recog.lang = "ko-KR";
+    recog.continuous = true;
+    recog.interimResults = false;
 
-            {location.state?.mic && (
-                <button
-                    className={`record-toggle-btn ${
-                        isRecording ? "on" : "off"
-                    }`}
-                    onClick={handleToggleMic}
-                >
-                    🎤
-                </button>
-            )}
+    recog.onstart = () => {
+      isRecognizingRef.current = true;
+    };
 
-            <div className="record-edit-footer">
-                <button className="cancel-button" onClick={handleCancel}>
-                    취소
-                </button>
-                <button className="save-button" onClick={handleSave}>
-                    저장하기
-                </button>
-            </div>
+    recog.onend = () => {
+      isRecognizingRef.current = false;
+    };
+
+    recog.onresult = (event) => {
+      let transcript = "";
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          transcript += event.results[i][0].transcript.trim() + " ";
+        }
+      }
+      if (transcript.trim()) {
+        setLogContent((prev) => prev + (prev ? " " : "") + transcript.trim());
+      }
+    };
+
+    recognitionRef.current = recog;
+
+    if (location.state?.mic) {
+      try {
+        recog.start();
+      } catch (e) {
+        console.warn("초기 STT 시작 실패:", e.message);
+      }
+    }
+
+    return () => {
+      recog.stop();
+    };
+  }, []);
+
+  const handleToggleMic = () => {
+    const recog = recognitionRef.current;
+    if (!recog) return;
+
+    if (isRecording) {
+      recog.stop();
+      setIsRecording(false);
+    } else {
+      if (!isRecognizingRef.current) {
+        try {
+          recog.start();
+          setIsRecording(true);
+        } catch (e) {
+          console.warn("녹음 재시작 실패:", e.message);
+        }
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    recognitionRef.current?.stop();
+    navigate("/recorddiary");
+  };
+
+  const handleSave = async () => {
+    const newDiary = {
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+      title: logTitle || "제목 없음",
+      content: logContent || "내용 없음",
+    };
+
+    // 👉 로컬 저장
+    const existing = JSON.parse(localStorage.getItem("diaries") || "[]");
+    localStorage.setItem("diaries", JSON.stringify([newDiary, ...existing]));
+
+    // 👉 TODO: DB 연동 시 아래 코드 활성화
+    /*
+        try {
+            const response = await fetch("https://<YOUR_BACKEND_URL>/api/temp_diary", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user_id: user.user_id,
+                    title: newDiary.title,
+                    content: newDiary.content,
+                    created_at: newDiary.createdAt,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("DB 저장 실패");
+            }
+        } catch (error) {
+            console.error("DB 저장 오류:", error);
+        }
+        */
+
+    navigate("/recorddiary");
+  };
+
+  if (!user) {
+    navigate("/login");
+    return null;
+  }
+
+  return (
+    <div
+      className={`record-edit-container ${
+        isKeyboardOpen ? "keyboard-open" : ""
+      }`}
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
+      <div className="top-buttons">
+        <PreviousArrow />
+        <div className="right-buttons">
+          <Settings />
+          <HomeButton />
         </div>
-    );
+      </div>
+
+      <div className="record-edit-box">
+        <div className="log-time-label">제목을 입력하세요</div>
+        <input
+          className="log-title"
+          placeholder="제목"
+          value={logTitle}
+          onChange={(e) => setLogTitle(e.target.value)}
+        />
+        <textarea
+          className="log-content"
+          ref={textareaRef}
+          placeholder="일기 내용을 입력하세요"
+          value={logContent}
+          onChange={(e) => setLogContent(e.target.value)}
+        />
+      </div>
+
+      {location.state?.mic && (
+        <button
+          className={`record-toggle-btn ${isRecording ? "on" : "off"}`}
+          onClick={handleToggleMic}
+        >
+          🎤
+        </button>
+      )}
+
+      <div className="record-edit-footer">
+        <button className="cancel-button" onClick={handleCancel}>
+          취소
+        </button>
+        <button className="save-button" onClick={handleSave}>
+          저장하기
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default RecordGen;
