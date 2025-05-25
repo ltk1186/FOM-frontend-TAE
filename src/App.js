@@ -14,24 +14,6 @@ import SettingsPage from "./pages/SettingsPage"; // 추가
 
 function App() {
     return (
-        // 일생님 코드
-        // <>
-        //   <nav>
-        //     <Link to="/">Home</Link> | <Link to="/login">Login</Link> |{" "}
-        //     <Link to="/signup">Signup</Link> | <Link to="/calender">Calender</Link>{" "}
-        //     | <Link to="/record1">Record1</Link> | <Link to="/logout">Logout</Link>
-        //   </nav>
-
-        //   <Routes>
-        //     <Route path="/" element={<Home />} />
-        //     <Route path="/login" element={<Login />} />
-        //     <Route path="/signup" element={<Signup />} />
-        //     <Route path="/calender" element={<Calender />} />
-        //     <Route path="/record1" element={<Record1 />} />
-        //     <Route path="/logout" element={<Logout />} />
-        //   </Routes>
-        // </>
-
         <div className="App">
             <header className="header">
                 <nav className="header-nav">

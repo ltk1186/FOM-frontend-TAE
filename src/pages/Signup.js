@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css"; // Login.css를 그대로 사용
 import ChevronLeft from "../assets/images/chevron-left0.svg";
+import backgroundImage from "../assets/images/login-1.png";
+import PreviousArrow from "../components/PreviousArrow";
+import HomeButton from "../components/HomeButton";
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -59,19 +62,15 @@ const Signup = () => {
     };
 
     return (
-        <div className="login-2">
-            {" "}
-            {/* Login.css에서 상단 클래스 재활용 */}
-            <div className="nav-back">
-                <img
-                    src={ChevronLeft}
-                    alt="뒤로가기"
-                    className="chevron-left"
-                    onClick={() => navigate(-1)}
-                />
-            </div>
-            <div className="home" onClick={() => navigate("/")}>
-                🏠
+        <div
+            className="record-edit-container"
+            style={{ backgroundImage: `url(${backgroundImage})` }}
+        >
+            <div className="top-buttons">
+                <PreviousArrow />
+                <div className="right-buttons">
+                    <HomeButton />
+                </div>
             </div>
             <div className="frame-12">
                 <h1 className="div2">회원가입</h1>{" "}
