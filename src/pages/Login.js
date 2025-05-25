@@ -20,8 +20,12 @@ const Login = () => {
 
         try {
             const response = await axios.post(
+<<<<<<< Updated upstream
                 //"http://localhost:8000/api/login",
 
+=======
+                // "http://localhost:8000/api/login",
+>>>>>>> Stashed changes
                 "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/login",
                 {
                     email,
