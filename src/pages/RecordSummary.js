@@ -1,60 +1,66 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useContext, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./RecordSummary.css";
 import Smiley from "../assets/images/image-50.png";
 import ChevronLeft from "../assets/images/chevron-left0.svg";
 import HomeIcon from "../assets/images/home0.svg";
 import { UserContext } from "./UserContext";
+import axios from "axios";
 
 const RecordSummary = () => {
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const diaries = useMemo(
+        () => location.state?.diaries || [],
+        [location.state?.diaries]
+    );
     const [summary, setSummary] = useState("");
 
-    // ✅ localStorage에서 기존 일지 불러오기
     useEffect(() => {
-        const stored = JSON.parse(localStorage.getItem("diaries") || "[]");
+        const formatted = diaries
+            .map((entry) => {
+                const formattedDate = entry.created_at
+                    ? new Date(entry.created_at).toLocaleString("ko-KR", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                      })
+                    : "날짜 없음";
 
-        const formatted = stored
-            .map(
-                (entry) =>
-                    `${entry.createdAt}\n${entry.title}\n${entry.content}\n-----\n`
-            )
+                return `${formattedDate}\n${entry.title}\n${entry.content}\n-----\n`;
+            })
             .join("\n");
 
         setSummary(formatted);
-    }, []);
+    }, [diaries]);
 
-    // ✅ AI 버튼 클릭 시 JSON 배열로 파싱 & 전송
     const handleAIClick = async () => {
-        const stored = JSON.parse(localStorage.getItem("diaries") || "[]");
-
         try {
-            const response = await fetch(
-                "https://your-api-endpoint.com/generate",
+            const response = await axios.post(
+                "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/diary_writing",
+                { entries: diaries }, // ✅ 여기서 곧바로 diaries 사용 가능!
                 {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ entries: stored }),
+                    headers: { "Content-Type": "application/json" },
                 }
             );
 
-            const data = await response.json();
-            setSummary(data.generatedDiary); // 🔁 결과 텍스트 박스에 표시
+            setSummary(response.data.generatedDiary);
         } catch (error) {
             alert("AI 요청 실패!");
         }
     };
+
     if (!user) {
-        //{user.email}통해 로그인 정보 참조
-        navigate("/login"); // 로그인을 하지 않았다면 로그인 화면으로 이동
+        navigate("/login");
         return null;
     }
+
     return (
         <div className="summary-page">
-            {/* 상단 네비 */}
             <div className="summary-header">
                 <img
                     src={ChevronLeft}

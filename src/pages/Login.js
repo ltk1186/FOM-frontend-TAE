@@ -3,7 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import "./Login.css";
-import ChevronLeft from "../assets/images/chevron-left0.svg";
 import backgroundImage from "../assets/images/login-1.png";
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
@@ -22,7 +21,10 @@ const Login = () => {
             const response = await axios.post(
                 // "http://localhost:8000/api/login",
                 "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/login",
-                { email, password }
+                {
+                    email,
+                    password,
+                }
             );
 
             if (response.data.success) {
