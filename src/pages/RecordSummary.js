@@ -31,7 +31,7 @@ const RecordSummary = () => {
                       })
                     : "날짜 없음";
 
-                return `${formattedDate}\n${entry.title}\n${entry.content}\n-----\n`;
+                return `${formattedDate}\n${entry.content}\n---\n`;
             })
             .join("\n");
 
