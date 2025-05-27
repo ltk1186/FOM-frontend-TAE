@@ -22,7 +22,10 @@ const Login = () => {
             const response = await axios.post(
                 // "http://localhost:8000/api/login",
                 "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/login",
-                { email, password }
+                {
+                    email,
+                    password,
+                }
             );
 
             if (response.data.success) {
