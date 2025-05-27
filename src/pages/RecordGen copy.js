@@ -84,7 +84,7 @@ const RecordGen = () => {
         return () => {
             recog.stop();
         };
-    }, [location.state?.mic]);
+    }, []);
 
     const handleToggleMic = () => {
         const recog = recognitionRef.current;
@@ -111,19 +111,9 @@ const RecordGen = () => {
     };
 
     const handleSave = async () => {
-        const createdAt = new Date();
-        const formattedCreatedAt = `${createdAt.getFullYear()}-${String(
-            createdAt.getMonth() + 1
-        ).padStart(2, "0")}-${String(createdAt.getDate()).padStart(
-            2,
-            "0"
-        )} ${String(createdAt.getHours()).padStart(2, "0")}:${String(
-            createdAt.getMinutes()
-        ).padStart(2, "0")}:${String(createdAt.getSeconds()).padStart(2, "0")}`;
-
         const newDiary = {
             id: Date.now().toString(),
-            createdAt: formattedCreatedAt,
+            createdAt: new Date().toISOString(),
             title: logTitle || "제목 없음",
             content: logContent || "내용 없음",
         };
@@ -135,25 +125,6 @@ const RecordGen = () => {
             JSON.stringify([newDiary, ...existing])
         );
 
-        try {
-            const response = await axios.post(
-                "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/create",
-                {
-                    user_id: user.user_id,
-                    title: newDiary.title,
-                    content: newDiary.content,
-                    created_at: newDiary.createdAt,
-                },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            console.log("✅ DB 저장 성공:", response.data);
-        } catch (error) {
-            console.error("DB 저장 오류:", error);
-        }
         // 👉 TODO: DB 연동 시 아래 코드 활성화
         /*
         try {

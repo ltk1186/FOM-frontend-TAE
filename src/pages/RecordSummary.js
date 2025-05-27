@@ -5,6 +5,7 @@ import Smiley from "../assets/images/image-50.png";
 import ChevronLeft from "../assets/images/chevron-left0.svg";
 import HomeIcon from "../assets/images/home0.svg";
 import { UserContext } from "./UserContext";
+import axios from "axios";
 
 const RecordSummary = () => {
     const { user } = useContext(UserContext);
@@ -28,24 +29,39 @@ const RecordSummary = () => {
     // ✅ AI 버튼 클릭 시 JSON 배열로 파싱 & 전송
     const handleAIClick = async () => {
         const stored = JSON.parse(localStorage.getItem("diaries") || "[]");
-
         try {
-            const response = await fetch(
-                "https://your-api-endpoint.com/generate",
+            const response = await axios.post(
+                "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/diary_writing",
+                { entries: stored },
                 {
-                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ entries: stored }),
                 }
             );
 
-            const data = await response.json();
-            setSummary(data.generatedDiary); // 🔁 결과 텍스트 박스에 표시
+            setSummary(response.data.generatedDiary); // 🔁 결과 텍스트 박스에 표시
         } catch (error) {
             alert("AI 요청 실패!");
         }
+
+        // try {
+        //     const response = await fetch(
+        //         "https://your-api-endpoint.com/generate",
+        //         {
+        //             method: "POST",
+        //             headers: {
+        //                 "Content-Type": "application/json",
+        //             },
+        //             body: JSON.stringify({ entries: stored }),
+        //         }
+        //     );
+
+        //     const data = await response.json();
+        //     setSummary(data.generatedDiary); // 🔁 결과 텍스트 박스에 표시
+        // } catch (error) {
+        //     alert("AI 요청 실패!");
+        // }
     };
     if (!user) {
         //{user.email}통해 로그인 정보 참조
