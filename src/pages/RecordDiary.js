@@ -118,7 +118,11 @@ const RecordDiary = () => {
                             onClick={() =>
                                 !isDeleteMode &&
                                 navigate("/recordedit", {
-                                    state: { id: diary.id },
+                                    state: {
+                                        id: diary.temp_diary_id,
+                                        title: diary.title,
+                                        content: diary.content,
+                                    },
                                 })
                             }
                         >

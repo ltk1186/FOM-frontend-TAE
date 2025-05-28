@@ -154,29 +154,6 @@ const RecordGen = () => {
         } catch (error) {
             console.error("DB 저장 오류:", error);
         }
-        // 👉 TODO: DB 연동 시 아래 코드 활성화
-        /*
-        try {
-            const response = await fetch("https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    user_id: user.user_id,
-                    title: newDiary.title,
-                    content: newDiary.content,
-                    created_at: newDiary.createdAt,
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error("DB 저장 실패");
-            }
-        } catch (error) {
-            console.error("DB 저장 오류:", error);
-        }
-        */
 
         navigate("/recorddiary");
     };
