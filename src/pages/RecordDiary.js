@@ -17,13 +17,13 @@ const RecordDiary = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [diaries, setDiaries] = useState([]);
+
   useEffect(() => {
     const fetchDiaries = async (userID) => {
       try {
         const response = await axios.get(
           `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/read?user_id=${userID}`
         );
-
         setDiaries(response.data);
         console.log("✅ diaries 데이터 가져오기 성공:", response.data);
       } catch (error) {
@@ -53,21 +53,27 @@ const RecordDiary = () => {
   };
 
   const handleBulkDelete = async () => {
-    const updated = diaries.filter((d) => !selectedIds.includes(d.id));
-    localStorage.setItem("diaries", JSON.stringify(updated));
+    for (const id of selectedIds) {
+      const diaryId = id; // ✅ RecordEdit.js와 동일한 명명 방식 사용
+      try {
+        await axios.delete(
+          `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
+        );
+        console.log(`✅ ID ${diaryId} 삭제 성공`);
+      } catch (error) {
+        console.error(`❌ ID ${diaryId} 삭제 실패:`, error);
+      }
+    }
 
-    // 📝 TODO: DB 연동 시 아래 코드 활성화
-    /*
-        for (const id of selectedIds) {
-            try {
-                await fetch(`https://<YOUR_BACKEND_URL>/api/temp_diary/${id}`, {
-                    method: "DELETE",
-                });
-            } catch (error) {
-                console.error("DB 삭제 실패:", error);
-            }
-        }
-        */
+    // 삭제 후 목록 재조회
+    try {
+      const response = await axios.get(
+        `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/read?user_id=${user.user_id}`
+      );
+      setDiaries(response.data);
+    } catch (error) {
+      console.error("❌ diaries 재조회 실패:", error);
+    }
 
     setSelectedIds([]);
     setIsDeleteMode(false);
@@ -108,7 +114,7 @@ const RecordDiary = () => {
           diaries.map((diary) => (
             <div
               className="diary-card"
-              key={diary.id}
+              key={diary.temp_diary_id}
               onClick={() =>
                 !isDeleteMode &&
                 navigate("/recordedit", {
@@ -123,11 +129,11 @@ const RecordDiary = () => {
               {isDeleteMode && (
                 <button
                   className={`select-circle ${
-                    selectedIds.includes(diary.id) ? "selected" : ""
+                    selectedIds.includes(diary.temp_diary_id) ? "selected" : ""
                   }`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleSelect(diary.id);
+                    handleSelect(diary.temp_diary_id);
                   }}
                 />
               )}

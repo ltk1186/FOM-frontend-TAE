@@ -5,6 +5,7 @@ import "./RecordSummary.css";
 import Smiley from "../assets/images/image-50.png";
 import ChevronLeft from "../assets/images/chevron-left0.svg";
 import HomeIcon from "../assets/images/home0.svg";
+import Settings from "../components/Settings"; // ✅ 추가
 import { UserContext } from "./UserContext";
 import axios from "axios";
 
@@ -40,26 +41,19 @@ const RecordSummary = () => {
   }, [diaries]);
 
   const handleAIClick = async () => {
-    // ✅ [임시 사용 코드] GPT 없이 summary에 더미 텍스트 추가
-    const fakeEdited = summary + "\n\n(이 내용은 AI가 편집한 것입니다.)";
-    setSummary(fakeEdited);
-
-    // 📝 TODO: 실제 API 연결 시 아래 코드 사용
-    /*
     try {
       const response = await axios.post(
-        "https://<YOUR_BACKEND_URL>/api/rewrite_summary",
+        "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/rewrite_summary",
         { content: summary },
         {
           headers: { "Content-Type": "application/json" },
         }
       );
-      setSummary(response.data.rewritten); // GPT 응답 받은 요약문
+      setSummary(response.data.rewritten);
     } catch (error) {
       console.error("AI 편집 실패:", error);
       alert("AI 요청에 실패했습니다.");
     }
-    */
   };
 
   const handleSave = async () => {
@@ -73,30 +67,23 @@ const RecordSummary = () => {
       createdAt.getMinutes()
     ).padStart(2, "0")}:${String(createdAt.getSeconds()).padStart(2, "0")}`;
 
-    const newDiary = {
-      id: Date.now().toString(),
-      createdAt: formattedCreatedAt,
-      content: summary || "내용 없음",
-    };
-
-    // ✅ [임시 사용 코드] localStorage에 저장
-    const existing = JSON.parse(localStorage.getItem("diaries") || "[]");
-    localStorage.setItem("diaries", JSON.stringify([newDiary, ...existing]));
-
-    // 📝 TODO: 실제 DB 저장 코드
-    /*
     try {
-      await axios.post("https://<YOUR_BACKEND_URL>/api/diary", {
-        user_id: user.user_id,
-        content: summary || "내용 없음",
-        created_at: formattedCreatedAt,
-      });
+      await axios.post(
+        "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/generate_diary/",
+        {
+          user_id: user.user_id,
+          content: summary || "내용 없음",
+          created_at: formattedCreatedAt,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      navigate("/recorddiary");
     } catch (error) {
       console.error("DB 저장 오류:", error);
+      alert("일기 저장에 실패했습니다.");
     }
-    */
-
-    navigate("/recorddiary");
   };
 
   if (!user) {
@@ -108,7 +95,10 @@ const RecordSummary = () => {
     <div className="summary-page">
       <div className="summary-header">
         <img src={ChevronLeft} alt="뒤로가기" onClick={() => navigate(-1)} />
-        <img src={HomeIcon} alt="홈" onClick={() => navigate("/")} />
+        <div className="header-right-buttons">
+          <Settings /> {/* ✅ 추가 */}
+          <img src={HomeIcon} alt="홈" onClick={() => navigate("/")} />
+        </div>
       </div>
 
       <img src={Smiley} alt="스마일" className="summary-smiley" />
