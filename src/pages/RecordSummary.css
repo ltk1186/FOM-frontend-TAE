@@ -15,6 +15,12 @@
   margin-bottom: 16px;
 }
 
+.header-right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .summary-card {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 16px;
@@ -50,7 +56,6 @@
   line-height: 1.5;
 }
 
-
 .summary-buttons {
   display: flex;
   justify-content: center;
@@ -81,7 +86,7 @@
 
 .summary-smiley {
   display: block;
-  margin: 0 auto;             /* 가운데 정렬 */
+  margin: 0 auto; /* 가운데 정렬 */
   width: 120px;
   height: 120px;
   animation: pulse 3s ease-in-out infinite;
@@ -89,10 +94,11 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.1);  /* 중간에 10% 커짐 */
+    transform: scale(1.1); /* 중간에 10% 커짐 */
   }
 }
