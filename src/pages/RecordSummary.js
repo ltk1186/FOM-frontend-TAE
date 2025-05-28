@@ -41,7 +41,7 @@ const RecordSummary = () => {
     const handleAIClick = async () => {
         try {
             const response = await axios.post(
-                "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/diary_writing",
+                "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/generate_diary",
                 { entries: diaries }, // ✅ 여기서 곧바로 diaries 사용 가능!
                 {
                     headers: { "Content-Type": "application/json" },
