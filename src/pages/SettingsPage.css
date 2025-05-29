@@ -18,13 +18,11 @@
   left: 0;
   right: 0;
   height: 60px;
-  background-color: rgba(253, 230, 183, 0.9);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
   z-index: 10;
-  border-bottom: 1px solid #e0cfa9;
 }
 
 .settings-title {
@@ -39,7 +37,7 @@
 
 /* 전체 박스 */
 .settings-wrapper {
-  background-color: white;
+  background-color: #fff7e8;
   border-radius: 25px;
   padding: 2rem 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -88,13 +86,40 @@
   background-color: #d0eaff;
 }
 
+/* 비밀번호 입력칸 + 아이콘 */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper .input {
+  padding-right: 2.5rem; /* 오른쪽 여백 확보 */
+  margin-bottom: 0;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: filter 0.2s ease;
+}
+
+.eye-icon.active {
+  filter: brightness(0) saturate(100%) invert(66%) sepia(28%) saturate(1047%)
+    hue-rotate(340deg) brightness(102%) contrast(98%);
+}
+
 /* 버튼들 */
 .button-group {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
 }
 
 .logout-button,
@@ -111,7 +136,7 @@
 }
 
 .edit-button.cancel {
-  background-color: #ef4444; /* Tailwind 빨간색 참고 */
+  background-color: #ef4444;
 }
 
 /* 스타일 옵션 */
@@ -154,7 +179,7 @@
 /* 문체 저장 버튼 */
 .style-save {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .style-save button {
@@ -217,5 +242,10 @@
 
   .example-text {
     font-size: 14px;
+  }
+
+  .eye-icon {
+    width: 24px;
+    height: 24px;
   }
 }
