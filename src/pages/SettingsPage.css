@@ -1,0 +1,221 @@
+@import url("https://fonts.googleapis.com/css2?family=Pretendard&display=swap");
+
+.settings-container {
+  min-height: 100vh;
+  padding-top: 130px;
+  font-family: "Pretendard", sans-serif;
+  background-image: url("../assets/images/login-1.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+}
+
+/* 상단 버튼바 */
+.top-buttons {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: rgba(253, 230, 183, 0.9);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  z-index: 10;
+  border-bottom: 1px solid #e0cfa9;
+}
+
+.settings-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.right-buttons {
+  display: flex;
+  align-items: center;
+}
+
+/* 전체 박스 */
+.settings-wrapper {
+  background-color: white;
+  border-radius: 25px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.section-wrapper {
+  margin-top: 2.5rem;
+}
+
+.section-title {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 0.4rem;
+  margin-left: 0;
+}
+
+.settings-box {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 1.2rem 1rem;
+  box-shadow: inset 0 0 0 1px #ccc;
+}
+
+/* 입력 라벨 */
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0.5rem 0 0.2rem;
+  display: block;
+}
+
+/* 텍스트 입력 */
+.input {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
+.input.editable {
+  background-color: #d0eaff;
+}
+
+/* 버튼들 */
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.logout-button,
+.edit-button,
+.save-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 20px;
+  background-color: #fcb65e;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.edit-button.cancel {
+  background-color: #ef4444; /* Tailwind 빨간색 참고 */
+}
+
+/* 스타일 옵션 */
+.style-options {
+  margin-top: 1rem;
+}
+
+.style-option {
+  margin-bottom: 1rem;
+}
+
+.option-label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 14px;
+}
+
+.option-label input {
+  margin-right: 0.5rem;
+}
+
+.example-text {
+  font-size: 13px;
+  margin-left: 1.5rem;
+  color: #555;
+}
+
+/* 사용자 지정 문체 입력 */
+.custom-textbox {
+  width: 100%;
+  height: 60px;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #e0e0e0;
+  font-size: 14px;
+}
+
+/* 문체 저장 버튼 */
+.style-save {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.style-save button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #fcb65e;
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* 색상 스타일 */
+.yellow {
+  color: #facc15;
+}
+.purple {
+  color: #a78bfa;
+}
+.blue {
+  color: #60a5fa;
+}
+.pink {
+  color: #f472b6;
+}
+.green {
+  color: #34d399;
+}
+.brown {
+  color: #a16207;
+}
+
+/* 반응형 */
+@media (min-width: 768px) {
+  .settings-title {
+    font-size: 24px;
+  }
+
+  .settings-wrapper {
+    padding: 2.5rem;
+  }
+
+  .input,
+  .custom-textbox {
+    font-size: 16px;
+  }
+
+  .logout-button,
+  .edit-button,
+  .save-button,
+  .style-save button {
+    font-size: 16px;
+  }
+
+  .option-label {
+    font-size: 16px;
+  }
+
+  .example-text {
+    font-size: 14px;
+  }
+}
