@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
-// import axios from "axios";
+// import axios from "axios"; // 실제 연결용
 import "./SettingsPage.css";
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
@@ -60,6 +60,7 @@ const SettingsPage = () => {
       return;
     }
 
+    // 👉 테스트용 시작
     const localData =
       JSON.parse(localStorage.getItem("fom_user_settings")) || {};
     setEmail(localData.email || "test@example.com");
@@ -76,10 +77,12 @@ const SettingsPage = () => {
       const matchedStyle = templateStyles.find((s) => s.text === savedText);
       if (matchedStyle) setSelectedStyle(matchedStyle.id);
     }
+    // 👉 테스트용 끝
   }, [user_id, navigate]);
 
   const handleToggleEdit = () => {
     if (editable) {
+      // 취소 → 원래 값 복구
       setEmail(originalEmail);
       setPassword(originalPassword);
       setEditable(false);
@@ -89,6 +92,7 @@ const SettingsPage = () => {
   };
 
   const handleSaveUserInfo = async () => {
+    // 👉 테스트용 시작
     localStorage.setItem(
       "fom_user_settings",
       JSON.stringify({
@@ -104,6 +108,24 @@ const SettingsPage = () => {
     setOriginalEmail(email);
     setOriginalPassword(password);
     alert("회원 정보가 로컬에 저장되었습니다.");
+    // 👉 테스트용 끝
+
+    /*
+    // 👉 실제 axios 저장
+    try {
+      await axios.put(
+        `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/users/${user_id}`,
+        { email, password }
+      );
+      setEditable(false);
+      setOriginalEmail(email);
+      setOriginalPassword(password);
+      alert("회원 정보가 수정되었습니다.");
+    } catch (error) {
+      console.error("회원정보 수정 에러:", error);
+      alert("회원정보 수정 실패");
+    }
+    */
   };
 
   const handleSaveStyle = async () => {
@@ -112,6 +134,7 @@ const SettingsPage = () => {
         ? customText
         : templateStyles.find((s) => s.id === selectedStyle)?.text;
 
+    // 👉 테스트용 시작
     const prev = JSON.parse(localStorage.getItem("fom_user_settings")) || {};
     localStorage.setItem(
       "fom_user_settings",
@@ -121,6 +144,7 @@ const SettingsPage = () => {
       })
     );
     alert("문체가 로컬에 저장되었습니다.");
+    // 👉 테스트용 끝
   };
 
   return (
