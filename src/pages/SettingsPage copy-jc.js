@@ -8,7 +8,7 @@ import HomeButton from "../components/HomeButton";
 import eyeOpenIcon from "../assets/images/eye-open0.svg";
 
 const SettingsPage = () => {
-  const { user, setIsLoading } = useContext(UserContext); // 🔹 setIsLoading 추가
+  const { user } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [originalEmail, setOriginalEmail] = useState("");
@@ -60,9 +60,6 @@ const SettingsPage = () => {
       return;
     }
 
-    // 🔹 페이지 진입 시 로딩 해제
-    setIsLoading(false);
-
     // 👉 테스트용 시작
     const localData =
       JSON.parse(localStorage.getItem("fom_user_settings")) || {};
@@ -81,7 +78,7 @@ const SettingsPage = () => {
       if (matchedStyle) setSelectedStyle(matchedStyle.id);
     }
     // 👉 테스트용 끝
-  }, [user_id, navigate, setIsLoading]);
+  }, [user_id, navigate]);
 
   const handleToggleEdit = () => {
     if (editable) {
@@ -95,8 +92,6 @@ const SettingsPage = () => {
   };
 
   const handleSaveUserInfo = async () => {
-    setIsLoading(true); // 🔹 로딩 시작
-
     // 👉 테스트용 시작
     localStorage.setItem(
       "fom_user_settings",
@@ -131,7 +126,6 @@ const SettingsPage = () => {
       alert("회원정보 수정 실패");
     }
     */
-    setIsLoading(false); // 🔹 로딩 종료
   };
 
   const handleSaveStyle = async () => {
@@ -139,8 +133,6 @@ const SettingsPage = () => {
       selectedStyle === "custom"
         ? customText
         : templateStyles.find((s) => s.id === selectedStyle)?.text;
-
-    setIsLoading(true); // 🔹 로딩 시작
 
     // 👉 테스트용 시작
     const prev = JSON.parse(localStorage.getItem("fom_user_settings")) || {};
@@ -153,8 +145,6 @@ const SettingsPage = () => {
     );
     alert("문체가 로컬에 저장되었습니다.");
     // 👉 테스트용 끝
-
-    setIsLoading(false); // 🔹 로딩 종료
   };
 
   return (

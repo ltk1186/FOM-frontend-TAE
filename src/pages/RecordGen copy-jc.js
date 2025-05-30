@@ -1,3 +1,4 @@
+// src/pages/RecordGen.js
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./RecordGen.css";
@@ -9,7 +10,7 @@ import { UserContext } from "./UserContext";
 import axios from "axios";
 
 const RecordGen = () => {
-  const { user, setIsLoading } = useContext(UserContext); // 🔹 추가됨
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
   const textareaRef = useRef(null);
@@ -81,11 +82,6 @@ const RecordGen = () => {
     };
   }, [location.state?.mic]);
 
-  // 🔹 페이지 진입 후 로딩 해제
-  useEffect(() => {
-    setIsLoading(false);
-  }, [setIsLoading]);
-
   const handleToggleMic = () => {
     const recog = recognitionRef.current;
     if (!recog) return;
@@ -128,8 +124,6 @@ const RecordGen = () => {
       content: logContent || "내용 없음",
     };
 
-    setIsLoading(true); // 🔹 저장 시작 시 로딩 표시
-
     try {
       const response = await axios.post(
         "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/create",
@@ -148,10 +142,9 @@ const RecordGen = () => {
       console.log("✅ DB 저장 성공:", response.data);
     } catch (error) {
       console.error("DB 저장 오류:", error);
-    } finally {
-      setIsLoading(false); // 🔹 저장 완료 시 로딩 해제
-      navigate("/recorddiary"); // 🔹 로딩 해제 후 이동
     }
+
+    navigate("/recorddiary");
   };
 
   if (!user) {
