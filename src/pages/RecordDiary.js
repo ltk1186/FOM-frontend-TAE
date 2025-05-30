@@ -22,7 +22,8 @@ const RecordDiary = () => {
       setIsLoading(true); // 🔹 로딩 시작
       try {
         const response = await axios.get(
-          `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/read?user_id=${userID}`
+          // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/read?user_id=${userID}`
+          `https://fombackend.azurewebsites.net/api/temp_diary/read?user_id=${userID}`
         );
         setDiaries(response.data);
         console.log("✅ diaries 데이터 가져오기 성공:", response.data);
@@ -60,7 +61,8 @@ const RecordDiary = () => {
       const diaryId = id; // ✅ RecordEdit.js와 동일한 명명 방식 사용
       try {
         await axios.delete(
-          `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
+          // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
+          `https://fombackend.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
         );
         console.log(`✅ ID ${diaryId} 삭제 성공`);
       } catch (error) {
@@ -70,7 +72,8 @@ const RecordDiary = () => {
 
     try {
       const response = await axios.get(
-        `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/read?user_id=${user.user_id}`
+        // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/read?user_id=${user.user_id}`
+        `https://fombackend.azurewebsites.net/api/temp_diary/read?user_id=${user.user_id}`
       );
       setDiaries(response.data);
     } catch (error) {
@@ -196,7 +199,7 @@ const RecordDiary = () => {
           className="fab-button"
           onClick={() => {
             setIsLoading(true); // 🔹 캘린더 이동
-            navigate("/calender");
+            navigate("/calendar");
           }}
         />
       </div>

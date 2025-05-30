@@ -55,7 +55,8 @@ const RecordEdit = () => {
     setIsLoading(true); // 🔹 저장 로딩 시작
     try {
       await axios.put(
-        `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/${diaryId}`,
+        // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/${diaryId}`,
+        `https://fombackend.azurewebsites.net/api/temp_diary/${diaryId}`,
         {
           title: logTitle,
           content: logContent,
@@ -79,7 +80,8 @@ const RecordEdit = () => {
     setIsLoading(true); // 🔹 삭제 로딩 시작
     try {
       await axios.delete(
-        `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
+        // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
+        `https://fombackend.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
       );
       navigate("/recorddiary");
     } catch (error) {

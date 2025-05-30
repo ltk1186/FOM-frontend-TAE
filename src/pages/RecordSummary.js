@@ -48,7 +48,8 @@ const RecordSummary = () => {
     setIsLoading(true); // 🔹 로딩 시작
     try {
       const response = await axios.post(
-        "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/rewrite_summary",
+        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/rewrite_summary",
+        "https://fombackend.azurewebsites.net/api/rewrite_summary",
         { content: summary },
         {
           headers: { "Content-Type": "application/json" },
@@ -77,7 +78,8 @@ const RecordSummary = () => {
     setIsLoading(true); // 🔹 로딩 시작
     try {
       await axios.post(
-        "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/generate_diary/",
+        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/diary/create/",
+        "https://fombackend.azurewebsites.net/api/diary/create/",
         {
           user_id: user.user_id,
           content: summary || "내용 없음",

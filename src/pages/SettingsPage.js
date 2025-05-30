@@ -119,7 +119,7 @@ const SettingsPage = () => {
     // 👉 실제 axios 저장
     try {
       await axios.put(
-        `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/users/${user_id}`,
+        `https://fombackend.azurewebsites.net/api/users/${user_id}`,
         { email, password }
       );
       setEditable(false);

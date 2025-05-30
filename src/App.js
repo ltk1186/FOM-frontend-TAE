@@ -9,7 +9,7 @@ import RecordDiary from "./pages/RecordDiary";
 import RecordGen from "./pages/RecordGen";
 import RecordEdit from "./pages/RecordEdit";
 import RecordSummary from "./pages/RecordSummary";
-import Calender from "./pages/Calender";
+import Calendar from "./pages/Calendar";
 import SettingsPage from "./pages/SettingsPage";
 
 import { UserContext } from "./pages/UserContext"; // 🔹 추가
@@ -50,8 +50,8 @@ function App() {
           <Link to="/recordsummary" className="nav-item">
             RecordSummary
           </Link>
-          <Link to="/calender" className="nav-item">
-            Calender
+          <Link to="/calendar" className="nav-item">
+            Calendar
           </Link>
           <Link to="/settings" className="nav-item">
             SettingsPage
@@ -68,7 +68,7 @@ function App() {
         <Route path="/recordgen" element={<RecordGen />} />
         <Route path="/recordedit" element={<RecordEdit />} />
         <Route path="/recordsummary" element={<RecordSummary />} />
-        <Route path="/calender" element={<Calender />} />
+        <Route path="/calendar" element={<Calendar />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </div>

@@ -132,7 +132,8 @@ const RecordGen = () => {
 
     try {
       const response = await axios.post(
-        "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/create",
+        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/create",
+        "https://fombackend.azurewebsites.net/api/temp_diary/create",
         {
           user_id: user.user_id,
           title: newDiary.title,

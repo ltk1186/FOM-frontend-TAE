@@ -35,7 +35,8 @@ const Signup = () => {
 
     try {
       const response = await fetch(
-        "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/signup",
+        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/signup",
+        "https://fombackend.azurewebsites.net/api/signup",
         {
           method: "POST",
           headers: {
