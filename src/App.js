@@ -10,6 +10,7 @@ import RecordGen from "./pages/RecordGen"; // 추가
 import RecordEdit from "./pages/RecordEdit"; // 추가
 import RecordSummary from "./pages/RecordSummary"; // 추가
 import Calender from "./pages/Calender"; // DiaryList -> Calender
+import Connselbot from "./pages/Connselbot";
 import SettingsPage from "./pages/SettingsPage"; // 추가
 
 function App() {
@@ -44,6 +45,9 @@ function App() {
                     <Link to="/recordsummary" className="nav-item">
                         RecordSummary
                     </Link>
+                    <Link to="/connselbot" className="nav-item">
+                        Connselbot
+                    </Link>
                     <Link to="/calender" className="nav-item">
                         Calender
                     </Link>
@@ -63,6 +67,7 @@ function App() {
                 <Route path="/recordgen" element={<RecordGen />} />
                 <Route path="/recordedit" element={<RecordEdit />} />{" "}
                 <Route path="/recordsummary" element={<RecordSummary />} />
+                <Route path="/connselbot" element={<Connselbot />} />
                 <Route path="/calender" element={<Calender />} />
                 <Route path="/settings" element={<SettingsPage />} />{" "}
             </Routes>
