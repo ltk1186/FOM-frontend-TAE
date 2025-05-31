@@ -1,3 +1,4 @@
+// src/pages/RecordDiary.js
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RecordDiary.css";
@@ -11,7 +12,7 @@ import { UserContext } from "./UserContext";
 import axios from "axios";
 
 const RecordDiary = () => {
-  const { user, setIsLoading } = useContext(UserContext); // 🔹 추가
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
@@ -19,11 +20,9 @@ const RecordDiary = () => {
 
   useEffect(() => {
     const fetchDiaries = async (userID) => {
-      setIsLoading(true); // 🔹 로딩 시작
       try {
         const response = await axios.get(
-          // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/read?user_id=${userID}`
-          `https://fombackend.azurewebsites.net/api/temp_diary/read?user_id=${userID}`
+          `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/read?user_id=${userID}`
         );
         setDiaries(response.data);
         console.log("✅ diaries 데이터 가져오기 성공:", response.data);
@@ -32,8 +31,6 @@ const RecordDiary = () => {
           "❌ diaries API 에러:",
           error.response?.data || error.message
         );
-      } finally {
-        setIsLoading(false); // 🔹 로딩 종료
       }
     };
 
@@ -42,7 +39,7 @@ const RecordDiary = () => {
     } else {
       console.warn("⚠️ 사용자 아이디가 없습니다.");
     }
-  }, [user?.user_id, setIsLoading]);
+  }, [user?.user_id]);
 
   const toggleDeleteMode = () => {
     setIsDeleteMode((prev) => !prev);
@@ -56,13 +53,11 @@ const RecordDiary = () => {
   };
 
   const handleBulkDelete = async () => {
-    setIsLoading(true); // 🔹 삭제 중 로딩
     for (const id of selectedIds) {
       const diaryId = id; // ✅ RecordEdit.js와 동일한 명명 방식 사용
       try {
         await axios.delete(
-          // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
-          `https://fombackend.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
+          `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
         );
         console.log(`✅ ID ${diaryId} 삭제 성공`);
       } catch (error) {
@@ -70,10 +65,10 @@ const RecordDiary = () => {
       }
     }
 
+    // 삭제 후 목록 재조회
     try {
       const response = await axios.get(
-        // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/read?user_id=${user.user_id}`
-        `https://fombackend.azurewebsites.net/api/temp_diary/read?user_id=${user.user_id}`
+        `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/read?user_id=${user.user_id}`
       );
       setDiaries(response.data);
     } catch (error) {
@@ -82,7 +77,6 @@ const RecordDiary = () => {
 
     setSelectedIds([]);
     setIsDeleteMode(false);
-    setIsLoading(false); // 🔹 삭제 후 로딩 종료
   };
 
   if (!user) {
@@ -123,16 +117,13 @@ const RecordDiary = () => {
               key={diary.temp_diary_id}
               onClick={() =>
                 !isDeleteMode &&
-                (() => {
-                  setIsLoading(true); // 🔹 클릭 시 로딩
-                  navigate("/recordedit", {
-                    state: {
-                      id: diary.temp_diary_id,
-                      title: diary.title,
-                      content: diary.content,
-                    },
-                  });
-                })()
+                navigate("/recordedit", {
+                  state: {
+                    id: diary.temp_diary_id,
+                    title: diary.title,
+                    content: diary.content,
+                  },
+                })
               }
             >
               {isDeleteMode && (
@@ -166,10 +157,7 @@ const RecordDiary = () => {
 
       <button
         className="add-diary-btn"
-        onClick={() => {
-          setIsLoading(true); // 🔹 요약 이동 시 로딩
-          navigate("/recordsummary", { state: { diaries } });
-        }}
+        onClick={() => navigate("/recordsummary", { state: { diaries } })}
       >
         일기 완성하기
       </button>
@@ -179,28 +167,19 @@ const RecordDiary = () => {
           src={WriteIcon}
           alt="텍스트 작성"
           className="fab-button"
-          onClick={() => {
-            setIsLoading(true); // 🔹 텍스트 작성 이동
-            navigate("/recordgen");
-          }}
+          onClick={() => navigate("/recordgen")}
         />
         <img
           src={MicIcon}
           alt="음성 입력"
           className="fab-button"
-          onClick={() => {
-            setIsLoading(true); // 🔹 음성 입력 이동
-            navigate("/recordgen", { state: { mic: true } });
-          }}
+          onClick={() => navigate("/recordgen", { state: { mic: true } })}
         />
         <img
           src={CalendarIcon}
           alt="캘린더"
           className="fab-button"
-          onClick={() => {
-            setIsLoading(true); // 🔹 캘린더 이동
-            navigate("/calendar");
-          }}
+          onClick={() => navigate("/calender")}
         />
       </div>
     </div>
