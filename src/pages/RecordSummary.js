@@ -49,7 +49,7 @@ const RecordSummary = () => {
     try {
       const response = await axios.post(
         // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/rewrite_summary",
-        "https://fombackend.azurewebsites.net/api/rewrite_summary",
+        "https://fombackend.azurewebsites.net/generate_diary",
         { content: summary },
         {
           headers: { "Content-Type": "application/json" },
@@ -79,7 +79,7 @@ const RecordSummary = () => {
     try {
       await axios.post(
         // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/diary/create/",
-        "https://fombackend.azurewebsites.net/api/diary/create/",
+        "https://fombackend.azurewebsites.net/api/diary/create",
         {
           user_id: user.user_id,
           content: summary || "내용 없음",
