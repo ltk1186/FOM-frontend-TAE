@@ -1,15 +1,16 @@
+// src/pages/RecordSummary.js
 import React, { useEffect, useState, useContext, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./RecordSummary.css";
 import Smiley from "../assets/images/image-50.png";
 import ChevronLeft from "../assets/images/chevron-left0.svg";
 import HomeIcon from "../assets/images/home0.svg";
-import Settings from "../components/Settings";
+import Settings from "../components/Settings"; // ✅ 추가
 import { UserContext } from "./UserContext";
 import axios from "axios";
 
 const RecordSummary = () => {
-  const { user, setIsLoading } = useContext(UserContext); // 🔹 setIsLoading 추가
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -39,17 +40,10 @@ const RecordSummary = () => {
     setSummary(formatted);
   }, [diaries]);
 
-  // 🔹 페이지 진입 시 로딩 해제
-  useEffect(() => {
-    setIsLoading(false);
-  }, [setIsLoading]);
-
   const handleAIClick = async () => {
-    setIsLoading(true); // 🔹 로딩 시작
     try {
       const response = await axios.post(
-        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/rewrite_summary",
-        "https://fombackend.azurewebsites.net/generate_diary",
+        "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/rewrite_summary",
         { content: summary },
         {
           headers: { "Content-Type": "application/json" },
@@ -59,8 +53,6 @@ const RecordSummary = () => {
     } catch (error) {
       console.error("AI 편집 실패:", error);
       alert("AI 요청에 실패했습니다.");
-    } finally {
-      setIsLoading(false); // 🔹 로딩 종료
     }
   };
 
@@ -75,11 +67,9 @@ const RecordSummary = () => {
       createdAt.getMinutes()
     ).padStart(2, "0")}:${String(createdAt.getSeconds()).padStart(2, "0")}`;
 
-    setIsLoading(true); // 🔹 로딩 시작
     try {
       await axios.post(
-        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/diary/create/",
-        "https://fombackend.azurewebsites.net/api/diary/create",
+        "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/generate_diary/",
         {
           user_id: user.user_id,
           content: summary || "내용 없음",
@@ -93,19 +83,7 @@ const RecordSummary = () => {
     } catch (error) {
       console.error("DB 저장 오류:", error);
       alert("일기 저장에 실패했습니다.");
-    } finally {
-      setIsLoading(false); // 🔹 로딩 종료
     }
-  };
-
-  const handleGoBack = () => {
-    setIsLoading(true); // 🔹 뒤로 가기 로딩
-    navigate(-1);
-  };
-
-  const handleGoReport = () => {
-    setIsLoading(true); // 🔹 포미와 이야기하기 로딩
-    navigate("/report");
   };
 
   if (!user) {
@@ -116,9 +94,9 @@ const RecordSummary = () => {
   return (
     <div className="summary-page">
       <div className="summary-header">
-        <img src={ChevronLeft} alt="뒤로가기" onClick={handleGoBack} />
+        <img src={ChevronLeft} alt="뒤로가기" onClick={() => navigate(-1)} />
         <div className="header-right-buttons">
-          <Settings />
+          <Settings /> {/* ✅ 추가 */}
           <img src={HomeIcon} alt="홈" onClick={() => navigate("/")} />
         </div>
       </div>
@@ -134,7 +112,7 @@ const RecordSummary = () => {
       <div className="summary-buttons">
         <button onClick={handleAIClick}>AI 일기 완성</button>
         <button onClick={handleSave}>저장하기</button>
-        <button onClick={handleGoReport}>포미와 이야기하기</button>
+        <button onClick={() => navigate("/report")}>포미와 이야기하기</button>
       </div>
     </div>
   );

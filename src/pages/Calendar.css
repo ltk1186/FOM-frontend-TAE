@@ -1,16 +1,16 @@
+/* =================================================================
+   CALENDAR PAGE – GLOBAL
+   =================================================================*/
+
 .calendar-page {
-  background: url("../assets/images/login-2.png");
-  background-size: cover;
-  background-position: center;
+  background: url("../assets/images/login-2.png") center/cover no-repeat;
   min-height: 100vh;
-  padding: 80px 24px 24px;
+  padding: 140px 24px 24px;
   font-family: "Pretendard", sans-serif;
   color: #653d00;
   overflow-x: hidden;
-  padding-top: 140px;
 }
 
-/* 상단 헤더 */
 .calendar-header {
   margin-top: 80px;
   display: flex;
@@ -27,7 +27,7 @@
   color: #653d00;
   font-weight: bold;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .calendar-header button:hover {
@@ -40,7 +40,6 @@
   font-weight: 600;
 }
 
-/* 달력 테이블 */
 .calendar-table {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 20px;
@@ -51,7 +50,6 @@
 
 .calendar-table table {
   width: 100%;
-  max-width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
   text-align: center;
@@ -62,18 +60,18 @@
   padding: 8px;
   font-size: 14px;
   color: #333;
-  transition: background 0.2s;
-  border-radius: 6px;
-  background: transparent;
-  border: none;
   font-weight: 500;
+  border-radius: 6px;
+  transition: background 0.2s;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  background: transparent;
+  border: none;
 }
 
 .calendar-table td:hover {
-  background-color: rgba(171, 171, 171, 0.4);
+  background: rgba(171, 171, 171, 0.4);
   cursor: pointer;
   border-radius: 6px;
 }
@@ -89,7 +87,23 @@
   list-style: none;
 }
 
-/* 감정 차트 */
+.calendar-table td:empty,
+.calendar-table th:empty {
+  display: table-cell;
+  visibility: hidden;
+  line-height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.calendar-empty {
+  display: inline-block;
+  width: 100%;
+  height: 1em;
+  visibility: hidden;
+}
+
 .emotion-chart {
   background: rgba(255, 255, 255, 0.85);
   border-radius: 24px;
@@ -100,9 +114,9 @@
 
 .chart-title {
   font-weight: bold;
-  margin-bottom: 16px;
   font-size: 16px;
   text-align: center;
+  margin-bottom: 16px;
 }
 
 .chart-bars {
@@ -110,9 +124,9 @@
   justify-content: space-between;
   align-items: flex-end;
   height: 160px;
+  gap: 12px;
   margin-bottom: 20px;
   padding: 0 8px;
-  gap: 12px;
 }
 
 .chart-column {
@@ -126,10 +140,9 @@
 .bar {
   width: 100%;
   border-radius: 2px;
-  transition: height 0.3s ease;
+  transition: height 0.3s;
 }
 
-/* ✅ 날짜 겹침 방지 */
 .day-label {
   margin-top: 8px;
   font-size: 12px;
@@ -139,7 +152,6 @@
   z-index: 2;
 }
 
-/* 감정 범례 */
 .legend {
   display: flex;
   flex-wrap: wrap;
@@ -163,51 +175,215 @@
   display: inline-block;
 }
 
-/* 모바일 반응형 */
 @media (max-width: 480px) {
   .calendar-title {
     font-size: 16px;
   }
-
   .chart-title {
     font-size: 14px;
   }
-
   .chart-bars {
     height: 120px;
     gap: 6px;
     padding: 0 4px;
   }
-
   .chart-column {
     min-width: 22px;
     height: 120px;
   }
-
   .legend-item {
     font-size: 11px;
   }
-
   .day-label {
     font-size: 11px;
   }
 }
 
-/* ✅ 빈 셀 점 제거 */
-.calendar-table td:empty,
-.calendar-table th:empty {
-  display: table-cell;
-  visibility: hidden;
-  line-height: 0;
-  padding: 0;
-  margin: 0;
+/* =================================================================
+   POP-UP  (Diary / Consulting)
+   =================================================================*/
+
+.diary-popup-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(50, 50, 50, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+}
+
+.diary-popup {
+  position: relative;
+  width: 90%;
+  max-width: 640px;
+  min-height: 480px;
+  padding: 40px 32px 120px;
+  background: #fff9e9;
+  border-radius: 32px;
+  color: #4b2c00;
+  font-family: "Pretendard";
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  animation: popupFadeIn 0.3s ease;
+}
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popup-header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.popup-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.popup-subtitle {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #795200;
+}
+
+.popup-close-button,
+.popup-back-button {
+  position: absolute;
+  top: 16px;
+  background: none;
   border: none;
+  font-size: 20px;
+  font-weight: 700;
+  color: #653d00;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
 }
-.calendar-empty {
-  display: inline-block;
+
+.popup-close-button {
+  right: 16px;
+}
+
+.popup-back-button {
+  left: 16px;
+  opacity: 0.7;
+}
+
+.popup-close-button:hover,
+.popup-back-button:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.popup-content {
+  font-size: 15px;
+  line-height: 1.6;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.popup-entry {
+  margin-bottom: 20px;
+}
+
+.popup-entry h4 {
+  margin-bottom: 4px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #3a1d00;
+}
+
+.popup-textarea {
   width: 100%;
-  height: 1em;
-  visibility: hidden; /* 점이 보이지 않게 */
+  height: 260px;
+  border: none;
+  resize: none;
+  font-family: "Pretendard", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  background: transparent;
+  outline: none;
 }
 
+.popup-bottom-row {
+  position: absolute;
+  bottom: 32px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 88px;
+  height: 64px;
+}
 
+.popup-button {
+  min-width: 110px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 24px;
+  font: 700 14px/1 "Pretendard";
+  color: #fff;
+  cursor: pointer;
+  background: #e25c5c;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background 0.2s;
+}
+
+.popup-button:hover {
+  background: #d34242;
+}
+
+.popup-button.delete {
+  order: 1;
+}
+
+.popup-button.save {
+  order: 3;
+}
+
+.popup-button.consult {
+  order: 2;
+  margin: 0 auto;
+  min-width: 140px;
+}
+
+.popup-smiley {
+  order: 2;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.popup-smiley:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 480px) {
+  .popup-bottom-row {
+    height: 100px;
+    justify-content: space-between;
+    padding: 0 16px;
+    gap: 0;
+  }
+
+  .popup-button {
+    position: static;
+    order: 0;
+  }
+
+  .popup-smiley {
+    margin: 0 auto;
+  }
+}
