@@ -9,8 +9,13 @@ import RecordDiary from "./pages/RecordDiary"; // 추가
 import RecordGen from "./pages/RecordGen"; // 추가
 import RecordEdit from "./pages/RecordEdit"; // 추가
 import RecordSummary from "./pages/RecordSummary"; // 추가
-import Calender from "./pages/Calender"; // DiaryList -> Calender
+import Connselbot from "./pages/Connselbot"; // 추가
+// import Calender from "./pages/Calender"; // DiaryList -> Calender
+import Calendar from "./pages/Calendar";
 import SettingsPage from "./pages/SettingsPage"; // 추가
+
+import { UserContext } from "./pages/UserContext"; // 🔹 추가
+import LoadingOverlay from "./components/LoadingOverlay"; // 🔹 추가
 
 function App() {
     const { isLoading } = useContext(UserContext); // 🔹 로딩 상태 가져오기

@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react"; // 🔹 useEffect 추가
 import { useNavigate } from "react-router-dom";
 import "./Login.css"; // Login.css를 그대로 사용
-import ChevronLeft from "../assets/images/chevron-left0.svg";
 import backgroundImage from "../assets/images/login-1.png";
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
