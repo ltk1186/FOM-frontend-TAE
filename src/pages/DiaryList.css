@@ -1,0 +1,128 @@
+/* ---------------- base ---------------- */
+.diary-list-page {
+  min-height: 100vh;
+  background: url("../assets/images/login-2.png") center/cover no-repeat;
+  padding: 120px 16px 40px;
+  font-family: "Pretendard", sans-serif;
+  color: #4b2c00;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---------------- top nav ---------------- */
+.list-top-nav {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  padding: 0 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap; /* ✅ 한 줄 넘을 경우 줄바꿈 */
+  z-index: 10;
+  background: transparent;
+  gap: 8px;
+}
+
+.dropdowns {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.dropdowns select {
+  padding: 6px 18px;
+  border-radius: 16px;
+  border: 1px solid #d6b980;
+  background: #fff9e9;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* ---------------- list ---------------- */
+.list-container {
+  width: 100%;
+  max-width: 480px;
+  margin-top: 30px; /* 상단바 높이에 맞게 */
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* ✅ 중앙 정렬 */
+  gap: 20px;
+}
+
+.list-top-nav {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.diary-card {
+  background: #fffce8;
+  border-radius: 20px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.diary-card:hover {
+  transform: translateY(-2px);
+}
+
+.diary-card .date {
+  font-size: 14px;
+  color: #8a6a2f;
+  margin-bottom: 6px;
+}
+.diary-card .summary {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.diary-card .content {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* ---------------- dummy 버튼 ---------------- */
+.dummy-generate-btn {
+  padding: 14px 36px;
+  margin: 30px auto 0 auto;
+  background: #ffddad;
+  color: #4b2c00;
+  font-weight: 600;
+  border: none;
+  border-radius: 24px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: block;
+}
+
+/* ---------------- empty ---------------- */
+.empty {
+  text-align: center;
+  padding: 40px 0;
+  color: #7d6130;
+}
+
+/* ---------------- responsive ---------------- */
+@media screen and (max-width: 480px) {
+  .list-top-nav {
+    justify-content: space-between;
+    padding: 0 12px;
+  }
+
+  .dropdowns select {
+    font-size: 14px;
+    padding: 4px 12px;
+  }
+
+  .dummy-generate-btn {
+    width: 80%;
+  }
+}

@@ -15,6 +15,9 @@ import SettingsPage from "./pages/SettingsPage";
 import { UserContext } from "./pages/UserContext"; // 🔹 추가
 import LoadingOverlay from "./components/LoadingOverlay"; // 🔹 추가
 
+import DiaryList from "./pages/DiaryList"; // ** 06.01 추가
+import ImageGen from "./pages/ImageGen"; // ** 06.01 추가
+
 function App() {
   const { isLoading } = useContext(UserContext); // 🔹 로딩 상태 가져오기
 
@@ -56,6 +59,7 @@ function App() {
           <Link to="/settings" className="nav-item">
             SettingsPage
           </Link>
+          <Link to="/diarylist" className="nav-item">DiaryList</Link>
         </nav>
       </header>
       <Routes>
@@ -70,6 +74,9 @@ function App() {
         <Route path="/recordsummary" element={<RecordSummary />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/diarylist" element={<DiaryList />} /> {/* ** 06.01 추가 */}
+        <Route path="/diary/:id" element={<ImageGen />} /> {/* ** 06.01 추가 */}
+        <Route path="/imagegen/:id" element={<ImageGen />} /> {/* ** 06.01 추가 */}
       </Routes>
     </div>
   );
