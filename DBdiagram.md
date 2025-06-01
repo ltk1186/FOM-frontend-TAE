@@ -14,6 +14,7 @@ erDiagram
         int user_id PK
         string username
         string email
+        string reference_text
         string password
         datetime created_at
     }
