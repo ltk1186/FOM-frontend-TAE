@@ -6,6 +6,7 @@ import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 import Settings from "../components/Settings";
 import { UserContext } from "./UserContext";
+import trashIcon from "../assets/images/trash.png";
 import axios from "axios";
 
 const RecordEdit = () => {
@@ -74,6 +75,8 @@ const RecordEdit = () => {
     if (!diaryId) {
       console.log(diaryId);
       return;
+    } else {
+      console.log(diaryId);
     }
 
     setIsLoading(true); // 🔹 삭제 로딩 시작
@@ -133,7 +136,7 @@ const RecordEdit = () => {
         {" "}
         {/* 🔄 변경됨 */}
         <button className={styles["delete-button"]} onClick={handleDelete}>
-          🗑
+          <img src={trashIcon} alt="삭제" className="trash-icon" />
         </button>
         <button className={styles["save-button"]} onClick={handleSave}>
           저장하기

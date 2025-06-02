@@ -23,34 +23,18 @@
   position: relative;
 }
 
-.nav-button {
-  width: 36px;
-  height: 36px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
-
-.nav-button:hover {
-  background-color: rgba(108, 81, 37, 0.1);
-}
-
 .back-button {
   position: absolute;
   left: 0;
   top: 2px;
 }
 
-.home-button {
+.right-buttons {
   position: absolute;
   right: 0;
   top: 2px;
-  visibility: hidden; /* 원본 CSS에서 hidden */
+  display: flex;
+  gap: 8px;
 }
 
 /* 구분선 */

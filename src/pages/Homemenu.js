@@ -2,6 +2,8 @@ import React, { useContext, useEffect } from "react"; // 🔹 useEffect 추가
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import styles from "./Homemenu.module.css"; // 🔄 변경됨
+import Settings from "../components/Settings";
+import PreviousArrow from "../components/PreviousArrow";
 import homemenu1 from "../assets/images/homemenu1.png";
 import homemenu2 from "../assets/images/homemenu2.png";
 import homemenu3 from "../assets/images/homemenu3.png";
@@ -91,34 +93,12 @@ const Homemenu = () => {
       {/* 🔄 변경됨 */}
       {/* 네비게이션 바 */}
       <div className={styles["navigation-bar"]}>
-        {" "}
-        {/* 🔄 변경됨 */}
-        <button className={styles["nav-button"] + " " + styles["back-button"]}>
-          {" "}
-          {/* 🔄 변경됨 */}
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M15 18L9 12L15 6"
-              stroke="#6C5125"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-        <button className={styles["nav-button"] + " " + styles["home-button"]}>
-          {" "}
-          {/* 🔄 변경됨 */}
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-              stroke="#6C5125"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
+        <div className={styles["back-button"]}>
+          <PreviousArrow />
+        </div>
+        <div className={styles["right-buttons"]}>
+          <Settings />
+        </div>
       </div>
       <div className={styles.divider}></div> {/* 🔄 변경됨 */}
       {/* 주간 달력 섹션 */}

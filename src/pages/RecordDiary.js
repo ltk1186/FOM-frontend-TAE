@@ -6,7 +6,8 @@ import HomeButton from "../components/HomeButton";
 import Settings from "../components/Settings";
 import MicIcon from "../assets/images/group-70.svg";
 import CalendarIcon from "../assets/images/group-90.svg";
-import WriteIcon from "../assets/images/write.png";
+import WriteIcon from "../assets/images/Group 19.svg";
+import TrashIcon from "../assets/images/trash.png";
 import { UserContext } from "./UserContext";
 import axios from "axios";
 
@@ -108,7 +109,7 @@ const RecordDiary = () => {
               className={styles["cancel-delete-button"]}
               onClick={toggleDeleteMode}
             >
-              ❌
+              취소
             </button>
           </div>
         )}
@@ -116,7 +117,15 @@ const RecordDiary = () => {
           {" "}
           {/* 🔄 변경됨 */}
           <button className={styles["trash-button"]} onClick={toggleDeleteMode}>
-            🗑
+            <img
+              src={TrashIcon}
+              alt="삭제 모드"
+              style={{
+                width: "20px",
+                height: "20px",
+                marginTop: "2px",
+              }}
+            />
           </button>
           <Settings />
           <HomeButton />
