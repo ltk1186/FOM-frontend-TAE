@@ -48,7 +48,7 @@ const RecordSummary = () => {
     setIsLoading(true); // 🔹 로딩 시작
     try {
       const response = await axios.post(
-        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/rewrite_summary",
+        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/generate_diary",
         "https://fombackend.azurewebsites.net/generate_diary",
         { content: summary },
         {

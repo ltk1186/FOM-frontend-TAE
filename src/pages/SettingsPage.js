@@ -1,18 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
-// import axios from "axios"; // 실제 연결용
+import axios from "axios";
 import "./SettingsPage.css";
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 import eyeOpenIcon from "../assets/images/eye-open0.svg";
 
 const SettingsPage = () => {
-  const { user, setIsLoading } = useContext(UserContext); // 🔹 setIsLoading 추가
+  const { user, setIsLoading } = useContext(UserContext);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState(""); // 새 비밀번호만 입력받음
   const [originalEmail, setOriginalEmail] = useState("");
-  const [originalPassword, setOriginalPassword] = useState("");
   const [editable, setEditable] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [referenceText, setReferenceText] = useState("");
@@ -60,34 +59,32 @@ const SettingsPage = () => {
       return;
     }
 
-    // 🔹 페이지 진입 시 로딩 해제
-    setIsLoading(false);
+    const fetchUserInfo = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(
+          `https://fombackend.azurewebsites.net/api/users/${user_id}`
+        );
+        const userData = response.data;
 
-    // 👉 테스트용 시작
-    const localData =
-      JSON.parse(localStorage.getItem("fom_user_settings")) || {};
-    setEmail(localData.email || "test@example.com");
-    setPassword(localData.password || "password123");
-    setOriginalEmail(localData.email || "test@example.com");
-    setOriginalPassword(localData.password || "password123");
-    const savedText = localData.reference_text || "";
-    setReferenceText(savedText);
+        setEmail(userData.email || "");
+        setOriginalEmail(userData.email || "");
+        setSelectedStyle(userData.reference_text ? "custom" : "");
+        setCustomText(userData.reference_text || "");
+      } catch (error) {
+        console.error("회원 정보 불러오기 실패:", error);
+        alert("회원 정보를 불러오는 데 실패했습니다.");
+      }
+      setIsLoading(false);
+    };
 
-    if (!templateStyles.some((s) => s.text === savedText)) {
-      setSelectedStyle("custom");
-      setCustomText(savedText);
-    } else {
-      const matchedStyle = templateStyles.find((s) => s.text === savedText);
-      if (matchedStyle) setSelectedStyle(matchedStyle.id);
-    }
-    // 👉 테스트용 끝
+    fetchUserInfo();
   }, [user_id, navigate, setIsLoading]);
 
   const handleToggleEdit = () => {
     if (editable) {
-      // 취소 → 원래 값 복구
       setEmail(originalEmail);
-      setPassword(originalPassword);
+      setPassword(""); // 새 비밀번호 입력값만 초기화
       setEditable(false);
     } else {
       setEditable(true);
@@ -95,43 +92,27 @@ const SettingsPage = () => {
   };
 
   const handleSaveUserInfo = async () => {
-    setIsLoading(true); // 🔹 로딩 시작
-
-    // 👉 테스트용 시작
-    localStorage.setItem(
-      "fom_user_settings",
-      JSON.stringify({
-        email,
-        password,
-        reference_text:
-          selectedStyle === "custom"
-            ? customText
-            : templateStyles.find((s) => s.id === selectedStyle)?.text,
-      })
-    );
-    setEditable(false);
-    setOriginalEmail(email);
-    setOriginalPassword(password);
-    alert("회원 정보가 로컬에 저장되었습니다.");
-    // 👉 테스트용 끝
-
-    /*
-    // 👉 실제 axios 저장
+    setIsLoading(true);
     try {
+      const updateData = { email };
+      if (password) {
+        updateData.password = password;
+      }
+
       await axios.put(
         `https://fombackend.azurewebsites.net/api/users/${user_id}`,
-        { email, password }
+        updateData
       );
+
       setEditable(false);
       setOriginalEmail(email);
-      setOriginalPassword(password);
+      setPassword(""); // 저장 후 비밀번호 필드 비움
       alert("회원 정보가 수정되었습니다.");
     } catch (error) {
       console.error("회원정보 수정 에러:", error);
       alert("회원정보 수정 실패");
     }
-    */
-    setIsLoading(false); // 🔹 로딩 종료
+    setIsLoading(false);
   };
 
   const handleSaveStyle = async () => {
@@ -140,21 +121,18 @@ const SettingsPage = () => {
         ? customText
         : templateStyles.find((s) => s.id === selectedStyle)?.text;
 
-    setIsLoading(true); // 🔹 로딩 시작
-
-    // 👉 테스트용 시작
-    const prev = JSON.parse(localStorage.getItem("fom_user_settings")) || {};
-    localStorage.setItem(
-      "fom_user_settings",
-      JSON.stringify({
-        ...prev,
-        reference_text: selectedText,
-      })
-    );
-    alert("문체가 로컬에 저장되었습니다.");
-    // 👉 테스트용 끝
-
-    setIsLoading(false); // 🔹 로딩 종료
+    setIsLoading(true);
+    try {
+      await axios.put(
+        `https://fombackend.azurewebsites.net/api/users/${user_id}`,
+        { reference_text: selectedText }
+      );
+      alert("문체가 저장되었습니다.");
+    } catch (error) {
+      console.error("문체 저장 에러:", error);
+      alert("문체 저장 실패");
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -180,7 +158,7 @@ const SettingsPage = () => {
               readOnly={!editable}
             />
 
-            <label className="label">비밀번호</label>
+            <label className="label">비밀번호 (새 비밀번호 입력)</label>
             <div className="password-wrapper">
               <input
                 className={editable ? "input editable" : "input"}
@@ -189,12 +167,14 @@ const SettingsPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 readOnly={!editable}
               />
-              <img
-                src={eyeOpenIcon}
-                alt="비밀번호 보기"
-                className={`eye-icon ${showPassword ? "active" : ""}`}
-                onClick={() => setShowPassword((prev) => !prev)}
-              />
+              {editable && (
+                <img
+                  src={eyeOpenIcon}
+                  alt="비밀번호 보기"
+                  className={`eye-icon ${showPassword ? "active" : ""}`}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                />
+              )}
             </div>
 
             <div className="button-group">
