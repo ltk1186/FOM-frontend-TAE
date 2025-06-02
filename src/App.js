@@ -11,7 +11,7 @@ import RecordEdit from "./pages/RecordEdit";
 import RecordSummary from "./pages/RecordSummary";
 import Calendar from "./pages/Calendar";
 import SettingsPage from "./pages/SettingsPage";
-
+import Connselbot from "./pages/Connselbot"; // 추가
 import DiaryList from "./pages/DiaryList"; // ** 06.01 추가
 import ImageGen from "./pages/ImageGen"; // ** 06.01 추가
 
@@ -56,6 +56,9 @@ function App() {
                     <Link to="/calendar" className="nav-item">
                         Calendar
                     </Link>
+                    <Link to="/connselbot" className="nav-item">
+                        Connselbot
+                    </Link>
                     <Link to="/settings" className="nav-item">
                         SettingsPage
                     </Link>
@@ -77,6 +80,7 @@ function App() {
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/diarylist" element={<DiaryList />} />{" "}
+                <Route path="/connselbot" element={<Connselbot />} />
                 {/* ** 06.01 추가 */}
                 <Route path="/diary/:id" element={<ImageGen />} />{" "}
                 {/* ** 06.01 추가 */}
