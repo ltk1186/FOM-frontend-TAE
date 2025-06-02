@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./LoginIntro.css";
+import styles from "./LoginIntro.module.css"; // 🔄 변경됨
 import character from "../assets/images/image-50.png";
 import { UserContext } from "./UserContext"; // 🔹 추가
 
@@ -19,18 +19,30 @@ const LoginIntro = () => {
   };
 
   return (
-    <div className="login-intro">
-      <img src={character} alt="마스코트" className="bouncy-character" />
-
-      <h1 className="intro-title">오늘 하루가 궁금해요</h1>
-
-      <button className="intro-button" onClick={() => handleNavigate("/login")}>
+    <div className={styles["login-intro"]}>
+      {" "}
+      {/* 🔄 변경됨 */}
+      <img
+        src={character}
+        alt="마스코트"
+        className={styles["bouncy-character"]} // 🔄 변경됨
+      />
+      <h1 className={styles["intro-title"]}>오늘 하루가 궁금해요</h1>{" "}
+      {/* 🔄 변경됨 */}
+      <button
+        className={styles["intro-button"]} // 🔄 변경됨
+        onClick={() => handleNavigate("/login")}
+      >
         로그인
       </button>
-
-      <p className="signup-text">
+      <p className={styles["signup-text"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
         계정이 없으신가요?{" "}
-        <span className="signup-link" onClick={() => handleNavigate("/signup")}>
+        <span
+          className={styles["signup-link"]} // 🔄 변경됨
+          onClick={() => handleNavigate("/signup")}
+        >
           회원가입
         </span>
       </p>

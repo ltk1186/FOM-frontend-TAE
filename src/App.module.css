@@ -1,0 +1,45 @@
+/* ✅ 프로젝트 공통 루트 요소 - 사용 중이면 유지 */
+.App {
+  text-align: center;
+}
+
+/* 🌀 앱 로고 애니메이션 - 사용 중이면 유지, 아니라면 삭제 가능 */
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 🧱 앱 헤더 - 사용 중이면 유지, 아니면 삭제 가능 */
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+/* 🔗 링크 색상 - 필요시 유지 */
+.App-link {
+  color: #61dafb;
+}
+
+/* ❌ 중복 제거됨: .header, .header-nav, .nav-item
+   → 이미 index.css에서 정의되어 있음 */

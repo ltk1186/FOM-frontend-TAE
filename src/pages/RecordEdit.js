@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./RecordEdit.css";
-import backgroundImage from "../assets/images/login-1.png";
+import styles from "./RecordEdit.module.css"; // 🔄 변경됨
+// import backgroundImage from "../assets/images/login-1.png"; // ❌ 제거됨
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 import Settings from "../components/Settings";
@@ -55,7 +55,6 @@ const RecordEdit = () => {
     setIsLoading(true); // 🔹 저장 로딩 시작
     try {
       await axios.put(
-        // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/${diaryId}`,
         `https://fombackend.azurewebsites.net/api/temp_diary/${diaryId}`,
         {
           title: logTitle,
@@ -80,7 +79,6 @@ const RecordEdit = () => {
     setIsLoading(true); // 🔹 삭제 로딩 시작
     try {
       await axios.delete(
-        // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
         `https://fombackend.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
       );
       navigate("/recorddiary");
@@ -98,38 +96,46 @@ const RecordEdit = () => {
 
   return (
     <div
-      className="record-edit-container"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      className={styles["record-edit-container"]} // 🔄 변경됨
+      // style={{ backgroundImage: `url(${backgroundImage})` }} // ❌ 제거됨: 전역 배경으로 대체
     >
-      <div className="top-buttons">
+      <div className={styles["top-buttons"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
         <PreviousArrow />
-        <div className="right-buttons">
+        <div className={styles["right-buttons"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
           <Settings />
           <HomeButton />
         </div>
       </div>
 
-      <div className="record-edit-box">
-        <div className="log-time">{logTime}</div>
+      <div className={styles["record-edit-box"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
+        <div className={styles["log-time"]}>{logTime}</div>
         <input
-          className="log-title"
+          className={styles["log-title"]}
           value={logTitle}
           onChange={(e) => setLogTitle(e.target.value)}
           placeholder="제목을 입력하세요"
         />
         <textarea
-          className="log-content"
+          className={styles["log-content"]}
           value={logContent}
           onChange={(e) => setLogContent(e.target.value)}
           placeholder="내용을 입력하세요"
         />
       </div>
 
-      <div className="record-edit-footer">
-        <button className="delete-button" onClick={handleDelete}>
+      <div className={styles["record-edit-footer"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
+        <button className={styles["delete-button"]} onClick={handleDelete}>
           🗑
         </button>
-        <button className="save-button" onClick={handleSave}>
+        <button className={styles["save-button"]} onClick={handleSave}>
           저장하기
         </button>
       </div>

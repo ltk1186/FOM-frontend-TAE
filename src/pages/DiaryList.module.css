@@ -1,7 +1,6 @@
 /* ---------------- base ---------------- */
 .diary-list-page {
   min-height: 100vh;
-  background: url("../assets/images/login-2.png") center/cover no-repeat;
   padding: 120px 16px 40px;
   font-family: "Pretendard", sans-serif;
   color: #4b2c00;
@@ -33,7 +32,6 @@
   align-items: center;
 }
 
-
 .dropdowns select {
   padding: 6px 18px;
   border-radius: 16px;
@@ -55,7 +53,6 @@
   align-items: center; /* ✅ 중앙 정렬 */
   gap: 20px;
 }
-
 
 .diary-card {
   background: #fffce8;

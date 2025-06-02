@@ -1,5 +1,4 @@
 .login-intro {
-  background-image: url("../assets/images/login-2.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -20,7 +19,8 @@
 }
 
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -29,7 +29,8 @@
 }
 
 @keyframes breathe {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
