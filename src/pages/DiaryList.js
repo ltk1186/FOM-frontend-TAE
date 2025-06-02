@@ -1,10 +1,11 @@
 //ai 일기 완성본 DB에서 가져오는 페이지
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react"; // 🔹 useContext 추가
 import { useNavigate } from "react-router-dom";
 import styles from "./DiaryList.module.css"; // 🔄 변경됨
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
+import { UserContext } from "./UserContext"; // 🔹 추가
 
 /* =======================================================================
    DUMMY DATA BLOCK  (❗API 연결 시 이 블록 통째로 삭제)
@@ -44,6 +45,7 @@ const dummyDiaries = [
 
 const DiaryList = () => {
   const navigate = useNavigate();
+  const { setIsLoading } = useContext(UserContext); // 🔹 추가
 
   /* ---------- state ---------- */
   const thisYear = new Date().getFullYear();
@@ -55,6 +57,7 @@ const DiaryList = () => {
 
   /* ---------- load (dummy or API) ---------- */
   useEffect(() => {
+    setIsLoading(true); // 🔹 로딩 시작
     // 🔸 더미 사용
     const filtered = dummyDiaries.filter((d) => {
       const dt = new Date(d.created_at);
@@ -63,14 +66,17 @@ const DiaryList = () => {
       );
     });
     setDiaries(filtered);
+    setIsLoading(false); // 🔹 로딩 종료
 
     /* 🔻 API 사용 시
     (async () => {
+      setIsLoading(true);
       const data = await fetchDiaries(user_id, year, month);
       setDiaries(data);
+      setIsLoading(false);
     })();
     */
-  }, [year, month]);
+  }, [year, month, setIsLoading]);
 
   /* ---------- helpers ---------- */
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -113,7 +119,10 @@ const DiaryList = () => {
             <div
               key={d.diary_id}
               className={styles["diary-card"]} // 🔄 변경됨
-              onClick={() => navigate(`/imagegen/${d.diary_id}`, { state: d })}
+              onClick={() => {
+                setIsLoading(true); // 🔹 클릭 시 로딩
+                navigate(`/imagegen/${d.diary_id}`, { state: d });
+              }}
             >
               <div className={styles.date}>
                 {" "}
@@ -132,13 +141,6 @@ const DiaryList = () => {
             </div>
           ))
         )}
-      </div>
-      {/* 더미 버튼 - TODO: 연결 예정 */}
-      <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "40px" }}
-      >
-        <button className={styles["dummy-generate-btn"]}>이미지 생성</button>{" "}
-        {/* 🔄 변경됨 */}
       </div>
     </div>
   );

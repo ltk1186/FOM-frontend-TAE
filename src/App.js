@@ -14,6 +14,7 @@ import SettingsPage from "./pages/SettingsPage";
 import Connselbot from "./pages/Connselbot"; // 추가
 import DiaryList from "./pages/DiaryList"; // ** 06.01 추가
 import ImageGen from "./pages/ImageGen"; // ** 06.01 추가
+import Gallery from "./pages/Gallery";
 
 import { UserContext } from "./pages/UserContext"; // 🔹 추가
 import LoadingOverlay from "./components/LoadingOverlay"; // 🔹 추가
@@ -47,6 +48,7 @@ function App() {
         <Route path="/diary/:id" element={<ImageGen />} /> {/* ** 06.01 추가 */}
         <Route path="/imagegen/:id" element={<ImageGen />} />{" "}
         {/* ** 06.01 추가 */}
+        <Route path="/gallery" element={<Gallery />} />
       </Routes>
     </div>
   );

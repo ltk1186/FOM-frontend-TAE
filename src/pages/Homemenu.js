@@ -38,7 +38,7 @@ const menuItems = [
     title: "나의 감정 이미지",
     image: homemenu4,
     className: "emotion-icon",
-    route: "/login",
+    route: "/gallery", // 🔹 수정됨: 감정 갤러리로 이동
   },
   {
     id: 5,
