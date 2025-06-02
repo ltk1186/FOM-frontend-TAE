@@ -72,6 +72,8 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/homemenu" element={<Homemenu />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/diarylist" element={<DiaryList />} />
+                <Route path="/homemenu" element={<Homemenu />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/recorddiary" element={<RecordDiary />} />
                 <Route path="/recordgen" element={<RecordGen />} />
