@@ -135,7 +135,6 @@ const SettingsPage = () => {
 
   return (
     <div className={styles["settings-container"]}>
-      {" "}
       {/* ✅ */}
       <div className={styles["top-buttons"]}>
         <PreviousArrow />
@@ -158,7 +157,6 @@ const SettingsPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               readOnly={!editable}
             />
-
             <label className={styles["label"]}>
               비밀번호 (새 비밀번호 입력)
             </label>
@@ -183,7 +181,6 @@ const SettingsPage = () => {
                 />
               )}
             </div>
-
             <div className={styles["button-group"]}>
               <button
                 className={styles["logout-button"]}
@@ -210,7 +207,6 @@ const SettingsPage = () => {
             </div>
           </div>
         </div>
-
         <div className={styles["section-wrapper"]}>
           <div className={styles["section-title"]}>일기 문체</div>
           <div className={styles["settings-box"]}>
