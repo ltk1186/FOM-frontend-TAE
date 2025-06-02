@@ -12,9 +12,6 @@ import RecordSummary from "./pages/RecordSummary";
 import Calendar from "./pages/Calendar";
 import SettingsPage from "./pages/SettingsPage";
 
-import { UserContext } from "./pages/UserContext"; // 🔹 추가
-import LoadingOverlay from "./components/LoadingOverlay"; // 🔹 추가
-
 import DiaryList from "./pages/DiaryList"; // ** 06.01 추가
 import ImageGen from "./pages/ImageGen"; // ** 06.01 추가
 
