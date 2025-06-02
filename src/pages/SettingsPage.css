@@ -87,7 +87,7 @@
 }
 
 /* 수정 불가능한 텍스트박스는 포커스되지 않도록 설정 */
-.input:read-only {
+input.input:read-only {
   pointer-events: none;
   caret-color: transparent;
   outline: none;
