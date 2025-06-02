@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./DiaryList.css";
+import styles from "./DiaryList.module.css"; // 🔄 변경됨
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 
@@ -22,7 +22,8 @@ const dummyDiaries = [
     diary_id: 2,
     created_at: "2025-06-02T14:20:00",
     summary: "야경보다 반짝인 건 우리 웃음소리",
-    content: "퇴근하자마자 친구랑 한강으로 달려갔다. 돗자리 깔고 앉아 치맥 한 입에 피로가 사르르 녹았다...",
+    content:
+      "퇴근하자마자 친구랑 한강으로 달려갔다. 돗자리 깔고 앉아 치맥 한 입에 피로가 사르르 녹았다...",
   },
   {
     diary_id: 3,
@@ -57,7 +58,9 @@ const DiaryList = () => {
     // 🔸 더미 사용
     const filtered = dummyDiaries.filter((d) => {
       const dt = new Date(d.created_at);
-      return dt.getFullYear() === Number(year) && dt.getMonth() + 1 === Number(month);
+      return (
+        dt.getFullYear() === Number(year) && dt.getMonth() + 1 === Number(month)
+      );
     });
     setDiaries(filtered);
 
@@ -75,11 +78,17 @@ const DiaryList = () => {
 
   /* ---------- render ---------- */
   return (
-    <div className="diary-list-page">
+    <div className={styles["diary-list-page"]}>
+      {" "}
+      {/* 🔄 변경됨 */}
       {/* top nav */}
-      <div className="list-top-nav">
+      <div className={styles["list-top-nav"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
         <PreviousArrow />
-        <div className="dropdowns">
+        <div className={styles.dropdowns}>
+          {" "}
+          {/* 🔄 변경됨 */}
           <select value={year} onChange={(e) => setYear(e.target.value)}>
             {years.map((y) => (
               <option key={y}>{y}</option>
@@ -93,19 +102,22 @@ const DiaryList = () => {
         </div>
         <HomeButton />
       </div>
-
       {/* diary cards */}
-      <div className="list-container">
+      <div className={styles["list-container"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
         {diaries.length === 0 ? (
-          <p className="empty">해당 월에 작성된 일기가 없습니다.</p>
+          <p className={styles.empty}>해당 월에 작성된 일기가 없습니다.</p> // 🔄 변경됨
         ) : (
           diaries.map((d) => (
             <div
               key={d.diary_id}
-              className="diary-card"
+              className={styles["diary-card"]} // 🔄 변경됨
               onClick={() => navigate(`/imagegen/${d.diary_id}`, { state: d })}
             >
-              <div className="date">
+              <div className={styles.date}>
+                {" "}
+                {/* 🔄 변경됨 */}
                 {new Date(d.created_at).toLocaleDateString("ko-KR", {
                   year: "numeric",
                   month: "long",
@@ -113,15 +125,20 @@ const DiaryList = () => {
                   weekday: "short",
                 })}
               </div>
-              <div className="summary">{d.summary}</div>
-              <div className="content">{d.content}</div>
+              <div className={styles.summary}>{d.summary}</div>{" "}
+              {/* 🔄 변경됨 */}
+              <div className={styles.content}>{d.content}</div>{" "}
+              {/* 🔄 변경됨 */}
             </div>
           ))
         )}
       </div>
       {/* 더미 버튼 - TODO: 연결 예정 */}
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "40px" }}>
-        <button className="dummy-generate-btn">이미지 생성</button>
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: "40px" }}
+      >
+        <button className={styles["dummy-generate-btn"]}>이미지 생성</button>{" "}
+        {/* 🔄 변경됨 */}
       </div>
     </div>
   );

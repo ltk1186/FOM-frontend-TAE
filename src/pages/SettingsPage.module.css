@@ -1,10 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Pretendard&display=swap");
-
 .settings-container {
   min-height: 100vh;
   padding-top: 130px;
   font-family: "Pretendard", sans-serif;
-  background-image: url("../assets/images/login-1.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

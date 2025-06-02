@@ -2,12 +2,11 @@
 .imagegen-page {
   width: 100vw;
   height: 100vh;
-  background: url("../assets/images/login-2.png") center/cover no-repeat;
   font-family: "Pretendard", sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 210px;             /* 상단 여유 */
+  padding-top: 210px; /* 상단 여유 */
   box-sizing: border-box;
 }
 
@@ -24,7 +23,7 @@
 }
 
 .mascot {
-  margin-top: 30px;  
+  margin-top: 30px;
   width: 100px;
   height: 100px;
 }
@@ -33,7 +32,7 @@
 .image-wrapper {
   width: 90%;
   max-width: 440px;
-  aspect-ratio: 1 / 1;           /* 정사각형 */
+  aspect-ratio: 1 / 1; /* 정사각형 */
   border-radius: 16px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.7);
@@ -92,16 +91,32 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.action-btn.gen { background: #f3a93c; }
-.action-btn.gen:hover { background: #e69726; }
+.action-btn.gen {
+  background: #f3a93c;
+}
+.action-btn.gen:hover {
+  background: #e69726;
+}
 
-.action-btn.save { background: #e25c5c; }
-.action-btn.save:hover { background: #d34242; }
+.action-btn.save {
+  background: #e25c5c;
+}
+.action-btn.save:hover {
+  background: #d34242;
+}
 
 /* ─── 모바일 대응 ────────────────────────── */
 @media (max-width: 480px) {
-  .mascot { width: 105px; height: 105px; }
+  .mascot {
+    width: 105px;
+    height: 105px;
+  }
   .image-wrapper,
-  .diary-card { max-width: 380px; }
-  .action-btn { font-size: 14px; padding: 10px 20px; }
+  .diary-card {
+    max-width: 380px;
+  }
+  .action-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
 }

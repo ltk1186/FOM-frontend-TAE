@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import "./RecordSummary.css";
+import styles from "./RecordSummary.module.css"; // ✅ CSS 모듈 import로 변경
 import Smiley from "../assets/images/image-50.png";
 import ChevronLeft from "../assets/images/chevron-left0.svg";
 import HomeIcon from "../assets/images/home0.svg";
@@ -48,8 +48,8 @@ const RecordSummary = () => {
     setIsLoading(true); // 🔹 로딩 시작
     try {
       const response = await axios.post(
-        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/generate_diary",
-        "https://fombackend.azurewebsites.net/generate_diary",
+        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/rewrite_summary",
+        "https://fombackend.azurewebsites.net/api/rewrite_summary",
         { content: summary },
         {
           headers: { "Content-Type": "application/json" },
@@ -79,7 +79,7 @@ const RecordSummary = () => {
     try {
       await axios.post(
         // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/diary/create/",
-        "https://fombackend.azurewebsites.net/api/diary/create",
+        "https://fombackend.azurewebsites.net/api/diary/create/",
         {
           user_id: user.user_id,
           content: summary || "내용 없음",
@@ -114,24 +114,31 @@ const RecordSummary = () => {
   }
 
   return (
-    <div className="summary-page">
-      <div className="summary-header">
+    <div className={styles["summary-page"]}>
+      {" "}
+      {/* ✅ className 수정 */}
+      <div className={styles["summary-header"]}>
+        {" "}
+        {/* ✅ */}
         <img src={ChevronLeft} alt="뒤로가기" onClick={handleGoBack} />
-        <div className="header-right-buttons">
+        <div className={styles["header-right-buttons"]}>
+          {" "}
+          {/* ✅ */}
           <Settings />
           <img src={HomeIcon} alt="홈" onClick={() => navigate("/")} />
         </div>
       </div>
-
-      <img src={Smiley} alt="스마일" className="summary-smiley" />
-
+      <img src={Smiley} alt="스마일" className={styles["summary-smiley"]} />{" "}
+      {/* ✅ */}
+      {/* ✅ */}
       <textarea
-        className="summary-textarea"
+        className={styles["summary-textarea"]}
         value={summary}
         onChange={(e) => setSummary(e.target.value)}
       />
-
-      <div className="summary-buttons">
+      <div className={styles["summary-buttons"]}>
+        {" "}
+        {/* ✅ */}
         <button onClick={handleAIClick}>AI 일기 완성</button>
         <button onClick={handleSave}>저장하기</button>
         <button onClick={handleGoReport}>포미와 이야기하기</button>

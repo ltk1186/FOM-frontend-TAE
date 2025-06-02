@@ -23,4 +23,11 @@
   /* 소셜 로그인 버튼 배경 */
   --interactive-secondary-solid-enabled-background: #eceff4;
   --interactive-secondary-solid-enabled-foreground: #1a212b;
+
+  /* 🔤 폰트 설정 */
+  --font-family-base: "Pretendard", "Noto Sans KR", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  --font-family-code: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }

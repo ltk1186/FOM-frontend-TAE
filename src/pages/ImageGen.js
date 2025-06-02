@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./ImageGen.css";
+import styles from "./ImageGen.module.css"; // 🔄 변경됨
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 import Smiley from "../assets/images/image-50.png";
@@ -20,19 +20,17 @@ const ImageGen = () => {
      ------------------------------------------------------------------*/
   const diary = state;
   if (!diary) {
-    // Hook 은 이미 위에서 호출됐으므로 규칙 위반이 아님
     navigate("/");
     return null;
   }
 
   /* ---------------- 이미지 생성 · 저장 ---------------- */
   const handleGenerate = async () => {
-    /* 데모용 : Hook setter 사용 → unused-var 경고 방지 */
-    setIsGenerating(true);            // ★ 로딩 상태 ON
+    setIsGenerating(true); // ★ 로딩 상태 ON
     alert("⚠️  이미지 생성 기능은 구현 준비 중입니다.");
 
-    /* TODO: DALLE API 호출 후 setImageUrl(url) */
-    setIsGenerating(false);           // ★ 로딩 상태 OFF
+    // TODO: DALLE API 호출 후 setImageUrl(url)
+    setIsGenerating(false); // ★ 로딩 상태 OFF
   };
 
   const handleSave = () =>
@@ -40,28 +38,43 @@ const ImageGen = () => {
 
   /* ---------------- 렌더링 ---------------- */
   return (
-    <div className="imagegen-page">
+    <div className={styles["imagegen-page"]}>
+      {" "}
+      {/* 🔄 변경됨 */}
       {/* ── 상단바 ─────────────────────────────────── */}
-      <div className="top-bar">
+      <div className={styles["top-bar"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
         <PreviousArrow />
-        <img src={Smiley} alt="마스코트" className="mascot" />
+        <img src={Smiley} alt="마스코트" className={styles.mascot} />{" "}
+        {/* 🔄 변경됨 */}
         <HomeButton />
       </div>
-
       {/* ── 이미지(또는 플레이스홀더) ───────────────── */}
-      <div className="image-wrapper">
+      <div className={styles["image-wrapper"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
         {imageUrl ? (
-          <img src={imageUrl} alt="감정 이미지" className="generated-img" />
+          <img
+            src={imageUrl}
+            alt="감정 이미지"
+            className={styles["generated-img"]} // 🔄 변경됨
+          />
         ) : (
-          <div className="placeholder">
+          <div className={styles.placeholder}>
+            {" "}
+            {/* 🔄 변경됨 */}
             {isGenerating ? "이미지 생성중…" : "이미지가 없습니다."}
           </div>
         )}
       </div>
-
       {/* ── 일기 카드 ─────────────────────────────── */}
-      <div className="diary-card">
-        <div className="diary-date">
+      <div className={styles["diary-card"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
+        <div className={styles["diary-date"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
           {new Date(diary.created_at).toLocaleDateString("ko-KR", {
             year: "numeric",
             month: "long",
@@ -69,15 +82,27 @@ const ImageGen = () => {
             weekday: "short",
           })}
         </div>
-        <p className="diary-content">{diary.content}</p>
+        <p className={styles["diary-content"]}>{diary.content}</p>{" "}
+        {/* 🔄 변경됨 */}
       </div>
-
       {/* ── 하단 버튼 ─────────────────────────────── */}
-      <div className="bottom-buttons">
-        <button className="action-btn gen" onClick={handleGenerate}>
+      <div className={styles["bottom-buttons"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
+        <button
+          className={`${styles["action-btn"]} ${styles.gen}`}
+          onClick={handleGenerate}
+        >
+          {" "}
+          {/* 🔄 변경됨 */}
           이미지 생성하기
         </button>
-        <button className="action-btn save" onClick={handleSave}>
+        <button
+          className={`${styles["action-btn"]} ${styles.save}`}
+          onClick={handleSave}
+        >
+          {" "}
+          {/* 🔄 변경됨 */}
           저장하기
         </button>
       </div>

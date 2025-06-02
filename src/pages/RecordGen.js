@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./RecordGen.css";
-import backgroundImage from "../assets/images/login-2.png";
+import styles from "./RecordGen.module.css"; // 🔄 CSS 모듈로 변경
+// import backgroundImage from "../assets/images/login-2.png"; // ❌ 제거됨
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 import Settings from "../components/Settings";
@@ -132,7 +132,6 @@ const RecordGen = () => {
 
     try {
       const response = await axios.post(
-        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/create",
         "https://fombackend.azurewebsites.net/api/temp_diary/create",
         {
           user_id: user.user_id,
@@ -162,29 +161,34 @@ const RecordGen = () => {
 
   return (
     <div
-      className={`record-edit-container ${
-        isKeyboardOpen ? "keyboard-open" : ""
-      }`}
-      style={{ backgroundImage: `url(${backgroundImage})` }}
+      className={`${styles["record-edit-container"]} ${
+        isKeyboardOpen ? styles["keyboard-open"] : ""
+      }`} // 🔄 className 수정
     >
-      <div className="top-buttons">
+      <div className={styles["top-buttons"]}>
+        {" "}
+        {/* 🔄 */}
         <PreviousArrow />
-        <div className="right-buttons">
+        <div className={styles["right-buttons"]}>
+          {" "}
+          {/* 🔄 */}
           <Settings />
           <HomeButton />
         </div>
       </div>
 
-      <div className="record-edit-box">
-        <div className="log-time-label">제목을 입력하세요</div>
+      <div className={styles["record-edit-box"]}>
+        {" "}
+        {/* 🔄 */}
+        <div className={styles["log-time-label"]}>제목을 입력하세요</div>
         <input
-          className="log-title"
+          className={styles["log-title"]}
           placeholder="제목"
           value={logTitle}
           onChange={(e) => setLogTitle(e.target.value)}
         />
         <textarea
-          className="log-content"
+          className={styles["log-content"]}
           ref={textareaRef}
           placeholder="일기 내용을 입력하세요"
           value={logContent}
@@ -194,18 +198,22 @@ const RecordGen = () => {
 
       {location.state?.mic && (
         <button
-          className={`record-toggle-btn ${isRecording ? "on" : "off"}`}
+          className={`${styles["record-toggle-btn"]} ${
+            isRecording ? styles["on"] : styles["off"]
+          }`} // 🔄
           onClick={handleToggleMic}
         >
           🎤
         </button>
       )}
 
-      <div className="record-edit-footer">
-        <button className="cancel-button" onClick={handleCancel}>
+      <div className={styles["record-edit-footer"]}>
+        {" "}
+        {/* 🔄 */}
+        <button className={styles["cancel-button"]} onClick={handleCancel}>
           취소
         </button>
-        <button className="save-button" onClick={handleSave}>
+        <button className={styles["save-button"]} onClick={handleSave}>
           저장하기
         </button>
       </div>

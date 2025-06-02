@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react"; // 🔹 useEffect 추가
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
-import "./Homemenu.css";
+import styles from "./Homemenu.module.css"; // 🔄 변경됨
 import homemenu1 from "../assets/images/homemenu1.png";
 import homemenu2 from "../assets/images/homemenu2.png";
 import homemenu3 from "../assets/images/homemenu3.png";
@@ -86,10 +86,16 @@ const Homemenu = () => {
   };
 
   return (
-    <div className="home-container">
+    <div className={styles["home-container"]}>
+      {" "}
+      {/* 🔄 변경됨 */}
       {/* 네비게이션 바 */}
-      <div className="navigation-bar">
-        <button className="nav-button back-button">
+      <div className={styles["navigation-bar"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
+        <button className={styles["nav-button"] + " " + styles["back-button"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
               d="M15 18L9 12L15 6"
@@ -100,7 +106,9 @@ const Homemenu = () => {
             />
           </svg>
         </button>
-        <button className="nav-button home-button">
+        <button className={styles["nav-button"] + " " + styles["home-button"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path
               d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
@@ -112,68 +120,94 @@ const Homemenu = () => {
           </svg>
         </button>
       </div>
-
-      <div className="divider"></div>
-
+      <div className={styles.divider}></div> {/* 🔄 변경됨 */}
       {/* 주간 달력 섹션 */}
-      <div className="weekly-calendar-container">
-        <div className="weekly-calendar-frame">
-          <div className="calendar-background-top"></div>
-          <div className="calendar-background-bottom"></div>
-
-          <div className="calendar-header">
+      <div className={styles["weekly-calendar-container"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
+        <div className={styles["weekly-calendar-frame"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
+          <div className={styles["calendar-background-top"]}></div>{" "}
+          {/* 🔄 변경됨 */}
+          <div className={styles["calendar-background-bottom"]}></div>{" "}
+          {/* 🔄 변경됨 */}
+          <div className={styles["calendar-header"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
             <h3>주간 달력</h3>
           </div>
-
-          <div className="weekly-dates">
+          <div className={styles["weekly-dates"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
             {weekDays.map((day, index) => (
-              <div key={index} className="date-component">
-                <div className="date-number">{day.day}</div>
+              <div key={index} className={styles["date-component"]}>
+                {" "}
+                {/* 🔄 변경됨 */}
+                <div className={styles["date-number"]}>{day.day}</div>{" "}
+                {/* 🔄 변경됨 */}
                 <div
-                  className={`date-indicator ${
-                    day.hasActivity ? "active" : ""
-                  }`}
+                  className={`${styles["date-indicator"]} ${
+                    day.hasActivity ? styles.active : ""
+                  }`} // 🔄 변경됨
                 ></div>
               </div>
             ))}
           </div>
         </div>
       </div>
-
       {/* 감정 지수 섹션 */}
-      <div className="emotion-index-container">
-        <div className="emotion-index-content">
-          <h3 className="emotion-question">
+      <div className={styles["emotion-index-container"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
+        <div className={styles["emotion-index-content"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
+          <h3 className={styles["emotion-question"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
             <p>
               <strong>{user.user_id}</strong>님 오늘 포미사용자의 감정지수는?
             </p>
           </h3>
-          <div className="emotion-result">
-            <span className="emotion-type">슬픔</span>
-            <span className="emotion-percentage">이 42%로 가장 높습니다.</span>
+          <div className={styles["emotion-result"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            <span className={styles["emotion-type"]}>슬픔</span>{" "}
+            {/* 🔄 변경됨 */}
+            <span className={styles["emotion-percentage"]}>
+              이 42%로 가장 높습니다.
+            </span>{" "}
+            {/* 🔄 변경됨 */}
           </div>
         </div>
       </div>
-
       {/* 기능 선택 섹션 */}
-      <div className="function-selection-container">
-        <h2 className="section-title">기능 선택</h2>
-
-        <div className="menu-grid">
+      <div className={styles["function-selection-container"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
+        <h2 className={styles["section-title"]}>기능 선택</h2> {/* 🔄 변경됨 */}
+        <div className={styles["menu-grid"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
           {menuItems.map((item) => (
             <div
               key={item.id}
-              className="menu-item"
+              className={styles["menu-item"]} // 🔄 변경됨
               onClick={() => handleMenuClick(item.route)} // 🔹 수정
             >
-              <div className="menu-icon-container">
-                <div className="menu-icon-background"></div>
+              <div className={styles["menu-icon-container"]}>
+                {" "}
+                {/* 🔄 변경됨 */}
+                <div className={styles["menu-icon-background"]}></div>{" "}
+                {/* 🔄 변경됨 */}
                 <img
                   src={item.image}
                   alt={item.title}
-                  className={`menu-icon ${item.className}`}
+                  className={`${styles["menu-icon"]} ${styles[item.className]}`} // 🔄 변경됨
                 />
-                <span className="menu-title">{item.title}</span>
+                <span className={styles["menu-title"]}>{item.title}</span>{" "}
+                {/* 🔄 변경됨 */}
               </div>
             </div>
           ))}
