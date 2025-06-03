@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react"; // 🔹 useContext, useEffect 추가
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./ImageGen.module.css"; // 🔄 변경됨
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 import Smiley from "../assets/images/image-50.png";
+import { UserContext } from "./UserContext"; // 🔹 추가
 
 const ImageGen = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { setIsLoading } = useContext(UserContext); // 🔹 추가
 
   /* ------------------------------------------------------------------
      🔸 Hook 은 **항상** 컴포넌트 최상단에서 호출되어야 합니다.
@@ -19,18 +21,27 @@ const ImageGen = () => {
      넘어온 일기(Diary) 확인 ― 없으면 홈으로 리디렉션
      ------------------------------------------------------------------*/
   const diary = state;
-  if (!diary) {
-    navigate("/");
-    return null;
-  }
+
+  useEffect(() => {
+    if (!diary) {
+      setIsLoading(true); // 🔹 로딩 시작
+      navigate("/");
+    }
+    setIsLoading(false); // 🔹 로딩 종료
+  }, [diary, navigate, setIsLoading]);
+
+  if (!diary) return null;
 
   /* ---------------- 이미지 생성 · 저장 ---------------- */
   const handleGenerate = async () => {
     setIsGenerating(true); // ★ 로딩 상태 ON
+    setIsLoading(true); // 🔹 전체 오버레이 ON
     alert("⚠️  이미지 생성 기능은 구현 준비 중입니다.");
 
     // TODO: DALLE API 호출 후 setImageUrl(url)
+
     setIsGenerating(false); // ★ 로딩 상태 OFF
+    setIsLoading(false); // 🔹 오버레이 OFF
   };
 
   const handleSave = () =>

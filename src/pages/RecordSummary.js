@@ -2,9 +2,9 @@ import React, { useEffect, useState, useContext, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./RecordSummary.module.css"; // ✅ CSS 모듈 import로 변경
 import Smiley from "../assets/images/image-50.png";
-import ChevronLeft from "../assets/images/chevron-left0.svg";
-import HomeIcon from "../assets/images/home0.svg";
+import PreviousArrow from "../components/PreviousArrow";
 import Settings from "../components/Settings";
+import HomeButton from "../components/HomeButton";
 import { UserContext } from "./UserContext";
 import axios from "axios";
 
@@ -48,8 +48,8 @@ const RecordSummary = () => {
     setIsLoading(true); // 🔹 로딩 시작
     try {
       const response = await axios.post(
-        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/rewrite_summary",
-        "https://fombackend.azurewebsites.net/api/rewrite_summary",
+        // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/generate_diary",
+        "https://fombackend.azurewebsites.net/generate_diary",
         { content: summary },
         {
           headers: { "Content-Type": "application/json" },
@@ -79,7 +79,7 @@ const RecordSummary = () => {
     try {
       await axios.post(
         // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/diary/create/",
-        "https://fombackend.azurewebsites.net/api/diary/create/",
+        "https://fombackend.azurewebsites.net/api/diary/create",
         {
           user_id: user.user_id,
           content: summary || "내용 없음",
@@ -118,14 +118,10 @@ const RecordSummary = () => {
       {" "}
       {/* ✅ className 수정 */}
       <div className={styles["summary-header"]}>
-        {" "}
-        {/* ✅ */}
-        <img src={ChevronLeft} alt="뒤로가기" onClick={handleGoBack} />
+        <PreviousArrow />
         <div className={styles["header-right-buttons"]}>
-          {" "}
-          {/* ✅ */}
           <Settings />
-          <img src={HomeIcon} alt="홈" onClick={() => navigate("/")} />
+          <HomeButton />
         </div>
       </div>
       <img src={Smiley} alt="스마일" className={styles["summary-smiley"]} />{" "}
