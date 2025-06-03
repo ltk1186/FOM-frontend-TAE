@@ -75,8 +75,6 @@ const RecordEdit = () => {
     if (!diaryId) {
       console.log(diaryId);
       return;
-    } else {
-      console.log(diaryId);
     }
 
     setIsLoading(true); // 🔹 삭제 로딩 시작
