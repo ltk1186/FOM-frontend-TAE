@@ -21,35 +21,36 @@ import LoadingOverlay from "./components/LoadingOverlay"; // 🔹 추가
 import styles from "./App.module.css"; // 🔄 변경됨
 
 function App() {
-  const { isLoading } = useContext(UserContext); // 🔹 로딩 상태 가져오기
+    const { isLoading } = useContext(UserContext); // 🔹 로딩 상태 가져오기
 
-  return (
-    <div className={styles.App}>
-      {" "}
-      {/* 🔄 변경됨 */}
-      {isLoading && <LoadingOverlay />} {/* 🔹 로딩 중일 때만 오버레이 */}
-      <header className="header"> {/* 🔄 변경됨 */}</header>
-      <Routes>
-        <Route path="/" element={<LoginIntro />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/homemenu" element={<Homemenu />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/recorddiary" element={<RecordDiary />} />
-        <Route path="/recordgen" element={<RecordGen />} />
-        <Route path="/recordedit" element={<RecordEdit />} />
-        <Route path="/recordsummary" element={<RecordSummary />} />
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/diarylist" element={<DiaryList />} />{" "}
-        <Route path="/connselbot" element={<Connselbot />} />
-        {/* ** 06.01 추가 */}
-        <Route path="/diary/:id" element={<ImageGen />} /> {/* ** 06.01 추가 */}
-        <Route path="/imagegen/:id" element={<ImageGen />} />{" "}
-        {/* ** 06.01 추가 */}
-      </Routes>
-    </div>
-  );
+    return (
+        <div className={styles.App}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            {isLoading && <LoadingOverlay />} {/* 🔹 로딩 중일 때만 오버레이 */}
+            <header className="header"> {/* 🔄 변경됨 */}</header>
+            <Routes>
+                <Route path="/" element={<LoginIntro />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/homemenu" element={<Homemenu />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/logout" element={<Logout />} />
+                <Route path="/recorddiary" element={<RecordDiary />} />
+                <Route path="/recordgen" element={<RecordGen />} />
+                <Route path="/recordedit" element={<RecordEdit />} />
+                <Route path="/recordsummary" element={<RecordSummary />} />
+                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/diarylist" element={<DiaryList />} />{" "}
+                <Route path="/connselbot" element={<Connselbot />} />
+                {/* ** 06.01 추가 */}
+                <Route path="/diary/:id" element={<ImageGen />} />{" "}
+                {/* ** 06.01 추가 */}
+                <Route path="/imagegen/:id" element={<ImageGen />} />{" "}
+                {/* ** 06.01 추가 */}
+            </Routes>
+        </div>
+    );
 }
 
 export default App;
