@@ -22,7 +22,7 @@ const Connselbot = () => {
         try {
             // const res = await axios.post("http://127.0.0.1:8000/chat/", {
             const res = await axios.post(
-                "https://fomapi.koreacentral.cloudapp.azure.com/chat/",
+                "https://fomeapi.eastus2.cloudapp.azure.com/chat/",
                 {
                     text: input,
                 }
