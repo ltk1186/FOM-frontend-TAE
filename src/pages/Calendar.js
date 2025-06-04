@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./Calendar.css";
+import axios from "axios";
 import HomeButton from "../components/HomeButton";
 import Settings from "../components/Settings";
 import PreviousArrow from "../components/PreviousArrow";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import Smiley from "../assets/images/image-50.png";
+
 
 const EMOTION_COLORS = {
   joy: "#FFD93D",
@@ -46,6 +48,7 @@ const CalendarPage = () => {
   const [isConsulting, setIsConsulting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [draftText, setDraftText] = useState("");
+  const [diaryId, setDiaryId] = useState(null);
 
   useEffect(() => {
     if (!user) {
@@ -174,13 +177,41 @@ const CalendarPage = () => {
     setCurrentDate(newDate);
   };
 
-  const openPopup = (dateStr) => {
+  const openPopup = async (dateStr) => {
     setSelectedDate(dateStr);
     setIsConsulting(false);
     setIsEditing(false);
-    const diary = [{ content: "휴 힘들다. 졸리다... (데모 텍스트)" }];
-    setDiaryPopupContent(diary);
-    setOriginalDiaryContent(diary);
+    setIsLoading(true); // 로딩 시작
+
+    try {
+      const response = await axios.get(
+        "https://fombackend.azurewebsites.net/api/diary/read",
+        {
+          params: {
+            user_id: user.user_id,
+            selected_date: dateStr,
+          },
+        }
+      );
+
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        const diary = [{ content: response.data[0].content }];
+        setDiaryPopupContent(diary);
+        setOriginalDiaryContent(diary);
+        setDiaryId(response.data[0].diary_id); // 일기 ID 저장
+      } else {
+        const diary = [{ content: "작성된 일기가 없습니다." }];
+        setDiaryPopupContent(diary);
+        setOriginalDiaryContent(diary);
+        setDiaryId(null);
+      }
+    } catch (error) {
+      console.error("❌ 일기 불러오기 실패:", error);
+      setDiaryPopupContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
+      setOriginalDiaryContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
+    } finally {
+      setIsLoading(false); // 로딩 종료
+    }
   };
 
   const handleMascotClick = () => {
@@ -199,8 +230,63 @@ const CalendarPage = () => {
     setDiaryPopupContent(originalDiaryContent);
   };
 
-  const handleDelete = () => console.log("❌ 삭제");
-  const handleSave = () => console.log("💾 저장");
+  const handleDelete = async () => {
+    if (!diaryId) {
+      console.warn("❌ 삭제할 diary_id가 없습니다.");
+      return;
+    }
+
+    setIsLoading(true); // ✅ 로딩 시작
+
+    try {
+      setIsLoading(true);
+      await axios.delete("https://fombackend.azurewebsites.net/api/diary/delete", {
+        params: { diary_id: diaryId },
+      });
+      console.log("✅ 일기 삭제 성공");
+      setSelectedDate(null); // 팝업 닫기
+    } catch (error) {
+      console.error("❌ 일기 삭제 실패:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!user || !selectedDate) {
+      console.warn("❌ 사용자 정보 또는 날짜 정보가 없습니다.");
+      return;
+    }
+
+    setIsLoading(true); // ✅ 로딩 시작
+
+    try {
+      setIsLoading(true);
+      if (diaryId) {
+        // 🔁 수정
+        await axios.put(
+          `https://fombackend.azurewebsites.net/api/diary/${diaryId}`,
+          { content: draftText }
+        );
+        console.log("✅ 일기 수정 성공");
+      } else {
+        // ✨ 생성
+        await axios.post("https://fombackend.azurewebsites.net/api/diary/create", {
+          user_id: user.user_id,
+          content: draftText,
+          created_at: selectedDate + "T09:00:00", // 임의 시간 부여
+        });
+        console.log("✅ 새 일기 생성 성공");
+      }
+
+      setIsEditing(false);
+      setOriginalDiaryContent([{ content: draftText }]);
+    } catch (error) {
+      console.error("❌ 일기 저장 실패:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const startEdit = () => {
     if (isConsulting) return;

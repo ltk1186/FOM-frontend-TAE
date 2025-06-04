@@ -124,7 +124,7 @@ const SettingsPage = () => {
     setIsLoading(true);
     try {
       await axios.put(
-        `https://fombackend.azurewebsites.net/api/users/${user_id}`,
+        `https://fombackend.azurewebsites.net/api/users/reference/${user_id}`,
         { reference_text: selectedText }
       );
       alert("문체가 저장되었습니다.");

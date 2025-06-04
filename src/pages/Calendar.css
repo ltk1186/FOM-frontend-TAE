@@ -211,7 +211,7 @@
   align-items: center;
   background: rgba(50, 50, 50, 0.5);
   backdrop-filter: blur(4px);
-  z-index: 9999;
+  z-index: 1000;
 }
 
 .diary-popup {

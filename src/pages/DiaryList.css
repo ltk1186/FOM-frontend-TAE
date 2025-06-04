@@ -1,7 +1,6 @@
 /* ---------------- base ---------------- */
 .diary-list-page {
   min-height: 100vh;
-  background: url("../assets/images/login-2.png") center/cover no-repeat;
   padding: 120px 16px 40px;
   font-family: "Pretendard", sans-serif;
   color: #4b2c00;
