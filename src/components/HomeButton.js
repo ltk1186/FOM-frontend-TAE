@@ -11,7 +11,7 @@ const HomeButton = () => {
       src={homeIcon}
       alt="홈으로"
       style={{ width: "24px", height: "24px", cursor: "pointer" }}
-      onClick={() => navigate("/")}
+      onClick={() => navigate("/homemenu")}
     />
   );
 };

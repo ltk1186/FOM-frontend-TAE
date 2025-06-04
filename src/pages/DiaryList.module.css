@@ -32,7 +32,6 @@
   align-items: center;
 }
 
-
 .dropdowns select {
   padding: 6px 18px;
   border-radius: 16px;
@@ -54,7 +53,6 @@
   align-items: center; /* ✅ 중앙 정렬 */
   gap: 20px;
 }
-
 
 .diary-card {
   background: #fffce8;

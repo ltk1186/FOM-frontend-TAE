@@ -14,7 +14,6 @@ import SettingsPage from "./pages/SettingsPage";
 import Connselbot from "./pages/Connselbot"; // 추가
 import DiaryList from "./pages/DiaryList"; // ** 06.01 추가
 import ImageGen from "./pages/ImageGen"; // ** 06.01 추가
-import Gallery from "./pages/Gallery";
 
 import { UserContext } from "./pages/UserContext"; // 🔹 추가
 import LoadingOverlay from "./components/LoadingOverlay"; // 🔹 추가
@@ -29,7 +28,79 @@ function App() {
       {" "}
       {/* 🔄 변경됨 */}
       {isLoading && <LoadingOverlay />} {/* 🔹 로딩 중일 때만 오버레이 */}
-      <header className="header"> {/* 🔄 변경됨 */}</header>
+      <header className={styles.header}>
+        {" "}
+        {/* 🔄 변경됨 */}
+        <nav className={styles["header-nav"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
+          <Link to="/" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            LoginIntro
+          </Link>
+          <Link to="/login" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            Login
+          </Link>
+          <Link to="/homemenu" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            Homemenu
+          </Link>
+          <Link to="/signup" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            Signup
+          </Link>
+          <Link to="/logout" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            Logout
+          </Link>
+          <Link to="/recorddiary" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            RecordDiary
+          </Link>
+          <Link to="/recordgen" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            RecordGen
+          </Link>
+          <Link to="/recordedit" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            RecordEdit
+          </Link>
+          <Link to="/recordsummary" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            RecordSummary
+          </Link>
+          <Link to="/calendar" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            Calendar
+          </Link>
+          <Link to="/connselbot" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            Connselbot
+          </Link>
+          <Link to="/settings" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            SettingsPage
+          </Link>
+          <Link to="/diarylist" className={styles["nav-item"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            DiaryList
+          </Link>
+        </nav>
+      </header>
       <Routes>
         <Route path="/" element={<LoginIntro />} />
         <Route path="/login" element={<Login />} />
@@ -48,7 +119,6 @@ function App() {
         <Route path="/diary/:id" element={<ImageGen />} /> {/* ** 06.01 추가 */}
         <Route path="/imagegen/:id" element={<ImageGen />} />{" "}
         {/* ** 06.01 추가 */}
-        <Route path="/gallery" element={<Gallery />} />
       </Routes>
     </div>
   );

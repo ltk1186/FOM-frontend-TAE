@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react"; // 🔹 useEffect 추가
+import { UserContext } from "./UserContext";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 
-import "./Connselbot.css";
+import styles from "./Connselbot.module.css"; // 🔄 변경됨
+
 const Connselbot = () => {
     const [messages, setMessages] = useState([]); // 대화 기록
     const [input, setInput] = useState(""); // 입력 필드 상태
@@ -17,9 +20,13 @@ const Connselbot = () => {
         setLoading(true);
 
         try {
-            const res = await axios.post("http://127.0.0.1:8000/chat/", {
-                text: input,
-            });
+            // const res = await axios.post("http://127.0.0.1:8000/chat/", {
+            const res = await axios.post(
+                "https://fomeapi.eastus2.cloudapp.azure.com/chat/",
+                {
+                    text: input,
+                }
+            );
 
             // 응답 추가
             setMessages((prev) => [
@@ -39,56 +46,84 @@ const Connselbot = () => {
             sendMessage(); // Enter 키 입력 시 메시지 전송
         }
     };
+    const navigate = useNavigate();
+    const { user, setIsLoading } = useContext(UserContext); // 🔹 setIsLoading 추가
 
+    // 🔹 페이지 진입 시 로딩 해제
+    useEffect(() => {
+        setIsLoading(false);
+    }, [setIsLoading]);
+
+    if (!user) {
+        navigate("/login"); // 로그인을 하지 않았다면 로그인 화면으로 이동
+        return null;
+    }
     return (
-        <div>
-            <div className="top-buttons">
+        <div className={styles["body-area"]}>
+            <div className={styles["top-buttons"]}>
+                {" "}
+                {/* 🔄 변경됨 */}
                 <PreviousArrow />
-                <div className="right-buttons">
+                <div className={styles["right-buttons"]}>
+                    {" "}
+                    {/* 🔄 변경됨 */}
                     <HomeButton />
                 </div>
             </div>
             {/* ✅ 오늘 날짜 표시 영역 */}
-            <div className="date-container">
+            <div className={styles["date-container"]}>
+                {" "}
+                {/* 🔄 변경됨 */}
                 {new Date().toLocaleDateString("ko-KR", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
                 })}
             </div>
-
-            <h1>FastAPI Chatbot</h1>
-            <div className="chat-container">
-                <div className="messages">
+            <div className={styles["chat-container"]}>
+                {" "}
+                {/* 🔄 변경됨 */}
+                <div className={styles.messages}>
+                    {" "}
+                    {/* 🔄 변경됨 */}
                     {/* 메시지 기록 */}
                     {messages.map((msg, index) => (
                         <div
                             key={index}
-                            className={`message ${
-                                msg.role === "user" ? "user" : "assistant"
-                            }`}
+                            className={`${styles.message} ${
+                                msg.role === "user"
+                                    ? styles.user
+                                    : styles.assistant
+                            }`} // 🔄 변경됨
                         >
                             {msg.content}
                         </div>
                     ))}
                     {/* 로딩 상태 표시 */}
-                    {loading && <div className="loading">Bot is typing...</div>}
+                    {loading && (
+                        <div className={styles.loading}>Bot is typing...</div>
+                    )}{" "}
+                    {/* 🔄 변경됨 */}
                 </div>
                 {/* 입력 영역 */}
-                <div className="input-container">
+                <div className={styles["input-container"]}>
+                    {" "}
+                    {/* 🔄 변경됨 */}
                     <input
-                        className="input-area"
+                        className={styles["input-area"]} // 🔄 변경됨
                         type="text"
                         placeholder="Type a message..."
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyPress}
                     />
-                    <button className="mic-button"></button>
+                    <button className={styles["mic-button"]}></button>{" "}
+                    {/* 🔄 변경됨 */}
                     <button
-                        className="send-button"
+                        className={styles["send-button"]}
                         onClick={sendMessage}
-                    ></button>
+                    ></button>{" "}
+                    {/* 🔄 변경됨 */}
                 </div>
             </div>
         </div>

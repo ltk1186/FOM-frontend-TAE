@@ -1,0 +1,152 @@
+.gallery-page {
+  background: url("../assets/images/login-2.png") no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: var(--font-family-base);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* ✅ 세로 중앙 정렬 */
+  position: relative;
+  padding-top: 80px; /* ✅ top-bar가 차지하는 높이만큼 여백 확보 */
+  padding-bottom: 100px; /* ✅ 하단 버튼 공간 확보 */
+}
+
+.top-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed; /* ✅ 화면에 고정 */
+  top: 0; /* ✅ 최상단 */
+  left: 0;
+  right: 0;
+  z-index: 1000; /* ✅ 다른 요소보다 위 */
+  padding: 12px 20px;
+  box-shadow: var(--elevation-large-box-shadow); /* 선택 */
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  top: 2px;
+}
+
+.right-buttons {
+  position: absolute;
+  right: 0;
+  top: 2px;
+  display: flex;
+  gap: 8px;
+}
+
+.tab-menu {
+  display: flex;
+  flex-direction: row; /* ✅ 명시적으로 가로 유지 */
+  width: 100%;
+  max-width: 480px;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  margin-bottom: 0;
+  background-color: #d8b185;
+  box-shadow: var(--elevation-large-box-shadow);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #d8b185;
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.tab-btn.active {
+  background-color: #fff4e0;
+  color: #1a212b;
+}
+
+.gallery-box {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 8px;
+  background-color: #fff4e0;
+  border-radius: 0 0 12px 12px;
+  box-shadow: var(--elevation-large-box-shadow);
+  width: 100%;
+  max-width: 480px;
+}
+
+.gallery-item {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #f9f1e7; /* 🔹 비었을 때도 배경 표시 */
+}
+
+.gallery-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bottom-btn-wrapper {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 100;
+  pointer-events: auto;
+}
+
+.go-generate-btn {
+  background-color: #f28b82;
+  color: white;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 25px;
+  box-shadow: var(--elevation-large-box-shadow);
+  cursor: pointer;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 600px) {
+  .tab-btn {
+    font-size: 12px;
+    padding: 10px 0;
+  }
+
+  .gallery-box {
+    grid-template-columns: repeat(2, 1fr); /* ✅ 모바일도 2열 유지 */
+    padding: 6px;
+  }
+
+  .go-generate-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .gallery-box {
+    grid-template-columns: repeat(2, 1fr); /* ✅ 모바일도 2열 유지 */
+  }
+
+  .tab-btn {
+    border-bottom: 1px solid #ffffff33;
+  }
+}

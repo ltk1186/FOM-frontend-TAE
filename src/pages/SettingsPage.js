@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./SettingsPage.css";
+import styles from "./SettingsPage.module.css"; // ✅ 모듈 import
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 import eyeOpenIcon from "../assets/images/eye-open0.svg";
@@ -10,7 +10,7 @@ import eyeOpenIcon from "../assets/images/eye-open0.svg";
 const SettingsPage = () => {
   const { user, setIsLoading } = useContext(UserContext);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(""); // 새 비밀번호만 입력받음
+  const [password, setPassword] = useState("");
   const [originalEmail, setOriginalEmail] = useState("");
   const [editable, setEditable] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -84,7 +84,7 @@ const SettingsPage = () => {
   const handleToggleEdit = () => {
     if (editable) {
       setEmail(originalEmail);
-      setPassword(""); // 새 비밀번호 입력값만 초기화
+      setPassword("");
       setEditable(false);
     } else {
       setEditable(true);
@@ -95,9 +95,7 @@ const SettingsPage = () => {
     setIsLoading(true);
     try {
       const updateData = { email };
-      if (password) {
-        updateData.password = password;
-      }
+      if (password) updateData.password = password;
 
       await axios.put(
         `https://fombackend.azurewebsites.net/api/users/${user_id}`,
@@ -106,7 +104,7 @@ const SettingsPage = () => {
 
       setEditable(false);
       setOriginalEmail(email);
-      setPassword(""); // 저장 후 비밀번호 필드 비움
+      setPassword("");
       alert("회원 정보가 수정되었습니다.");
     } catch (error) {
       console.error("회원정보 수정 에러:", error);
@@ -136,32 +134,37 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="settings-container">
-      <div className="top-buttons">
+    <div className={styles["settings-container"]}>
+      {/* ✅ */}
+      <div className={styles["top-buttons"]}>
         <PreviousArrow />
-        <h2 className="settings-title">설정</h2>
-        <div className="right-buttons">
+        <h2 className={styles["settings-title"]}>설정</h2>
+        <div className={styles["right-buttons"]}>
           <HomeButton />
         </div>
       </div>
-
-      <div className="settings-wrapper">
-        <div className="section-wrapper">
-          <div className="section-title">사용자 정보</div>
-          <div className="settings-box">
-            <label className="label">이메일</label>
+      <div className={styles["settings-wrapper"]}>
+        <div className={styles["section-wrapper"]}>
+          <div className={styles["section-title"]}>사용자 정보</div>
+          <div className={styles["settings-box"]}>
+            <label className={styles["label"]}>이메일</label>
             <input
-              className={editable ? "input editable" : "input"}
+              className={
+                editable ? `${styles.input} ${styles.editable}` : styles.input
+              }
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               readOnly={!editable}
             />
-
-            <label className="label">비밀번호 (새 비밀번호 입력)</label>
-            <div className="password-wrapper">
+            <label className={styles["label"]}>
+              비밀번호 (새 비밀번호 입력)
+            </label>
+            <div className={styles["password-wrapper"]}>
               <input
-                className={editable ? "input editable" : "input"}
+                className={
+                  editable ? `${styles.input} ${styles.editable}` : styles.input
+                }
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -171,26 +174,32 @@ const SettingsPage = () => {
                 <img
                   src={eyeOpenIcon}
                   alt="비밀번호 보기"
-                  className={`eye-icon ${showPassword ? "active" : ""}`}
+                  className={`${styles["eye-icon"]} ${
+                    showPassword ? styles.active : ""
+                  }`}
                   onClick={() => setShowPassword((prev) => !prev)}
                 />
               )}
             </div>
-
-            <div className="button-group">
+            <div className={styles["button-group"]}>
               <button
-                className="logout-button"
+                className={styles["logout-button"]}
                 onClick={() => navigate("/logout")}
               >
                 로그아웃
               </button>
               {editable && (
-                <button className="save-button" onClick={handleSaveUserInfo}>
+                <button
+                  className={styles["save-button"]}
+                  onClick={handleSaveUserInfo}
+                >
                   저장하기
                 </button>
               )}
               <button
-                className={`edit-button ${editable ? "cancel" : ""}`}
+                className={`${styles["edit-button"]} ${
+                  editable ? styles.cancel : ""
+                }`}
                 onClick={handleToggleEdit}
               >
                 {editable ? "수정 취소" : "회원정보 수정"}
@@ -198,14 +207,17 @@ const SettingsPage = () => {
             </div>
           </div>
         </div>
-
-        <div className="section-wrapper">
-          <div className="section-title">일기 문체</div>
-          <div className="settings-box">
-            <div className="style-options">
+        <div className={styles["section-wrapper"]}>
+          <div className={styles["section-title"]}>일기 문체</div>
+          <div className={styles["settings-box"]}>
+            <div className={styles["style-options"]}>
               {templateStyles.map((style) => (
-                <div key={style.id} className="style-option">
-                  <label className={`option-label ${style.color}`}>
+                <div key={style.id} className={styles["style-option"]}>
+                  <label
+                    className={`${styles["option-label"]} ${
+                      styles[style.color]
+                    }`}
+                  >
                     <input
                       type="radio"
                       name="style"
@@ -215,11 +227,11 @@ const SettingsPage = () => {
                     />
                     {style.name}
                   </label>
-                  <p className="example-text">{style.text}</p>
+                  <p className={styles["example-text"]}>{style.text}</p>
                 </div>
               ))}
-              <div className="style-option">
-                <label className="option-label brown">
+              <div className={styles["style-option"]}>
+                <label className={`${styles["option-label"]} ${styles.brown}`}>
                   <input
                     type="radio"
                     name="style"
@@ -231,7 +243,7 @@ const SettingsPage = () => {
                 </label>
                 {selectedStyle === "custom" && (
                   <textarea
-                    className="custom-textbox"
+                    className={styles["custom-textbox"]}
                     value={customText}
                     onChange={(e) => setCustomText(e.target.value)}
                     placeholder="문체를 입력하세요..."
@@ -239,7 +251,7 @@ const SettingsPage = () => {
                 )}
               </div>
             </div>
-            <div className="style-save">
+            <div className={styles["style-save"]}>
               <button onClick={handleSaveStyle}>저장하기</button>
             </div>
           </div>

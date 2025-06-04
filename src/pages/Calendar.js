@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import "./Calendar.css";
+import styles from "./Calendar.module.css"; // 🔄 변경됨
 import axios from "axios";
 import HomeButton from "../components/HomeButton";
 import Settings from "../components/Settings";
@@ -7,7 +7,6 @@ import PreviousArrow from "../components/PreviousArrow";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import Smiley from "../assets/images/image-50.png";
-
 
 const EMOTION_COLORS = {
   joy: "#FFD93D",
@@ -219,9 +218,7 @@ const CalendarPage = () => {
     setIsConsulting(true);
     setIsEditing(false);
     setDiaryPopupContent([
-      {
-        content: "오늘의 일기를 읽으며 당신의 하루가 고요하게...",
-      },
+      { content: "오늘의 일기를 읽으며 당신의 하루가 고요하게..." },
     ]);
   };
 
@@ -302,23 +299,40 @@ const CalendarPage = () => {
 
   return (
     <>
-      <div className="calendar-page">
-        <div className="calendar-header">
+      <div className={styles["calendar-page"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
+        <div className={styles["calendar-header"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
           <PreviousArrow />
-          <div className="calendar-title">
-            <button className="month-btn" onClick={() => changeMonth(-1)}>
+          <div className={styles["calendar-title"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            <button
+              className={styles["month-btn"]}
+              onClick={() => changeMonth(-1)}
+            >
+              {" "}
+              {/* 🔄 변경됨 */}
               &lt;
             </button>
             {year}년 {month + 1}월
-            <button className="month-btn" onClick={() => changeMonth(1)}>
+            <button
+              className={styles["month-btn"]}
+              onClick={() => changeMonth(1)}
+            >
+              {" "}
+              {/* 🔄 변경됨 */}
               &gt;
             </button>
           </div>
           <Settings />
           <HomeButton />
         </div>
-
-        <div className="calendar-table">
+        <div className={styles["calendar-table"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
           <table>
             <thead>
               <tr>
@@ -330,19 +344,25 @@ const CalendarPage = () => {
             <tbody>{calendarRows}</tbody>
           </table>
         </div>
-
-        <div className="emotion-chart">
-          <div className="chart-title">일주일의 나의 감정</div>
-          <div className="chart-bars">
+        <div className={styles["emotion-chart"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
+          <div className={styles["chart-title"]}>일주일의 나의 감정</div>{" "}
+          {/* 🔄 변경됨 */}
+          <div className={styles["chart-bars"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
             {emotionData.map((day, index) => {
               let offset = 0;
               return (
-                <div key={index} className="chart-column">
+                <div key={index} className={styles["chart-column"]}>
+                  {" "}
+                  {/* 🔄 변경됨 */}
                   {Object.entries(day).map(([emotion, value]) => {
                     const bar = (
                       <div
                         key={emotion}
-                        className="bar"
+                        className={styles.bar} // 🔄 변경됨
                         style={{
                           backgroundColor: EMOTION_COLORS[emotion],
                           height: `${value}px`,
@@ -353,18 +373,24 @@ const CalendarPage = () => {
                     offset += value;
                     return bar;
                   })}
-                  <div className="day-label">{DAYS[index]}</div>
+                  <div className={styles["day-label"]}>{DAYS[index]}</div>{" "}
+                  {/* 🔄 변경됨 */}
                 </div>
               );
             })}
           </div>
-          <div className="legend">
+          <div className={styles.legend}>
+            {" "}
+            {/* 🔄 변경됨 */}
             {Object.entries(EMOTION_COLORS).map(([key, color]) => (
-              <div key={key} className="legend-item">
+              <div key={key} className={styles["legend-item"]}>
+                {" "}
+                {/* 🔄 변경됨 */}
                 <span
-                  className="color-dot"
+                  className={styles["color-dot"]}
                   style={{ backgroundColor: color }}
-                />
+                />{" "}
+                {/* 🔄 변경됨 */}
                 {EMOTION_KR[key]}
               </div>
             ))}
@@ -373,48 +399,61 @@ const CalendarPage = () => {
       </div>
 
       {selectedDate && (
-        <div className="diary-popup-overlay">
-          <div className="diary-popup">
+        <div className={styles["diary-popup-overlay"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
+          <div className={styles["diary-popup"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
             <button
-              className="popup-close-button"
+              className={styles["popup-close-button"]}
               onClick={() => setSelectedDate(null)}
             >
               ×
             </button>
-
-            <div className="popup-header">
+            <div className={styles["popup-header"]}>
+              {" "}
+              {/* 🔄 변경됨 */}
               {isConsulting && (
-                <button className="popup-back-button" onClick={handleBack}>
+                <button
+                  className={styles["popup-back-button"]}
+                  onClick={handleBack}
+                >
+                  {" "}
+                  {/* 🔄 변경됨 */}
                   &lt;
                 </button>
               )}
-              <div className="popup-title">{selectedDate}</div>
+              <div className={styles["popup-title"]}>{selectedDate}</div>{" "}
+              {/* 🔄 변경됨 */}
               {isConsulting && (
-                <div className="popup-subtitle">포미의 상담 보고서</div>
+                <div className={styles["popup-subtitle"]}>
+                  포미의 상담 보고서
+                </div>
               )}
             </div>
-
-            <div className="popup-content" onClick={startEdit}>
+            <div className={styles["popup-content"]} onClick={startEdit}>
+              {" "}
+              {/* 🔄 변경됨 */}
               {isConsulting || !isEditing ? (
                 diaryPopupContent.map(({ content }, i) => (
                   <p key={i}>{content}</p>
                 ))
               ) : (
                 <textarea
-                  className="popup-textarea"
+                  className={styles["popup-textarea"]} // 🔄 변경됨
                   value={draftText}
                   onChange={(e) => setDraftText(e.target.value)}
                 />
               )}
             </div>
-
             <div
-              className="popup-bottom-row"
+              className={styles["popup-bottom-row"]} // 🔄 변경됨
               style={isConsulting ? { justifyContent: "center" } : undefined}
             >
               {isConsulting ? (
                 <button
-                  className="popup-button save"
+                  className={`${styles["popup-button"]} ${styles.save}`} // 🔄 변경됨
                   onClick={() => console.log("▶ 더 상담하기")}
                 >
                   더 상담하기
@@ -422,7 +461,7 @@ const CalendarPage = () => {
               ) : (
                 <>
                   <button
-                    className="popup-button delete"
+                    className={`${styles["popup-button"]} ${styles.delete}`} // 🔄 변경됨
                     onClick={handleDelete}
                   >
                     삭제하기
@@ -430,11 +469,11 @@ const CalendarPage = () => {
                   <img
                     src={Smiley}
                     alt="마스코트"
-                    className="popup-smiley"
+                    className={styles["popup-smiley"]} // 🔄 변경됨
                     onClick={handleMascotClick}
                   />
                   <button
-                    className="popup-button save"
+                    className={`${styles["popup-button"]} ${styles.save}`} // 🔄 변경됨
                     onClick={isEditing ? completeEdit : handleSave}
                   >
                     {isEditing ? "완료" : "저장하기"}

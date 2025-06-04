@@ -1,0 +1,129 @@
+.record-edit-container {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  padding: 80px 20px 40px;
+  font-family: "Pretendard", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: padding-bottom 0.3s ease;
+}
+
+.record-edit-container.keyboard-open {
+  padding-bottom: 300px; /* 키보드가 올라올 때 공간 확보 */
+}
+
+.top-buttons {
+  position: absolute;
+  top: 80px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 20;
+}
+
+.right-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.record-edit-box {
+  background-color: #fff7e8;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  width: 90%;
+  max-width: 600px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+
+  margin-bottom: 100px;
+  min-height: 300px;
+  flex-grow: 1;
+}
+
+.log-time-label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.log-title {
+  font-weight: 700;
+  font-size: 18px;
+  border: none;
+  margin-bottom: 16px;
+  background: transparent;
+  outline: none;
+}
+
+.log-content {
+  font-size: 15px;
+  flex-grow: 1;
+  border: none;
+  resize: none;
+  background: transparent;
+  outline: none;
+}
+
+.record-edit-footer {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  z-index: 100;
+}
+
+.cancel-button,
+.save-button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  font-weight: normal !important;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.cancel-button {
+  background-color: #ff7f4e;
+  color: white;
+}
+
+.save-button {
+  background-color: #ff956d;
+  color: white;
+}
+
+.record-toggle-btn {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  font-size: 24px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 30;
+}
+
+.record-toggle-btn.on {
+  background-color: #f44336;
+  color: white;
+}
+
+.record-toggle-btn.off {
+  background-color: #aaa;
+  color: white;
+}

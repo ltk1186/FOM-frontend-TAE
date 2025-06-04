@@ -2,8 +2,8 @@ import React, { useState, useContext, useEffect } from "react"; // useEffect 추
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
-import "./Login.css";
-import backgroundImage from "../assets/images/login-1.png";
+import styles from "./Login.module.css"; // 🔄 변경됨
+// import backgroundImage from "../assets/images/login-1.png"; // ❌ 제거됨
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 
@@ -25,13 +25,8 @@ const Login = () => {
         setIsLoading(true); // 🔹 로딩 시작
         try {
             const response = await axios.post(
-                // "http://localhost:8000/api/login",
-                // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/login",
                 "https://fombackend.azurewebsites.net/api/login",
-                {
-                    email,
-                    password,
-                }
+                { email, password }
             );
 
             if (response.data.success) {
@@ -52,28 +47,42 @@ const Login = () => {
 
     return (
         <div
-            className="record-edit-container"
-            style={{ backgroundImage: `url(${backgroundImage})` }}
+            className={styles["record-edit-container"]} // 🔄 변경됨
+            // style={{ backgroundImage: `url(${backgroundImage})` }} // ❌ 제거됨: 전역 배경으로 대체
         >
-            <div className="top-buttons">
+            <div className={styles["top-buttons"]}>
+                {" "}
+                {/* 🔄 변경됨 */}
                 <PreviousArrow />
-                <div className="right-buttons">
+                <div className={styles["right-buttons"]}>
+                    {" "}
+                    {/* 🔄 변경됨 */}
                     <HomeButton />
                 </div>
             </div>
 
-            <div className="frame-12">
-                <div className="div2">로그인</div>
-                <form className="frame-7" onSubmit={handleSubmit}>
-                    <div className="text-field">
-                        <label htmlFor="email" className="label">
+            <div className={styles["frame-12"]}>
+                {" "}
+                {/* 🔄 변경됨 */}
+                <div className={styles.div2}>로그인</div> {/* 🔄 변경됨 */}
+                <form className={styles["frame-7"]} onSubmit={handleSubmit}>
+                    {" "}
+                    {/* 🔄 변경됨 */}
+                    <div className={styles["text-field"]}>
+                        {" "}
+                        {/* 🔄 변경됨 */}
+                        <label htmlFor="email" className={styles.label}>
+                            {" "}
+                            {/* 🔄 변경됨 */}
                             이메일
                         </label>
-                        <div className="input">
+                        <div className={styles.input}>
+                            {" "}
+                            {/* 🔄 변경됨 */}
                             <input
                                 type="email"
                                 id="email"
-                                className="value"
+                                className={styles.value} // 🔄 변경됨
                                 placeholder="이메일 입력"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -81,16 +90,21 @@ const Login = () => {
                             />
                         </div>
                     </div>
-
-                    <div className="password-field">
-                        <label htmlFor="password" className="label">
+                    <div className={styles["password-field"]}>
+                        {" "}
+                        {/* 🔄 변경됨 */}
+                        <label htmlFor="password" className={styles.label}>
+                            {" "}
+                            {/* 🔄 변경됨 */}
                             비밀번호
                         </label>
-                        <div className="input">
+                        <div className={styles.input}>
+                            {" "}
+                            {/* 🔄 변경됨 */}
                             <input
                                 type="password"
                                 id="password"
-                                className="value"
+                                className={styles.value} // 🔄 변경됨
                                 placeholder="비밀번호 입력"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -98,14 +112,19 @@ const Login = () => {
                             />
                         </div>
                     </div>
-                    <br></br>
-                    <button type="submit" className="button">
-                        <span className="label2">로그인</span>
+                    <br />
+                    <button type="submit" className={styles.button}>
+                        {" "}
+                        {/* 🔄 변경됨 */}
+                        <span className={styles.label2}>로그인</span>{" "}
+                        {/* 🔄 변경됨 */}
                     </button>
-                    <p className="signup-text">
+                    <p className={styles["signup-text"]}>
+                        {" "}
+                        {/* 🔄 변경됨 */}
                         계정이 없으신가요?{" "}
                         <span
-                            className="signup-link"
+                            className={styles["signup-link"]} // 🔄 변경됨
                             onClick={() => navigate("/signup")}
                         >
                             회원가입

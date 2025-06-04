@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./RecordDiary.css";
+import styles from "./RecordDiary.module.css"; // 🔄 변경됨
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 import Settings from "../components/Settings";
 import MicIcon from "../assets/images/group-70.svg";
 import CalendarIcon from "../assets/images/group-90.svg";
-import WriteIcon from "../assets/images/write.png";
+import WriteIcon from "../assets/images/Group 19.svg";
+import TrashIcon from "../assets/images/trash.png";
 import { UserContext } from "./UserContext";
 import axios from "axios";
 
@@ -22,7 +23,6 @@ const RecordDiary = () => {
       setIsLoading(true); // 🔹 로딩 시작
       try {
         const response = await axios.get(
-          // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/read?user_id=${userID}`
           `https://fombackend.azurewebsites.net/api/temp_diary/read?user_id=${userID}`
         );
         setDiaries(response.data);
@@ -58,21 +58,18 @@ const RecordDiary = () => {
   const handleBulkDelete = async () => {
     setIsLoading(true); // 🔹 삭제 중 로딩
     for (const id of selectedIds) {
-      const diaryId = id; // ✅ RecordEdit.js와 동일한 명명 방식 사용
       try {
         await axios.delete(
-          // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
-          `https://fombackend.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${diaryId}`
+          `https://fombackend.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${id}`
         );
-        console.log(`✅ ID ${diaryId} 삭제 성공`);
+        console.log(`✅ ID ${id} 삭제 성공`);
       } catch (error) {
-        console.error(`❌ ID ${diaryId} 삭제 실패:`, error);
+        console.error(`❌ ID ${id} 삭제 실패:`, error);
       }
     }
 
     try {
       const response = await axios.get(
-        // `https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/temp_diary/read?user_id=${user.user_id}`
         `https://fombackend.azurewebsites.net/api/temp_diary/read?user_id=${user.user_id}`
       );
       setDiaries(response.data);
@@ -91,35 +88,58 @@ const RecordDiary = () => {
   }
 
   return (
-    <div className="diary-page">
-      <div className="top-buttons">
+    <div className={styles["diary-page"]}>
+      {" "}
+      {/* 🔄 변경됨 */}
+      <div className={styles["top-buttons"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
         <PreviousArrow />
         {isDeleteMode && (
-          <div className="delete-controls">
-            <button className="delete-count-button" onClick={handleBulkDelete}>
+          <div className={styles["delete-controls"]}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            <button
+              className={styles["delete-count-button"]}
+              onClick={handleBulkDelete}
+            >
               {selectedIds.length}개 항목 삭제
             </button>
-            <button className="cancel-delete-button" onClick={toggleDeleteMode}>
-              ❌
+            <button
+              className={styles["cancel-delete-button"]}
+              onClick={toggleDeleteMode}
+            >
+              취소
             </button>
           </div>
         )}
-        <div className="right-buttons">
-          <button className="trash-button" onClick={toggleDeleteMode}>
-            🗑
+        <div className={styles["right-buttons"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
+          <button className={styles["trash-button"]} onClick={toggleDeleteMode}>
+            <img
+              src={TrashIcon}
+              alt="삭제 모드"
+              style={{
+                width: "20px",
+                height: "20px",
+                marginTop: "2px",
+              }}
+            />
           </button>
           <Settings />
           <HomeButton />
         </div>
       </div>
-
-      <div className="diary-list">
+      <div className={styles["diary-list"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
         {diaries.length === 0 ? (
-          <p className="empty-message">작성된 일지가 없습니다.</p>
+          <p className={styles["empty-message"]}>작성된 일지가 없습니다.</p>
         ) : (
           diaries.map((diary) => (
             <div
-              className="diary-card"
+              className={styles["diary-card"]}
               key={diary.temp_diary_id}
               onClick={() =>
                 !isDeleteMode &&
@@ -137,8 +157,10 @@ const RecordDiary = () => {
             >
               {isDeleteMode && (
                 <button
-                  className={`select-circle ${
-                    selectedIds.includes(diary.temp_diary_id) ? "selected" : ""
+                  className={`${styles["select-circle"]} ${
+                    selectedIds.includes(diary.temp_diary_id)
+                      ? styles["selected"]
+                      : ""
                   }`}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -146,7 +168,7 @@ const RecordDiary = () => {
                   }}
                 />
               )}
-              <div className="diary-date">
+              <div className={styles["diary-date"]}>
                 {diary.created_at
                   ? new Date(diary.created_at).toLocaleString("ko-KR", {
                       year: "numeric",
@@ -157,15 +179,14 @@ const RecordDiary = () => {
                     })
                   : "날짜 없음"}
               </div>
-              <div className="diary-title">{diary.title}</div>
-              <div className="diary-content">{diary.content}</div>
+              <div className={styles["diary-title"]}>{diary.title}</div>
+              <div className={styles["diary-content"]}>{diary.content}</div>
             </div>
           ))
         )}
       </div>
-
       <button
-        className="add-diary-btn"
+        className={styles["add-diary-btn"]}
         onClick={() => {
           setIsLoading(true); // 🔹 요약 이동 시 로딩
           navigate("/recordsummary", { state: { diaries } });
@@ -173,12 +194,11 @@ const RecordDiary = () => {
       >
         일기 완성하기
       </button>
-
-      <div className="bottom-icons">
+      <div className={styles["bottom-icons"]}>
         <img
           src={WriteIcon}
           alt="텍스트 작성"
-          className="fab-button"
+          className={styles["fab-button"]}
           onClick={() => {
             setIsLoading(true); // 🔹 텍스트 작성 이동
             navigate("/recordgen");
@@ -187,7 +207,7 @@ const RecordDiary = () => {
         <img
           src={MicIcon}
           alt="음성 입력"
-          className="fab-button"
+          className={styles["fab-button"]}
           onClick={() => {
             setIsLoading(true); // 🔹 음성 입력 이동
             navigate("/recordgen", { state: { mic: true } });
@@ -196,7 +216,7 @@ const RecordDiary = () => {
         <img
           src={CalendarIcon}
           alt="캘린더"
-          className="fab-button"
+          className={styles["fab-button"]}
           onClick={() => {
             setIsLoading(true); // 🔹 캘린더 이동
             navigate("/calendar");

@@ -90,15 +90,31 @@
 }
 
 .delete-button {
-  background-color: red;
-  color: white;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 18px;
+  background-color: transparent; /* 배경 제거 */
   border: none;
   cursor: pointer;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease;
+}
+
+.delete-button:hover {
+  background-color: red; /* 마우스 올렸을 때 연한 빨간색 */
+}
+
+.delete-button:active {
+  background-color: red; /* 클릭하고 있는 동안 빨간색 */
+}
+
+.delete-button img {
+  width: 20px;
+  height: 20px;
 }
 
 /* 아이콘 버튼 스타일 공통 */

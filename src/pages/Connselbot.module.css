@@ -1,0 +1,252 @@
+.body-area {
+  margin: 0;
+  display: flex;
+  flex-direction: column; /* ✅ 수정: 세로 배치로 변경 */
+  justify-content: center;
+  align-items: center;
+  min-height: 100dvh;
+}
+
+/* 챗봇 전체 박스 */
+.chat-container {
+  width: 100%;
+  max-width: 480px; /* 최대 너비 */
+  min-height: 80dvh; /* 최소 높이 */
+  display: flex;
+  flex-direction: column; /* 세로 정렬 */
+  justify-content: flex-start; /* 상단 정렬 */
+  align-items: center; /* 중앙 맞춤 */
+  padding: 5px 0px 0px 0px; /* 패딩 조정 */
+  gap: 22px; /* 요소 간격 */
+  background: rgba(255, 251, 222, 0.75); /* 배경 색상 */
+  border-radius: 15px; /* 둥근 테두리 */
+  flex-shrink: 0; /* 유연성 제한 */
+  width: 349px; /* 너비 조정 */
+  height: 510px; /* 고정 높이 */
+  position: relative; /* 상대적인 배치 */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* 박스 그림자 */
+  margin: 40px 16px; /* 여백 */
+  margin-top: 100px; /* 상단 여백 */
+}
+
+/* 메시지 영역 */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 24px;
+}
+
+/* 말풍선 공통 */
+.message {
+  max-width: 80%;
+  padding: 12px 16px;
+  font-size: 15px;
+  line-height: 1.5;
+  border-radius: 18px;
+  word-break: break-word;
+  position: relative;
+}
+
+/* 사용자 메시지 */
+.message.user {
+  align-self: flex-end;
+  background: #fffdf8;
+  font-family: "Pretendard-Regular", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #6f3e16;
+  border-top-right-radius: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* 챗봇 메시지 */
+.message.assistant {
+  display: flex;
+  align-items: flex-start;
+  background-color: #6f3e16;
+  color: var(--foundation-yellow-light, #fef8ee);
+  font-size: 12px;
+  font-weight: 400;
+  font-family: "Pretendard-Regular", sans-serif;
+  border-radius: 18px;
+  border-top-left-radius: 0;
+  padding: 12px 16px 12px 12px;
+  margin-left: 40px; /* 아이콘 공간 확보 */
+  position: relative;
+  max-width: 80%;
+}
+
+/* 챗봇 아이콘 */
+.message.assistant::before {
+  content: "";
+  background: url("../assets/images/image-50.png") no-repeat center center;
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  left: -40px;
+  top: 6px;
+  border-radius: 50%;
+}
+
+/* 입력창 영역 */
+.input-container {
+  width: 100%;
+  background: #fff9e2;
+  border-top: 1px solid #ddd;
+  display: flex;
+  flex-direction: row;
+  gap: 10px; /* 요소 간격 추가 */
+  align-items: center;
+  justify-content: flex-start; /* 시작 위치 정렬 */
+  padding: 0px 0px 0px 22px; /* 패딩 설정 */
+  border-radius: 30px; /* 둥근 테두리 */
+  flex-shrink: 0; /* 유연성 제한 */
+  box-shadow: 5px 4px 20px 0px rgba(0, 0, 0, 0.13); /* 그림자 효과 */
+  width: 333px; /* 고정 너비 */
+  height: 40px; /* 고정 높이 */
+  position: relative; /* 상대적인 배치 */
+  box-sizing: border-box; /* 보더박스 */
+  margin-bottom: 10px;
+}
+
+/* 입력창 */
+.input-area {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 8px;
+  background: none;
+  font-family: "Pretendard", sans-serif;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* 전송 버튼 */
+.send-button {
+  background: url("../assets/images/msgsendbutton.svg") no-repeat center center;
+  background-size: contain;
+  width: 24px;
+  height: 24px;
+  border: none;
+  padding: 0;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  position: absolute;
+  left: 293px;
+  top: 10px;
+}
+.send-button:hover {
+  height: auto;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+  opacity: 0.8;
+}
+.vuesax-bold-send {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 293px;
+  top: 10px;
+}
+.vuesax-bold-send2 {
+  height: auto;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+}
+
+/* 로딩 표시 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #999;
+  margin: 5px 0;
+}
+
+.mic-button {
+  background: url("../assets/images/microphone.svg") no-repeat center center;
+  background-size: contain;
+  width: 24px;
+  height: 24px;
+  border: none;
+  padding: 0;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  position: absolute;
+  left: 262px;
+  top: 10px;
+}
+
+.mic-button:hover {
+  height: auto;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
+  opacity: 0.8;
+}
+
+/* 상담 종료 버튼 */
+.end-button {
+  background-color: #ff9a9a;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 12px auto 0;
+  display: block;
+  text-align: center;
+}
+
+/* 홈 버튼 위치 조정 */
+.top-buttons {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background-color: transparent;
+  z-index: 1000;
+}
+
+/* 오른쪽 버튼 (홈) 위치 설정 */
+.right-buttons {
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+/* 채팅 영역 아래로 내려오게 (예: App 전체 레이아웃에 적용) */
+.chat-area {
+  margin-top: 70px; /* top-buttons 높이 + 여유 공간 */
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+}
+
+.date-container {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--foundation-yellow-dark-active, #6f3e16);
+  margin: 12px 0 0 16px;
+  font-family: "Pretendard-SemiBold", sans-serif;
+  text-align: left;
+}

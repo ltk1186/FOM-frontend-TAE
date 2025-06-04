@@ -1,7 +1,6 @@
 .diary-page {
   width: 100vw;
   height: 100vh;
-  background-image: url("../assets/images/login-2.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -12,6 +11,10 @@
   padding-top: 120px;
   padding-bottom: 140px;
   overflow: hidden;
+}
+
+.empty-message {
+  text-align: center;
 }
 
 .top-buttons {
@@ -35,7 +38,7 @@
 
 .delete-count-button,
 .cancel-delete-button {
-  background-color: #f44336;
+  background-color: #ff7f4e;
   color: white;
   border: none;
   padding: 6px 12px;
@@ -67,7 +70,7 @@
 }
 
 .diary-card {
-  background: #ffffff;
+  background: #fffbde;
   padding: 16px;
   border-radius: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
@@ -81,14 +84,14 @@
   right: 12px;
   width: 20px;
   height: 20px;
-  border: 3px solid red;
+  border: 3px solid rgba(74, 60, 53, 0.605);
   background: white;
   border-radius: 50%;
   cursor: pointer;
 }
 
 .select-circle.selected {
-  background: red;
+  background: rgba(255, 2, 27, 0.658);
 }
 
 .add-diary-btn {
@@ -104,6 +107,10 @@
   margin: 0 auto 8px;
 }
 
+.add-diary-btn:hover {
+  transform: scale(1.1);
+}
+
 .bottom-icons {
   position: fixed;
   bottom: 20px;
@@ -117,8 +124,8 @@
 }
 
 .fab-button {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   background: #f3a93c;
   padding: 12px;
