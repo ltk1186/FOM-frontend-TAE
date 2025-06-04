@@ -15,7 +15,7 @@
 
 .top-buttons {
   position: absolute;
-  top: 80px;
+  top: 20px; /* 상단 홈 버튼 위치 80 에서 20으로 수정*/
   left: 20px;
   right: 20px;
   display: flex;
@@ -92,6 +92,7 @@
 
 /* 네비게이션 및 아이콘 */
 .nav-container {
+  height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -212,4 +213,27 @@
   width: 24px;
   height: 24px;
   overflow: visible;
+}
+
+.signup-link {
+  color: #653d00; /* 원하는 색상 */
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: underline; /* or dotted, or none */
+  transition: 0.2s ease;
+}
+
+.signup-link:hover {
+  color: #653d00;
+  text-decoration: underline;
+}
+
+.frame-12 .button {
+  margin: 15px 0 0px; /* 위 20px / 좌우 0 / 아래 6px  (원하는 값으로 조절) */
+}
+
+/* 로그인 버튼 ↕️ 회원가입 안내문 사이 간격 */
+.frame-12 .button {
+  /* 주황색 기본 버튼만 타깃 */
+  margin-bottom: 10px; /* 원하는 픽셀 값으로 조절 */
 }
