@@ -1,252 +1,225 @@
 .body-area {
-  margin: 0;
-  display: flex;
-  flex-direction: column; /* ✅ 수정: 세로 배치로 변경 */
-  justify-content: center;
-  align-items: center;
-  min-height: 100dvh;
+    margin: 0; /* 기본 여백 초기화 */
+    display: flex; /* 부모 요소로서 내부 콘텐츠를 Flexbox로 배치 */
+    flex-direction: column; /* 콘텐츠를 세로 방향으로 정렬 */
+    justify-content: center; /* 콘텐츠를 중앙에 배치 (수평 중앙) */
+    align-items: center; /* 콘텐츠를 중앙에 배치 (수직 중앙) */
+    min-height: 100dvh; /* 뷰포트 높이를 기준으로 최소 높이 설정 */
 }
 
 /* 챗봇 전체 박스 */
 .chat-container {
-  width: 100%;
-  max-width: 480px; /* 최대 너비 */
-  min-height: 80dvh; /* 최소 높이 */
-  display: flex;
-  flex-direction: column; /* 세로 정렬 */
-  justify-content: flex-start; /* 상단 정렬 */
-  align-items: center; /* 중앙 맞춤 */
-  padding: 5px 0px 0px 0px; /* 패딩 조정 */
-  gap: 22px; /* 요소 간격 */
-  background: rgba(255, 251, 222, 0.75); /* 배경 색상 */
-  border-radius: 15px; /* 둥근 테두리 */
-  flex-shrink: 0; /* 유연성 제한 */
-  width: 349px; /* 너비 조정 */
-  height: 510px; /* 고정 높이 */
-  position: relative; /* 상대적인 배치 */
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* 박스 그림자 */
-  margin: 40px 16px; /* 여백 */
-  margin-top: 100px; /* 상단 여백 */
+    width: 100%; /* 부모 요소를 기준으로 전체 너비 */
+    max-width: 480px; /* 박스 전체 크기의 최대 너비 */
+    min-height: 80dvh; /* 뷰포트 높이를 기준으로 최소 높이 */
+    display: flex; /* 내부 콘텐츠를 Flexbox로 배치 */
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    justify-content: flex-start; /* 콘텐츠를 상단에 배치 */
+    align-items: center; /* 콘텐츠를 중앙에 위치시킴 */
+    padding: 5px 0px 0px 0px; /* 상단에 패딩 추가 */
+    gap: 22px; /* 요소들 간의 간격 */
+    background: rgba(255, 251, 222, 0.75); /* 배경 색상 (반투명) */
+    border-radius: 15px; /* 박스 모서리를 둥글게 설정 */
+    flex-shrink: 0; /* 요소 크기가 줄어들지 않도록 제한 */
+    width: 349px; /* 박스의 고정 너비 */
+    height: 510px; /* 박스의 고정 높이 */
+    position: relative; /* 상대적 배치로 위치 설정 가능 */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    margin: 40px 16px; /* 상단과 좌우 여백 설정 */
+    margin-top: 1px; /* 상단 여백 추가 */
 }
 
 /* 메시지 영역 */
 .messages {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-bottom: 24px;
+    flex: 1; /* 콘텐츠가 남은 공간 모두 사용 */
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+    display: flex; /* 내부 콘텐츠를 Flex 정렬 */
+    flex-direction: column; /* 세로 방향 정렬 */
+    gap: 12px; /* 요소 간의 간격 */
+    padding-bottom: 24px; /* 하단 패딩 추가 */
 }
 
-/* 말풍선 공통 */
+/* 말풍선 공통 스타일 */
 .message {
-  max-width: 80%;
-  padding: 12px 16px;
-  font-size: 15px;
-  line-height: 1.5;
-  border-radius: 18px;
-  word-break: break-word;
-  position: relative;
+    max-width: 80%; /* 말풍선 최대 너비 설정 (화면 기준 %) */
+    padding: 12px 16px; /* 내부 여백 설정 */
+    font-size: 15px; /* 글꼴 크기 */
+    line-height: 1.5; /* 줄 간격 */
+    border-radius: 18px; /* 모서리를 둥글게 설정 */
+    word-break: break-word; /* 단어 줄바꿈 처리 */
+    position: relative; /* 상대적 배치로 위치 설정 */
 }
 
-/* 사용자 메시지 */
+/* 사용자 메시지 스타일 */
 .message.user {
-  align-self: flex-end;
-  background: #fffdf8;
-  font-family: "Pretendard-Regular", sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  color: #6f3e16;
-  border-top-right-radius: 0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    align-self: flex-end; /* 말풍선을 오른쪽(사용자 쪽) 정렬 */
+    background: #fffdf8; /* 배경색 지정 (밝은색) */
+    font-family: "Pretendard-Regular", sans-serif; /* 글꼴 설정 */
+    font-size: 12px; /* 글꼴 크기 */
+    font-weight: 400; /* 글꼴 두께 */
+    color: #6f3e16; /* 글자 색상 */
+    border-top-right-radius: 0; /* 상단 오른쪽 모서리 없음 */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* 말풍선 그림자 효과 */
 }
 
-/* 챗봇 메시지 */
+/* 챗봇 메시지 스타일 */
 .message.assistant {
-  display: flex;
-  align-items: flex-start;
-  background-color: #6f3e16;
-  color: var(--foundation-yellow-light, #fef8ee);
-  font-size: 12px;
-  font-weight: 400;
-  font-family: "Pretendard-Regular", sans-serif;
-  border-radius: 18px;
-  border-top-left-radius: 0;
-  padding: 12px 16px 12px 12px;
-  margin-left: 40px; /* 아이콘 공간 확보 */
-  position: relative;
-  max-width: 80%;
+    display: flex; /* 내부 콘텐츠 Flex 배치 */
+    align-items: flex-start; /* 상단으로 정렬 */
+    background-color: #6f3e16; /* 배경색 설정 */
+    color: var(--foundation-yellow-light, #fef8ee); /* 글자 색상 */
+    font-size: 12px; /* 글꼴 크기 */
+    font-weight: 400; /* 글꼴 두께 */
+    font-family: "Pretendard-Regular", sans-serif; /* 글꼴 설정 */
+    border-radius: 18px; /* 모서리를 둥근 상태로 유지 */
+    border-top-left-radius: 0; /* 상단 왼쪽 모서리 없음 */
+    padding: 12px 16px 12px 12px; /* 내부 여백 설정 */
+    margin-left: 40px; /* 챗봇 아이콘 공간 확보 */
+    position: relative; /* 상대적 배치 */
+    max-width: 80%; /* 말풍선 최대 너비 */
 }
 
-/* 챗봇 아이콘 */
+/* 챗봇 아이콘 (말풍선과 함께 표시) */
 .message.assistant::before {
-  content: "";
-  background: url("../assets/images/image-50.png") no-repeat center center;
-  background-size: cover;
-  width: 32px;
-  height: 32px;
-  position: absolute;
-  left: -40px;
-  top: 6px;
-  border-radius: 50%;
+    content: ""; /* 빈 콘텐츠로 아이콘 표시 */
+    background: url("../assets/images/image-50.png") no-repeat center center; /* 아이콘 배경 설정 */
+    background-size: cover; /* 배경이미지 설정 */
+    width: 32px; /* 아이콘 너비 */
+    height: 32px; /* 아이콘 높이 */
+    position: absolute; /* 위치 상대적으로 설정 */
+    left: -40px; /* 말풍선 왼쪽으로 배치 */
+    top: 6px; /* 말풍선 위쪽에 배치 */
+    border-radius: 50%; /* 아이콘을 둥글게 설정 */
 }
-
-/* 입력창 영역 */
+/* 입력창 컨테이너 */
 .input-container {
-  width: 100%;
-  background: #fff9e2;
-  border-top: 1px solid #ddd;
-  display: flex;
-  flex-direction: row;
-  gap: 10px; /* 요소 간격 추가 */
-  align-items: center;
-  justify-content: flex-start; /* 시작 위치 정렬 */
-  padding: 0px 0px 0px 22px; /* 패딩 설정 */
-  border-radius: 30px; /* 둥근 테두리 */
-  flex-shrink: 0; /* 유연성 제한 */
-  box-shadow: 5px 4px 20px 0px rgba(0, 0, 0, 0.13); /* 그림자 효과 */
-  width: 333px; /* 고정 너비 */
-  height: 40px; /* 고정 높이 */
-  position: relative; /* 상대적인 배치 */
-  box-sizing: border-box; /* 보더박스 */
-  margin-bottom: 10px;
+    width: 100%; /* 전체 너비 사용 */
+    background: #fff9e2; /* 배경색 설정 */
+    border-top: 1px solid #ddd; /* 상단 테두리 설정 */
+    display: flex; /* Flexbox 배치 */
+    flex-direction: row; /* 가로 정렬 */
+    align-items: center; /* 입력창과 버튼을 수직 중앙 정렬 */
+    justify-content: space-between; /* 내부 요소를 양 끝에 배치 */
+    padding: 8px 12px; /* 내부 여백 설정 */
+    border-radius: 30px; /* 둥근 모서리 설정 */
+    box-shadow: 5px 4px 20px 0px rgba(0, 0, 0, 0.13); /* 입체감을 위한 그림자 */
+    margin-bottom: 10px; /* 하단 여백 추가 */
+    box-sizing: border-box; /* 패딩과 보더 크기 포함 */
 }
 
-/* 입력창 */
 .input-area {
-  flex: 1;
-  border: none;
-  outline: none;
-  font-size: 14px;
-  padding: 8px;
-  background: none;
-  font-family: "Pretendard", sans-serif;
-  border-radius: 12px;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+    width: 100%; /* 입력창이 컨테이너 안에서 전체 너비를 차지 */
+    height: 40px; /* 고정 높이 설정 */
+    resize: none; /* 크기 조정 비활성화 */
+    border: none; /* 테두리 제거 */
+    outline: none; /* 포커스 시 외곽선 없음 */
+    font-size: 14px; /* 글꼴 크기 */
+    padding: 8px; /* 내부 여백 */
+    background: none; /* 배경 없음 */
+    font-family: "Pretendard", sans-serif; /* 글꼴 설정 */
+    border-radius: 12px; /* 내부 입력창 모서리를 둥글게 설정 */
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05); /* 입력창 안쪽 그림자 */
+    white-space: pre-wrap; /* 줄바꿈 반영 */
+    overflow-y: auto; /* 입력창 높이를 초과하면 스크롤 활성화 */
+    transition: height 0.2s ease-in-out; /* 높이 변경 시 부드럽게 애니메이션 적용 */
+}
+.input-area:focus {
+    border-color: #0078d7; /* 포커스 시 테두리 색 변경 */
+    box-shadow: 0 0 5px rgba(0, 120, 215, 0.5); /* 포커스 시 약간의 그림자 */
 }
 
-/* 전송 버튼 */
 .send-button {
-  background: url("../assets/images/msgsendbutton.svg") no-repeat center center;
-  background-size: contain;
-  width: 24px;
-  height: 24px;
-  border: none;
-  padding: 0;
-  margin-left: 10px;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-  position: absolute;
-  left: 293px;
-  top: 10px;
+    background: url("../assets/images/msgsendbutton.svg") no-repeat center
+        center; /* 전송 버튼 아이콘 */
+    background-size: contain; /* 이미지 크기 자동 조정 */
+    width: 24px; /* 버튼 너비 */
+    height: 24px; /* 버튼 높이 */
+    border: none; /* 버튼 테두리 제거 */
+    cursor: pointer; /* 버튼에 포인터 표시 */
+    transition: opacity 0.2s ease; /* 호버 효과 */
+    display: flex; /* 버튼 내부 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 가로 중앙 정렬 */
 }
 .send-button:hover {
-  height: auto;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  overflow: visible;
-  opacity: 0.8;
+    background-color: #005fa3; /* 버튼 호버 시 색상 변경 */
 }
+
 .vuesax-bold-send {
-  flex-shrink: 0;
-  width: 24px;
-  height: 24px;
-  position: absolute;
-  left: 293px;
-  top: 10px;
+    flex-shrink: 0; /* 크기를 줄이지 않도록 제한 */
+    width: 24px; /* 버튼 너비 */
+    height: 24px; /* 버튼 높이 */
+    position: absolute; /* 고정된 위치 배치 */
+    left: 293px; /* 입력창 오른쪽 영역에 위치 */
+    top: 10px; /* 입력창 위쪽 영역에 위치 */
 }
 .vuesax-bold-send2 {
-  height: auto;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  overflow: visible;
+    height: auto; /* 버튼 높이 자동 조정 */
+    position: absolute; /* 고정된 위치 배치 */
+    left: 0px; /* 버튼을 왼쪽으로 이동 */
+    top: 0px; /* 버튼을 위쪽으로 이동 */
+    overflow: visible; /* 내용 넘침 허용 */
 }
 
-/* 로딩 표시 */
+/* 로딩 표시 (메시지 처리 중) */
 .loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  color: #999;
-  margin: 5px 0;
-}
-
-.mic-button {
-  background: url("../assets/images/microphone.svg") no-repeat center center;
-  background-size: contain;
-  width: 24px;
-  height: 24px;
-  border: none;
-  padding: 0;
-  margin-left: 10px;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-  position: absolute;
-  left: 262px;
-  top: 10px;
-}
-
-.mic-button:hover {
-  height: auto;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  overflow: visible;
-  opacity: 0.8;
+    display: flex; /* Flex 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    font-size: 13px; /* 글꼴 크기 */
+    color: #999; /* 로딩 텍스트 색상 */
+    margin: 5px 0; /* 메시지 아래 여백 */
 }
 
 /* 상담 종료 버튼 */
 .end-button {
-  background-color: #ff9a9a;
-  border: none;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 14px;
-  margin: 12px auto 0;
-  display: block;
-  text-align: center;
+    background-color: #ff9a9a; /* 버튼 배경색 (밝은 빨간색) */
+    border: none; /* 테두리 제거 */
+    color: white; /* 글자 색상 */
+    padding: 10px 16px; /* 내부 여백 */
+    border-radius: 20px; /* 모서리를 둥글게 설정 */
+    cursor: pointer; /* 포인터 표시 */
+    font-size: 14px; /* 글자 크기 */
+    margin: 12px auto 0; /* 상단 여백과 버튼 중앙 정렬 */
+    display: block; /* 블록 요소로 표시 */
+    text-align: center; /* 텍스트 중앙 정렬 */
 }
 
-/* 홈 버튼 위치 조정 */
+/* 상단 버튼 영역 (홈 포함) */
 .top-buttons {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 36px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  background-color: transparent;
-  z-index: 1000;
+    position: fixed; /* 화면 상단에 고정 위치 */
+    top: 0; /* 상단에 위치 */
+    left: 0; /* 왼쪽 시작점 */
+    width: 100%; /* 화면 너비 */
+    height: 36px; /* 버튼 영역 높이 */
+    display: flex; /* 내부 콘텐츠를 Flex 정렬 */
+    justify-content: space-between; /* 양옆 버튼 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    padding: 0 20px; /* 내부 여백 */
+    background-color: transparent; /* 배경색 없음 */
+    z-index: 1000; /* 다른 요소를 덮을 수 있는 우선순위 */
 }
 
-/* 오른쪽 버튼 (홈) 위치 설정 */
+/* 오른쪽 버튼 (홈) 영역 */
 .right-buttons {
-  height: 36px;
-  display: flex;
-  align-items: center;
+    height: 36px; /* 버튼 높이 */
+    display: flex; /* 내부 콘텐츠를 Flex 배치 */
+    align-items: center; /* 수직 중앙 정렬 */
 }
 
-/* 채팅 영역 아래로 내려오게 (예: App 전체 레이아웃에 적용) */
+/* 채팅 영역 아래로 내려오게 (전체 화면 레이아웃 적용) */
 .chat-area {
-  margin-top: 70px; /* top-buttons 높이 + 여유 공간 */
-  height: calc(100vh - 70px);
-  overflow-y: auto;
+    margin-top: 70px; /* top-buttons 높이 + 여유 공간 */
+    height: calc(100vh - 70px); /* 화면 높이에서 여유 공간을 뺀 높이 */
+    overflow-y: auto; /* 세로 스크롤 활성화 */
 }
 
+/* 날짜 표시 영역 */
 .date-container {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--foundation-yellow-dark-active, #6f3e16);
-  margin: 12px 0 0 16px;
-  font-family: "Pretendard-SemiBold", sans-serif;
-  text-align: left;
+    font-size: 12px; /* 글자 크기 */
+    font-weight: 600; /* 글자 두께 */
+    color: var(--foundation-yellow-dark-active, #6f3e16); /* 글자 색 */
+    margin: 12px 0 0 16px; /* 여백 설정 (상단 및 왼쪽) */
+    font-family: "Pretendard-SemiBold", sans-serif; /* 날짜 텍스트 글꼴 */
+    text-align: left; /* 왼쪽 정렬 */
 }
