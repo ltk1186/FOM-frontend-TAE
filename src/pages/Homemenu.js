@@ -8,8 +8,9 @@ import homemenu1 from "../assets/images/homemenu1.png";
 import homemenu2 from "../assets/images/homemenu2.png";
 import homemenu3 from "../assets/images/homemenu3.png";
 import homemenu4 from "../assets/images/homemenu4.png";
-import homemenu5 from "../assets/images/homemenu5.png";
-import homemenu6 from "../assets/images/homemenu6.png";
+import homemenu5 from "../assets/images/homemenu6.png";
+import homemenu6 from "../assets/images/homemenu5.png";
+import EmotionResult from "../components/EmotionResult";
 
 const menuItems = [
     {
@@ -24,7 +25,7 @@ const menuItems = [
         title: "캐릭터",
         image: homemenu2,
         className: "character-icon",
-        route: "/",
+        route: "/login",
     },
     {
         id: 3,
@@ -45,14 +46,14 @@ const menuItems = [
         title: "목표",
         image: homemenu5,
         className: "target-icon",
-        route: "/",
+        route: "/login",
     },
     {
         id: 6,
         title: "명상",
         image: homemenu6,
         className: "meditation-icon",
-        route: "/",
+        route: "/login",
     },
 ];
 
@@ -89,8 +90,6 @@ const Homemenu = () => {
 
     return (
         <div className={styles["home-container"]}>
-            {" "}
-            {/* 🔄 변경됨 */}
             {/* 네비게이션 바 */}
             <div className={styles["navigation-bar"]}>
                 <div className={styles["back-button"]}>
@@ -100,47 +99,29 @@ const Homemenu = () => {
                     <Settings />
                 </div>
             </div>
-            <div className={styles.divider}></div> {/* 🔄 변경됨 */}
+            <div className={styles.divider}></div>
             {/* 주간 달력 섹션 */}
             <div className={styles["weekly-calendar-container"]}>
-                {" "}
-                {/* 🔄 변경됨 */}
                 <div className={styles["weekly-calendar-frame"]}>
-                    {" "}
-                    {/* 🔄 변경됨 */}
-                    <div
-                        className={styles["calendar-background-top"]}
-                    ></div>{" "}
-                    {/* 🔄 변경됨 */}
-                    <div
-                        className={styles["calendar-background-bottom"]}
-                    ></div>{" "}
-                    {/* 🔄 변경됨 */}
+                    <div className={styles["calendar-background-top"]}></div>
+                    <div className={styles["calendar-background-bottom"]}></div>
                     <div className={styles["calendar-header"]}>
-                        {" "}
-                        {/* 🔄 변경됨 */}
                         <h3>주간 달력</h3>
                     </div>
                     <div className={styles["weekly-dates"]}>
-                        {" "}
-                        {/* 🔄 변경됨 */}
                         {weekDays.map((day, index) => (
                             <div
                                 key={index}
                                 className={styles["date-component"]}
                             >
-                                {" "}
-                                {/* 🔄 변경됨 */}
                                 <div className={styles["date-number"]}>
                                     {day.day}
-                                </div>{" "}
-                                {/* 🔄 변경됨 */}
+                                </div>
                                 <div
                                     className={`${styles["date-indicator"]} ${
                                         day.hasActivity ? styles.active : ""
                                     }`}
-                                ></div>{" "}
-                                {/* 🔄 변경됨 */}
+                                ></div>
                             </div>
                         ))}
                     </div>
@@ -148,42 +129,19 @@ const Homemenu = () => {
             </div>
             {/* 감정 지수 섹션 */}
             <div className={styles["emotion-index-container"]}>
-                {" "}
-                {/* 🔄 변경됨 */}
                 <div className={styles["emotion-index-content"]}>
-                    {" "}
-                    {/* 🔄 변경됨 */}
                     <h3 className={styles["emotion-question"]}>
-                        {" "}
-                        {/* 🔄 변경됨 */}
-                        <p>
-                            <strong>{user.user_id}</strong>님 오늘 포미사용자의
-                            감정지수는?
-                        </p>
+                        <p>오늘 포미사용자의 감정지수는?</p>
                     </h3>
                     <div className={styles["emotion-result"]}>
-                        {" "}
-                        {/* 🔄 변경됨 */}
-                        <span className={styles["emotion-type"]}>
-                            슬픔
-                        </span>{" "}
-                        {/* 🔄 변경됨 */}
-                        <span className={styles["emotion-percentage"]}>
-                            이 42%로 가장 높습니다.
-                        </span>{" "}
-                        {/* 🔄 변경됨 */}
+                        <EmotionResult />
                     </div>
                 </div>
             </div>
             {/* 기능 선택 섹션 */}
             <div className={styles["function-selection-container"]}>
-                {" "}
-                {/* 🔄 변경됨 */}
-                <h2 className={styles["section-title"]}>기능 선택</h2>{" "}
-                {/* 🔄 변경됨 */}
+                <h2 className={styles["section-title"]}>기능 선택</h2>
                 <div className={styles["menu-grid"]}>
-                    {" "}
-                    {/* 🔄 변경됨 */}
                     {menuItems.map((item) => (
                         <div
                             key={item.id}
@@ -191,12 +149,9 @@ const Homemenu = () => {
                             onClick={() => handleMenuClick(item.route)} // 🔹 수정
                         >
                             <div className={styles["menu-icon-container"]}>
-                                {" "}
-                                {/* 🔄 변경됨 */}
                                 <div
                                     className={styles["menu-icon-background"]}
-                                ></div>{" "}
-                                {/* 🔄 변경됨 */}
+                                ></div>
                                 <img
                                     src={item.image}
                                     alt={item.title}
@@ -206,8 +161,7 @@ const Homemenu = () => {
                                 />
                                 <span className={styles["menu-title"]}>
                                     {item.title}
-                                </span>{" "}
-                                {/* 🔄 변경됨 */}
+                                </span>
                             </div>
                         </div>
                     ))}

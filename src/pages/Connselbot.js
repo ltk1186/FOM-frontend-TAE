@@ -80,15 +80,16 @@ const Connselbot = () => {
                     <HomeButton />
                 </div>
             </div>
-            <div className={styles["date-container"]}>
-                {new Date().toLocaleDateString("ko-KR", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                })}
-            </div>
+
             <div className={styles["chat-container"]}>
                 <div className={styles.messages}>
+                    <div className={styles["date-container"]}>
+                        {new Date().toLocaleDateString("ko-KR", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })}
+                    </div>
                     {messages.map((msg, index) => (
                         <div
                             key={index}
@@ -109,7 +110,7 @@ const Connselbot = () => {
                     <textarea
                         ref={textareaRef} // 참조 설정
                         className={styles["input-area"]}
-                        placeholder="Type a message..."
+                        placeholder="메세지를 입력하세요"
                         value={input}
                         onChange={handleInputChange} // 입력 시 높이 조정
                         onKeyDown={handleKeyPress} // 엔터 키 이벤트 처리

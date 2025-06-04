@@ -58,8 +58,9 @@
     font-size: 12px; /* 글꼴 크기 */
     font-weight: 400; /* 글꼴 두께 */
     color: #6f3e16; /* 글자 색상 */
-    border-top-right-radius: 0; /* 상단 오른쪽 모서리 없음 */
+    border-bottom-right-radius: 0; /* 상단 오른쪽 모서리 없음 */
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* 말풍선 그림자 효과 */
+    margin: 0 35px 20px 0; /* 오른쪽과 아래에 여백 추가 */
 }
 
 /* 챗봇 메시지 스타일 */
@@ -72,11 +73,12 @@
     font-weight: 400; /* 글꼴 두께 */
     font-family: "Pretendard-Regular", sans-serif; /* 글꼴 설정 */
     border-radius: 18px; /* 모서리를 둥근 상태로 유지 */
-    border-top-left-radius: 0; /* 상단 왼쪽 모서리 없음 */
+    border-bottom-left-radius: 0; /* 하단 왼쪽 모서리 없음 */
     padding: 12px 16px 12px 12px; /* 내부 여백 설정 */
     margin-left: 40px; /* 챗봇 아이콘 공간 확보 */
     position: relative; /* 상대적 배치 */
-    max-width: 80%; /* 말풍선 최대 너비 */
+    max-width: 82%; /* 말풍선 최대 너비 */
+    margin: 0 0 10px 40px; /* 오른쪽과 아래에 여백 추가 */
 }
 
 /* 챗봇 아이콘 (말풍선과 함께 표시) */
@@ -88,7 +90,7 @@
     height: 32px; /* 아이콘 높이 */
     position: absolute; /* 위치 상대적으로 설정 */
     left: -40px; /* 말풍선 왼쪽으로 배치 */
-    top: 6px; /* 말풍선 위쪽에 배치 */
+    bottom: 1px; /* 말풍선 위쪽에 배치 */
     border-radius: 50%; /* 아이콘을 둥글게 설정 */
 }
 /* 입력창 컨테이너 */
@@ -219,7 +221,11 @@
     font-size: 12px; /* 글자 크기 */
     font-weight: 600; /* 글자 두께 */
     color: var(--foundation-yellow-dark-active, #6f3e16); /* 글자 색 */
-    margin: 12px 0 0 16px; /* 여백 설정 (상단 및 왼쪽) */
+    margin: 0; /* 여백 초기화 */
     font-family: "Pretendard-SemiBold", sans-serif; /* 날짜 텍스트 글꼴 */
     text-align: left; /* 왼쪽 정렬 */
+
+    position: absolute; /* 부모 요소 기준으로 위치 설정 */
+    top: 10px; /* chat-container 요소의 위쪽에서 거리 */
+    left: 10px; /* chat-container 요소의 왼쪽에서 거리 */
 }
