@@ -1,0 +1,15 @@
+.emotion-result {  
+    text-align: center;  
+    margin: 20px;  
+}  
+  
+.emotion-type {  
+    font-size: 1.5rem;  
+    font-weight: bold;  
+}  
+  
+.emotion-percentage {  
+    margin-top: 10px;  
+    font-size: 1.2rem;  
+    color: #585858; /* 기본 텍스트 색 */  
+}  
