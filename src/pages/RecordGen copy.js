@@ -22,16 +22,6 @@ const RecordGen = () => {
   const recognitionRef = useRef(null);
   const isRecognizingRef = useRef(false);
 
-  // 🔄 수정: 스크롤 여부 상태
-  const [isScrolled, setIsScrolled] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   useEffect(() => {
     const handleResize = () => {
       setIsKeyboardOpen(window.innerHeight < 500);
@@ -175,22 +165,15 @@ const RecordGen = () => {
         isKeyboardOpen ? styles["keyboard-open"] : ""
       }`} // 🔄 className 수정
     >
-      {/* 🔄 수정: navigation-bar 통일 */}
-      <div
-        className={`${styles["navigation-bar"]} ${
-          isScrolled ? styles["scrolled"] : ""
-        }`}
-      >
-        <div className={styles["nav-left"]}>
-          <PreviousArrow />
-        </div>
-        <div className={styles["nav-right"]}>
-          <div className={styles["button-settings"]}>
-            <Settings />
-          </div>
-          <div className={styles["button-home"]}>
-            <HomeButton />
-          </div>
+      <div className={styles["top-buttons"]}>
+        {" "}
+        {/* 🔄 */}
+        <PreviousArrow />
+        <div className={styles["right-buttons"]}>
+          {" "}
+          {/* 🔄 */}
+          <Settings />
+          <HomeButton />
         </div>
       </div>
 

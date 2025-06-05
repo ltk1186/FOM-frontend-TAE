@@ -22,16 +22,6 @@ const RecordEdit = () => {
   const [logTitle, setLogTitle] = useState(diaryTitle);
   const [logContent, setLogContent] = useState(diaryContent);
 
-  // 🔄 수정: 스크롤 시 navigation-bar 스타일 적용을 위한 상태
-  const [isScrolled, setIsScrolled] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   useEffect(() => {
     const createdAt = new Date();
     const formattedCreatedAt = `${createdAt.getFullYear()}-${String(
@@ -110,22 +100,15 @@ const RecordEdit = () => {
       className={styles["record-edit-container"]} // 🔄 변경됨
       // style={{ backgroundImage: `url(${backgroundImage})` }} // ❌ 제거됨: 전역 배경으로 대체
     >
-      {/* 🔄 수정: navigation-bar 통일 */}
-      <div
-        className={`${styles["navigation-bar"]} ${
-          isScrolled ? styles["scrolled"] : ""
-        }`}
-      >
-        <div className={styles["nav-left"]}>
-          <PreviousArrow />
-        </div>
-        <div className={styles["nav-right"]}>
-          <div className={styles["button-settings"]}>
-            <Settings />
-          </div>
-          <div className={styles["button-home"]}>
-            <HomeButton />
-          </div>
+      <div className={styles["top-buttons"]}>
+        {" "}
+        {/* 🔄 변경됨 */}
+        <PreviousArrow />
+        <div className={styles["right-buttons"]}>
+          {" "}
+          {/* 🔄 변경됨 */}
+          <Settings />
+          <HomeButton />
         </div>
       </div>
 

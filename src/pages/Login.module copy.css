@@ -237,34 +237,3 @@
   /* 주황색 기본 버튼만 타깃 */
   margin-bottom: 10px; /* 원하는 픽셀 값으로 조절 */
 }
-
-/* 🔄 수정: navigation-bar 간단 구성 (스크롤 반응 제거, PreviousArrow만 좌측) */
-.navigation-bar {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  z-index: 20;
-}
-
-/* .navigation-bar.scrolled {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  backdrop-filter: blur(6px);
-} */
-
-.nav-left {
-  flex: none;
-}
-
-/* 필요 없는 중앙/우측 영역은 구조 유지를 위해 남김 (미사용 가능) */
-.nav-center {
-  display: none;
-}
-
-.nav-right {
-  display: none;
-}

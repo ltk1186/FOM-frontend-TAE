@@ -20,15 +20,6 @@ const SettingsPage = () => {
   const navigate = useNavigate();
   const user_id = user?.user_id || "local_test_user";
 
-  const [isScrolled, setIsScrolled] = useState(false); // 🔄 수정: 스크롤 여부
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const templateStyles = [
     {
       id: "style1",
@@ -144,26 +135,15 @@ const SettingsPage = () => {
 
   return (
     <div className={styles["settings-container"]}>
-      {/* 🔄 수정: navigation-bar 통일 */}
-      <div
-        className={`${styles["navigation-bar"]} ${
-          isScrolled ? styles["scrolled"] : ""
-        }`}
-      >
-        <div className={styles["nav-left"]}>
-          <PreviousArrow />
-        </div>
-        <div className={styles["nav-right"]}>
-          <div className={styles["button-home"]}>
-            <HomeButton />
-          </div>
+      {/* ✅ */}
+      <div className={styles["top-buttons"]}>
+        <PreviousArrow />
+        <h2 className={styles["settings-title"]}>설정</h2>
+        <div className={styles["right-buttons"]}>
+          <HomeButton />
         </div>
       </div>
-
       <div className={styles["settings-wrapper"]}>
-        {/* ✅ 추가: 설정 타이틀 */}
-        <div className={styles["settings-title"]}>설정</div>
-
         <div className={styles["section-wrapper"]}>
           <div className={styles["section-title"]}>사용자 정보</div>
           <div className={styles["settings-box"]}>
@@ -227,7 +207,6 @@ const SettingsPage = () => {
             </div>
           </div>
         </div>
-
         <div className={styles["section-wrapper"]}>
           <div className={styles["section-title"]}>일기 문체</div>
           <div className={styles["settings-box"]}>

@@ -17,6 +17,7 @@ const RecordDiary = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [diaries, setDiaries] = useState([]);
+  const [isScrolled, setIsScrolled] = useState(false); // 🔹 추가: 스크롤 여부 상태
 
   useEffect(() => {
     const fetchDiaries = async (userID) => {
@@ -43,6 +44,14 @@ const RecordDiary = () => {
       console.warn("⚠️ 사용자 아이디가 없습니다.");
     }
   }, [user?.user_id, setIsLoading]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0); // 🔹 스크롤 여부 판단
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const toggleDeleteMode = () => {
     setIsDeleteMode((prev) => !prev);
@@ -89,16 +98,18 @@ const RecordDiary = () => {
 
   return (
     <div className={styles["diary-page"]}>
-      {" "}
-      {/* 🔄 변경됨 */}
-      <div className={styles["top-buttons"]}>
-        {" "}
-        {/* 🔄 변경됨 */}
-        <PreviousArrow />
+      <div
+        className={`${styles["navigation-bar"]} ${
+          isScrolled ? styles["scrolled"] : ""
+        }`}
+      >
+        {/* 🔄 구조를 좌/중앙/우 3분할 */}
+        <div className={styles["nav-left"]}>
+          <PreviousArrow />
+        </div>
+
         {isDeleteMode && (
-          <div className={styles["delete-controls"]}>
-            {" "}
-            {/* 🔄 변경됨 */}
+          <div className={styles["nav-center"]}>
             <button
               className={styles["delete-count-button"]}
               onClick={handleBulkDelete}
@@ -113,10 +124,12 @@ const RecordDiary = () => {
             </button>
           </div>
         )}
-        <div className={styles["right-buttons"]}>
-          {" "}
-          {/* 🔄 변경됨 */}
-          <button className={styles["trash-button"]} onClick={toggleDeleteMode}>
+
+        <div className={styles["nav-right"]}>
+          <button
+            className={`${styles["trash-button"]} ${styles["button-trash"]}`}
+            onClick={toggleDeleteMode}
+          >
             <img
               src={TrashIcon}
               alt="삭제 모드"
@@ -127,12 +140,16 @@ const RecordDiary = () => {
               }}
             />
           </button>
-          <Settings />
-          <HomeButton />
+          <div className={styles["button-settings"]}>
+            <Settings />
+          </div>
+          <div className={styles["button-home"]}>
+            <HomeButton />
+          </div>
         </div>
       </div>
+
       <div className={styles["diary-list"]}>
-        {" "}
         {/* 🔄 변경됨 */}
         {diaries.length === 0 ? (
           <p className={styles["empty-message"]}>작성된 일지가 없습니다.</p>
@@ -185,6 +202,7 @@ const RecordDiary = () => {
           ))
         )}
       </div>
+
       <button
         className={styles["add-diary-btn"]}
         onClick={() => {
@@ -194,6 +212,7 @@ const RecordDiary = () => {
       >
         일기 완성하기
       </button>
+
       <div className={styles["bottom-icons"]}>
         <img
           src={WriteIcon}

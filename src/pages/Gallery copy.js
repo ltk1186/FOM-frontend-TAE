@@ -28,7 +28,6 @@ const Gallery = () => {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [confirmShare, setConfirmShare] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false); // ✅ 추가: 스크롤 여부 상태
 
   useEffect(() => {
     const loadGallery = async () => {
@@ -61,15 +60,6 @@ const Gallery = () => {
     };
     loadGallery();
   }, [user]);
-
-  // ✅ 추가: 스크롤 감지
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const handleGoToDiaryList = () => {
     setIsLoading(true);
@@ -189,26 +179,16 @@ const Gallery = () => {
 
   return (
     <div className={styles["gallery-page"]}>
-      {/* 🔄 navigation-bar로 통일된 상단바 구조 시작 */}
-      <div
-        className={`${styles["navigation-bar"]} ${
-          isScrolled ? styles["scrolled"] : ""
-        }`}
-      >
-        <div className={styles["nav-left"]}>
+      {/* 🔹 상단 네비게이션 */}
+      <div className={styles["top-bar"]}>
+        <div className={styles["back-button"]}>
           <PreviousArrow />
         </div>
-
-        <div className={styles["nav-center"]}>
-          {/* 중앙 영역이 필요하면 여기에 추가 */}
-        </div>
-
-        <div className={styles["nav-right"]}>
+        <div className={styles["right-buttons"]}>
           <Settings />
           <HomeButton />
         </div>
       </div>
-      {/* 🔼 navigation-bar로 통일된 상단바 구조 끝 */}
 
       {/* 🔹 탭 메뉴 */}
       <div className={styles["tab-menu"]}>
@@ -248,9 +228,11 @@ const Gallery = () => {
               alt={`감정 이미지 ${idx + 1}`}
               className={styles["gallery-img"]}
             />
+            {/* 🔹 공유된 이미지 좌측 상단 체크 표시 */}
             {selectedTab === "my" && entry.isShared && (
               <div className={styles["shared-check"]}>✅</div>
             )}
+            {/* 🔹 삭제 선택 버튼 */}
             {isDeleteMode && selectedTab === "my" && (
               <button
                 className={`${styles["select-circle"]} ${

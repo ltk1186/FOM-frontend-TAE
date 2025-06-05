@@ -1,4 +1,5 @@
 .gallery-page {
+  background: url("../assets/images/login-2.png") no-repeat center center fixed;
   background-size: cover;
   min-height: 100vh;
   padding: 20px;
@@ -7,73 +8,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* ✅ 세로 중앙 정렬 */
   position: relative;
-  padding-top: 100px;
-  padding-bottom: 120px;
+  padding-top: 100px; /* ✅ top-bar가 차지하는 높이만큼 여백 확보 */
+  padding-bottom: 120px; /* ✅ 하단 버튼 공간 확보 */
 }
 
-/* 🔄 기존 top-bar -> navigation-bar 로 리팩토링 시작 */
-.navigation-bar {
-  /* 🔄 수정됨 */
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  z-index: 1000;
-  background: none;
-  transition: box-shadow 0.3s ease, background 0.3s ease;
-}
-
-.navigation-bar.scrolled {
-  /* 🔄 수정됨 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  backdrop-filter: blur(6px);
-}
-
-.nav-left,
-.nav-center,
-.nav-right {
-  /* 🔄 수정됨 */
-  display: flex;
-  align-items: center;
-}
-
-.nav-left {
-  flex: 1;
-}
-
-.nav-center {
-  flex: 2;
-  justify-content: center;
-  gap: 8px;
-}
-
-.nav-right {
-  flex: 1;
-  justify-content: flex-end;
-  gap: 8px;
-}
-/* 🔼 기존 top-bar -> navigation-bar 로 리팩토링 끝 */
-
-/*
 .top-bar {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: fixed;
+  position: fixed; /* ✅ 화면에 고정 */
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 1000; /* ✅ 다른 요소보다 위 */
   padding: 20px 20px;
-  box-shadow: var(--elevation-large-box-shadow);
+  box-shadow: var(--elevation-large-box-shadow); /* 선택 */
 }
 
 .back-button {
@@ -89,11 +41,10 @@
   display: flex;
   gap: 8px;
 }
-*/
 
 .tab-menu {
   display: flex;
-  flex-direction: row;
+  flex-direction: row; /* ✅ 명시적으로 가로 유지 */
   width: 100%;
   max-width: 480px;
   border-radius: 20px 20px 0 0;
@@ -133,7 +84,7 @@
   box-shadow: var(--elevation-large-box-shadow);
   width: 100%;
   max-width: 480px;
-  min-height: 300px;
+  min-height: 300px; /* ✅ 추가: 최소 높이 설정 */
   position: relative;
 }
 
@@ -142,14 +93,14 @@
   aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 8px;
-  background-color: #f9f1e7;
-  transition: transform 0.2s ease-in-out;
-  min-height: 100px;
-  position: relative;
+  background-color: #f9f1e7; /* 🔹 비었을 때도 배경 표시 */
+  transition: transform 0.2s ease-in-out; /* ✅ hover 효과 추가 */
+  min-height: 100px; /* ✅ 추가: 빈 칸 높이 유지 */
+  position: relative; /* ✅ 선택 버튼 위치 위해 필요 */
 }
 
 .gallery-item:hover {
-  transform: scale(1.03);
+  transform: scale(1.03); /* ✅ hover 시 확대 */
 }
 
 .gallery-img {
@@ -209,7 +160,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 12px; /* ✅ 버튼 간격 */
   z-index: 100;
   pointer-events: auto;
 }
@@ -277,10 +228,10 @@
   background-color: #fff4e0;
   border-radius: 20px;
   padding: 24px;
-  width: 280px;
+  width: 280px; /* ✅ 작게 고정 */
   text-align: center;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-  border: 6px solid #f28b82;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* ✅ 그림자 강조 */
+  border: 6px solid #f28b82; /* ✅ 테두리 강조 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -310,7 +261,7 @@
 .popup-message {
   font-size: 16px;
   font-weight: bold;
-  color: #5a4033;
+  color: #5a4033; /* 공유 확인용 텍스트 색상 */
   margin-bottom: 16px;
 }
 
@@ -341,6 +292,7 @@
   width: 320px;
 }
 
+/* ✅ 큰 이미지 박스 */
 .popup-large-img {
   width: 100%;
   height: 200px;
@@ -349,6 +301,7 @@
   margin-bottom: 16px;
 }
 
+/* ✅ 날짜 + 버튼 플로팅 바 */
 .popup-info-bar {
   display: flex;
   justify-content: space-between;
@@ -365,6 +318,7 @@
   gap: 12px;
 }
 
+/* ✅ 요약 박스는 베이지 배경 유지 */
 .popup-summary {
   margin-top: 10px;
   padding: 12px;
@@ -373,19 +327,13 @@
   font-size: 14px;
   line-height: 1.4;
   color: #333;
-  width: 100%;
-  box-sizing: border-box;
+  width: 100%; /* ✅ 이미지와 동일한 너비로 고정 */
+  box-sizing: border-box; /* ✅ padding 포함한 너비로 계산 */
   text-align: center;
 }
 
 /* 반응형 디자인 */
-@media (max-width: 768px) {
-  .navigation-bar {
-    top: 16px;
-    left: 12px;
-    right: 12px;
-  }
-
+@media (max-width: 600px) {
   .tab-btn {
     font-size: 12px;
     padding: 10px 0;

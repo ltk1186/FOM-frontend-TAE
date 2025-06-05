@@ -4,7 +4,7 @@
   min-height: 100svh; /* 모바일 브라우저 대응! */
   height: auto;
   box-sizing: border-box;
-  padding: 100px 16px 40px; /* 🔄 navigation-bar 리팩토링: 상단 여백 조정 */
+  padding: 120px 16px 40px;
   font-family: "Pretendard", sans-serif;
   color: #4b2c00;
   display: flex;
@@ -15,53 +15,8 @@
   /* overflow-y: auto; // 불필요, 스크롤은 body에 맡김 */
 }
 
-/* ---------------- navigation-bar 리팩토링 ---------------- */
-.navigation-bar {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  z-index: 20;
-  background: none;
-  transition: box-shadow 0.3s ease, background 0.3s ease;
-}
-
-.navigation-bar.scrolled {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  backdrop-filter: blur(6px);
-}
-
-.nav-left,
-.nav-center,
-.nav-right {
-  display: flex;
-  align-items: center;
-}
-
-.nav-left {
-  flex: 1;
-}
-
-.nav-center {
-  flex: 2;
-  justify-content: center;
-  gap: 10px;
-}
-
-.nav-right {
-  flex: 1;
-  justify-content: flex-end;
-  gap: 8px;
-}
-/* 🔄 navigation-bar 리팩토링 끝 */
-
 /* ---------------- top nav ---------------- */
-/* .list-top-nav {
+.list-top-nav {
   position: fixed;
   top: 80px;
   left: 0;
@@ -71,10 +26,10 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap; /* ✅ 한 줄 넘을 경우 줄바꿈 */
-/* z-index: 10;
+  z-index: 10;
   background: transparent;
   gap: 8px;
-}  */
+}
 
 .dropdowns {
   display: flex;
@@ -169,11 +124,10 @@
   .diary-list-page {
     padding: 100px 4px 16px;
   }
-
-  /* .list-top-nav {
-     justify-content: space-between;
-     padding: 0 6px;
-   } */
+  .list-top-nav {
+    justify-content: space-between;
+    padding: 0 6px;
+  }
 
   .dropdowns select {
     font-size: 14px;
@@ -183,13 +137,8 @@
   .dummy-generate-btn {
     width: 80%;
   }
-
   .list-container {
     max-width: 100%;
     padding: 0 0 16px 0;
-  }
-
-  .nav-center {
-    font-size: 15px;
   }
 }
