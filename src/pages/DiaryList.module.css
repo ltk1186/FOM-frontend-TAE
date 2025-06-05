@@ -1,12 +1,18 @@
 /* ---------------- base ---------------- */
 .diary-list-page {
   min-height: 100vh;
+  min-height: 100svh; /* 모바일 브라우저 대응! */
+  height: auto;
+  box-sizing: border-box;
   padding: 120px 16px 40px;
   font-family: "Pretendard", sans-serif;
   color: #4b2c00;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  overflow-y: auto;
+  /* overflow-y: auto; // 불필요, 스크롤은 body에 맡김 */
 }
 
 /* ---------------- top nav ---------------- */
@@ -52,7 +58,19 @@
   flex-direction: column;
   align-items: center; /* ✅ 중앙 정렬 */
   gap: 20px;
+  /* height: auto;  // 추가하지 마세요 */
+  /* overflow-y: visible; // 추가하지 마세요 */
+  box-sizing: border-box;
+  flex-grow: 1; 
 }
+
+/* 스크롤을 .list-container에 주고 싶다면 아래처럼(권장X) */
+/*
+.list-container {
+  max-height: calc(100svh - 180px); // 상단+하단 여백 뺀 값
+  overflow-y: auto;
+}
+*/
 
 .diary-card {
   background: #fffce8;
@@ -61,6 +79,8 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   transition: transform 0.15s;
+  width: 100%;
+  box-sizing: border-box;
 }
 .diary-card:hover {
   transform: translateY(-2px);
@@ -81,20 +101,17 @@
   color: #333;
 }
 
-/* ---------------- dummy 버튼 ---------------- */
-.dummy-generate-btn {
-  padding: 14px 36px;
-  margin: 30px auto 0 auto;
-  background: #ffddad;
-  color: #4b2c00;
-  font-weight: 600;
-  border: none;
-  border-radius: 24px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  cursor: pointer;
-  transition: background 0.2s ease;
-  display: block;
+.summary {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 최대 3줄 */
+  line-clamp: 3; /* 표준 속성 추가 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.6;
+  min-height: 4.8em; /* 3줄 높이 맞추기(선택) */
 }
+
 
 /* ---------------- empty ---------------- */
 .empty {
@@ -105,9 +122,12 @@
 
 /* ---------------- responsive ---------------- */
 @media screen and (max-width: 480px) {
+  .diary-list-page {
+    padding: 100px 4px 16px;
+  }
   .list-top-nav {
     justify-content: space-between;
-    padding: 0 12px;
+    padding: 0 6px;
   }
 
   .dropdowns select {
@@ -117,5 +137,9 @@
 
   .dummy-generate-btn {
     width: 80%;
+  }
+  .list-container {
+    max-width: 100%;
+    padding: 0 0 16px 0;
   }
 }
