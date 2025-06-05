@@ -365,7 +365,7 @@ useEffect(() => {
               style={isConsulting ? { justifyContent: "center" } : undefined}
             >
               {isConsulting ? (
-                <button className={`${styles["popup-button"]} ${styles.save}`} onClick={() => console.log("▶ 더 상담하기")}>
+                <button className={`${styles["popup-button"]} ${styles.save}`} onClick={() => navigate("/connselbot")}>
                   더 상담하기
                 </button>
               ) : (
