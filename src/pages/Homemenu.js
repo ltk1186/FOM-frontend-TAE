@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from "react"; // 🔹 useEffect 추가
+import React, { useContext, useEffect } from "react";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
-import styles from "./Homemenu.module.css"; // 🔄 변경됨
+import styles from "./Homemenu.module.css";
 import Settings from "../components/Settings";
 import PreviousArrow from "../components/PreviousArrow";
 import homemenu1 from "../assets/images/homemenu1.png";
@@ -11,6 +11,7 @@ import homemenu4 from "../assets/images/homemenu4.png";
 import homemenu5 from "../assets/images/homemenu6.png";
 import homemenu6 from "../assets/images/homemenu5.png";
 import EmotionResult from "../components/EmotionResult";
+import WeeklyCalendar from "../components/WeeklyCalendar";
 
 const menuItems = [
     {
@@ -39,7 +40,7 @@ const menuItems = [
         title: "나의 감정 이미지",
         image: homemenu4,
         className: "emotion-icon",
-        route: "/gallery", // 🔹 수정됨: 감정 갤러리로 이동
+        route: "/gallery",
     },
     {
         id: 5,
@@ -100,7 +101,7 @@ const Homemenu = () => {
                 </div>
             </div>
             <div className={styles.divider}></div>
-            {/* 주간 달력 섹션 */}
+            {/* 주간 달력 섹션
             <div className={styles["weekly-calendar-container"]}>
                 <div className={styles["weekly-calendar-frame"]}>
                     <div className={styles["calendar-background-top"]}></div>
@@ -126,7 +127,8 @@ const Homemenu = () => {
                         ))}
                     </div>
                 </div>
-            </div>
+            </div> */}
+            <WeeklyCalendar />
             {/* 감정 지수 섹션 */}
             <div className={styles["emotion-index-container"]}>
                 <div className={styles["emotion-index-content"]}>

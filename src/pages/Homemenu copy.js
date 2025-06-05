@@ -2,12 +2,15 @@ import React, { useContext, useEffect } from "react"; // 🔹 useEffect 추가
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import styles from "./Homemenu.module.css"; // 🔄 변경됨
+import Settings from "../components/Settings";
+import PreviousArrow from "../components/PreviousArrow";
 import homemenu1 from "../assets/images/homemenu1.png";
 import homemenu2 from "../assets/images/homemenu2.png";
 import homemenu3 from "../assets/images/homemenu3.png";
 import homemenu4 from "../assets/images/homemenu4.png";
-import homemenu5 from "../assets/images/homemenu5.png";
-import homemenu6 from "../assets/images/homemenu6.png";
+import homemenu5 from "../assets/images/homemenu6.png";
+import homemenu6 from "../assets/images/homemenu5.png";
+import EmotionResult from "../components/EmotionResult";
 
 const menuItems = [
     {
@@ -36,7 +39,7 @@ const menuItems = [
         title: "나의 감정 이미지",
         image: homemenu4,
         className: "emotion-icon",
-        route: "/login",
+        route: "/gallery", // 🔹 수정됨: 감정 갤러리로 이동
     },
     {
         id: 5,
@@ -87,86 +90,37 @@ const Homemenu = () => {
 
     return (
         <div className={styles["home-container"]}>
-            {" "}
-            {/* 🔄 변경됨 */}
             {/* 네비게이션 바 */}
             <div className={styles["navigation-bar"]}>
-                {" "}
-                {/* 🔄 변경됨 */}
-                <button
-                    className={
-                        styles["nav-button"] + " " + styles["back-button"]
-                    }
-                >
-                    {" "}
-                    {/* 🔄 변경됨 */}
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path
-                            d="M15 18L9 12L15 6"
-                            stroke="#6C5125"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
-                </button>
-                <button
-                    className={
-                        styles["nav-button"] + " " + styles["home-button"]
-                    }
-                >
-                    {" "}
-                    {/* 🔄 변경됨 */}
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path
-                            d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-                            stroke="#6C5125"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
-                </button>
+                <div className={styles["back-button"]}>
+                    <PreviousArrow />
+                </div>
+                <div className={styles["right-buttons"]}>
+                    <Settings />
+                </div>
             </div>
-            <div className={styles.divider}></div> {/* 🔄 변경됨 */}
+            <div className={styles.divider}></div>
             {/* 주간 달력 섹션 */}
             <div className={styles["weekly-calendar-container"]}>
-                {" "}
-                {/* 🔄 변경됨 */}
                 <div className={styles["weekly-calendar-frame"]}>
-                    {" "}
-                    {/* 🔄 변경됨 */}
-                    <div
-                        className={styles["calendar-background-top"]}
-                    ></div>{" "}
-                    {/* 🔄 변경됨 */}
-                    <div
-                        className={styles["calendar-background-bottom"]}
-                    ></div>{" "}
-                    {/* 🔄 변경됨 */}
+                    <div className={styles["calendar-background-top"]}></div>
+                    <div className={styles["calendar-background-bottom"]}></div>
                     <div className={styles["calendar-header"]}>
-                        {" "}
-                        {/* 🔄 변경됨 */}
                         <h3>주간 달력</h3>
                     </div>
                     <div className={styles["weekly-dates"]}>
-                        {" "}
-                        {/* 🔄 변경됨 */}
                         {weekDays.map((day, index) => (
                             <div
                                 key={index}
                                 className={styles["date-component"]}
                             >
-                                {" "}
-                                {/* 🔄 변경됨 */}
                                 <div className={styles["date-number"]}>
                                     {day.day}
-                                </div>{" "}
-                                {/* 🔄 변경됨 */}
+                                </div>
                                 <div
                                     className={`${styles["date-indicator"]} ${
                                         day.hasActivity ? styles.active : ""
-                                    }`} // 🔄 변경됨
+                                    }`}
                                 ></div>
                             </div>
                         ))}
@@ -175,42 +129,19 @@ const Homemenu = () => {
             </div>
             {/* 감정 지수 섹션 */}
             <div className={styles["emotion-index-container"]}>
-                {" "}
-                {/* 🔄 변경됨 */}
                 <div className={styles["emotion-index-content"]}>
-                    {" "}
-                    {/* 🔄 변경됨 */}
                     <h3 className={styles["emotion-question"]}>
-                        {" "}
-                        {/* 🔄 변경됨 */}
-                        <p>
-                            <strong>{user.user_id}</strong>님 오늘 포미사용자의
-                            감정지수는?
-                        </p>
+                        <p>오늘 포미사용자의 감정지수는?</p>
                     </h3>
                     <div className={styles["emotion-result"]}>
-                        {" "}
-                        {/* 🔄 변경됨 */}
-                        <span className={styles["emotion-type"]}>
-                            슬픔
-                        </span>{" "}
-                        {/* 🔄 변경됨 */}
-                        <span className={styles["emotion-percentage"]}>
-                            이 42%로 가장 높습니다.
-                        </span>{" "}
-                        {/* 🔄 변경됨 */}
+                        <EmotionResult />
                     </div>
                 </div>
             </div>
             {/* 기능 선택 섹션 */}
             <div className={styles["function-selection-container"]}>
-                {" "}
-                {/* 🔄 변경됨 */}
-                <h2 className={styles["section-title"]}>기능 선택</h2>{" "}
-                {/* 🔄 변경됨 */}
+                <h2 className={styles["section-title"]}>기능 선택</h2>
                 <div className={styles["menu-grid"]}>
-                    {" "}
-                    {/* 🔄 변경됨 */}
                     {menuItems.map((item) => (
                         <div
                             key={item.id}
@@ -218,12 +149,9 @@ const Homemenu = () => {
                             onClick={() => handleMenuClick(item.route)} // 🔹 수정
                         >
                             <div className={styles["menu-icon-container"]}>
-                                {" "}
-                                {/* 🔄 변경됨 */}
                                 <div
                                     className={styles["menu-icon-background"]}
-                                ></div>{" "}
-                                {/* 🔄 변경됨 */}
+                                ></div>
                                 <img
                                     src={item.image}
                                     alt={item.title}
@@ -233,8 +161,7 @@ const Homemenu = () => {
                                 />
                                 <span className={styles["menu-title"]}>
                                     {item.title}
-                                </span>{" "}
-                                {/* 🔄 변경됨 */}
+                                </span>
                             </div>
                         </div>
                     ))}
