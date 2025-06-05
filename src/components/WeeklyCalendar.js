@@ -56,7 +56,7 @@ const WeeklyCalendar = () => {
                 if (!user || !user.user_id) return;
 
                 const response = await axios.post(
-                    "http://localhost:8000/myfeeling/",
+                    "https://fomeapi.eastus2.cloudapp.azure.com/myfeeling/",
                     {
                         user_id: user.user_id,
                     }
