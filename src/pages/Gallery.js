@@ -1,4 +1,3 @@
-// 🔽 기존 import 유지
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Gallery.module.css";
@@ -6,16 +5,9 @@ import PreviousArrow from "../components/PreviousArrow";
 import Settings from "../components/Settings";
 import HomeButton from "../components/HomeButton";
 import { UserContext } from "./UserContext";
-// import axios from "axios"; // 🔹 실제 백엔드 연동 시 사용
-// 샘플 이미지 import -> 나중에 삭제
-import sample1 from "../assets/images/sample1.jpg";
-import sample2 from "../assets/images/sample2.jpg";
-import sample3 from "../assets/images/sample3.jpg";
-import sample4 from "../assets/images/sample4.jpg";
-import sample5 from "../assets/images/sample5.jpg";
-import sample6 from "../assets/images/sample6.jpg";
-import TrashIcon from "../assets/images/trash.png"; // ✅ 삭제 아이콘
-import Smiley from "../assets/images/image-50.png"; // ✅ 공유 확인 팝업 이미지
+import axios from "axios";
+import TrashIcon from "../assets/images/trash.png";
+import Smiley from "../assets/images/image-50.png";
 
 const Gallery = () => {
   const navigate = useNavigate();
@@ -33,24 +25,18 @@ const Gallery = () => {
     const loadGallery = async () => {
       setIsLoading(true);
       try {
-        // 🔽 테스트 코드 시작
-        const sampleImages1 = [
-          sample1,
-          sample2,
-          sample3,
-          sample4,
-          sample5,
-          sample6,
-        ];
-        const mockGallery = sampleImages1.map((img, i) => ({
-          photo: img,
-          created_at: `2025-06-0${i + 1}T10:00:00`,
-          summary: `나의 일기 내용 ${i + 1}`,
-          diary_id: i + 1,
-          isShared: false, // 🔄 초기에는 공유되지 않은 상태로 설정
+        const response = await axios.get(
+          `https://fombackend.azurewebsites.net/api/diary/read?user_id=${user.user_id}`
+        );
+        const data = response.data || [];
+        const withShareStatus = data.map((item) => ({
+          ...item,
+          isShared: false, // 🔄 실제 공유 여부는 서버 연동 시 판단 필요
         }));
-        setMyGallery(mockGallery);
-        setSharedGallery([]); // 🔄 초기에는 공유된 항목 없음
+        setMyGallery(withShareStatus);
+
+        // 🔽 테스트 코드 시작: 마음 갤러리용 (Share API 구현 전까지)
+        setSharedGallery([]); // 실제 API: /api/share/read/all
         // 🔼 테스트 코드 끝
       } catch (error) {
         console.error("❌ 갤러리 로딩 실패:", error);
@@ -58,7 +44,10 @@ const Gallery = () => {
         setIsLoading(false);
       }
     };
-    loadGallery();
+
+    if (user?.user_id) {
+      loadGallery();
+    }
   }, [user]);
 
   const handleGoToDiaryList = () => {
@@ -68,13 +57,21 @@ const Gallery = () => {
 
   const handleDeletePhoto = async (diary_id) => {
     setIsLoading(true);
+    try {
+      await axios.put(
+        `https://fombackend.azurewebsites.net/api/diary/update_photo_null?diary_id=${diary_id}`
+      );
+      await axios.delete(
+        `https://fombackend.azurewebsites.net/api/share/delete?diary_id=${diary_id}`
+      );
+    } catch (error) {
+      console.error("❌ 이미지 삭제 실패:", error);
+    }
+
     setMyGallery((prev) => prev.filter((item) => item.diary_id !== diary_id));
     setSharedGallery((prev) =>
       prev.filter((item) => item.diary_id !== diary_id)
-    ); // 🔄 공유된 항목도 제거
-    // 🔒 실제 API 예시
-    // await axios.delete(`/api/diary/delete?diary_id=${diary_id}`);
-    // await axios.delete(`/api/share/delete?diary_id=${diary_id}`); // 🔒 공유 테이블에서 삭제
+    );
     setPopupData(null);
     setIsLoading(false);
   };
@@ -92,17 +89,25 @@ const Gallery = () => {
 
   const handleBulkDelete = async () => {
     setIsLoading(true);
+    try {
+      for (const id of selectedIds) {
+        await axios.put(
+          `https://fombackend.azurewebsites.net/api/diary/update_photo_null?diary_id=${id}`
+        );
+        await axios.delete(
+          `https://fombackend.azurewebsites.net/api/share/delete?diary_id=${id}`
+        );
+      }
+    } catch (error) {
+      console.error("❌ 이미지 삭제 실패:", error);
+    }
+
     setMyGallery((prev) =>
       prev.filter((item) => !selectedIds.includes(item.diary_id))
     );
     setSharedGallery((prev) =>
       prev.filter((item) => !selectedIds.includes(item.diary_id))
-    ); // 🔄 공유된 항목도 함께 제거
-    // 🔒 실제 삭제 API 연동
-    // for (const id of selectedIds) {
-    //   await axios.delete(`/api/diary/delete?diary_id=${id}`);
-    //   await axios.delete(`/api/share/delete?diary_id=${id}`);
-    // }
+    );
     setSelectedIds([]);
     setIsDeleteMode(false);
     setIsLoading(false);
@@ -110,7 +115,8 @@ const Gallery = () => {
 
   const handleShareConfirm = async () => {
     setIsLoading(true);
-    // 🔽 테스트 코드 시작
+
+    // 🔽 테스트 코드 시작: AutoGen + Share 저장
     const newEntry = {
       diary_id: popupData.diary_id,
       user_id: user?.user_id,
@@ -130,13 +136,17 @@ const Gallery = () => {
 
     // 🔒 실제 API 연동 예시
     /*
-    const response = await axios.post("/api/share", {
-      user_id: user.user_id,
-      diary_id: popupData.diary_id,
-      photo: popupData.photo,
-      anonymous_summary: await autoGen(popupData.summary),
-      created_at: new Date(),
-    });
+    try {
+      const response = await axios.post("https://fombackend.azurewebsites.net/api/share", {
+        diary_id: popupData.diary_id,
+        user_id: user.user_id,
+        photo: popupData.photo,
+        anonymous_summary: await autoGen(popupData.summary),
+        created_at: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("❌ 공유 실패:", error);
+    }
     */
 
     setConfirmShare(false);
@@ -146,6 +156,8 @@ const Gallery = () => {
 
   const handleCancelShare = async () => {
     setIsLoading(true);
+
+    // 🔽 테스트 코드 시작
     setSharedGallery((prev) =>
       prev.filter((item) => item.diary_id !== popupData.diary_id)
     );
@@ -156,10 +168,19 @@ const Gallery = () => {
           : item
       )
     );
+    // 🔼 테스트 코드 끝
+
     // 🔒 실제 API 연동 예시
     /*
-    await axios.delete(`/api/share/delete?diary_id=${popupData.diary_id}`);
+    try {
+      await axios.delete(
+        `https://fombackend.azurewebsites.net/api/share/delete?diary_id=${popupData.diary_id}`
+      );
+    } catch (error) {
+      console.error("❌ 공유 취소 실패:", error);
+    }
     */
+
     setPopupData(null);
     setIsLoading(false);
   };
@@ -179,7 +200,6 @@ const Gallery = () => {
 
   return (
     <div className={styles["gallery-page"]}>
-      {/* 🔹 상단 네비게이션 */}
       <div className={styles["top-bar"]}>
         <div className={styles["back-button"]}>
           <PreviousArrow />
@@ -190,7 +210,6 @@ const Gallery = () => {
         </div>
       </div>
 
-      {/* 🔹 탭 메뉴 */}
       <div className={styles["tab-menu"]}>
         <button
           className={`${styles["tab-btn"]} ${
@@ -210,9 +229,8 @@ const Gallery = () => {
         </button>
       </div>
 
-      {/* 🔹 갤러리 박스 */}
       <div className={styles["gallery-box"]}>
-        {currentGallery.length === 0 && selectedTab === "my" && (
+        {currentGallery.length === 0 && (
           <div className={styles["no-image-message"]}>
             갤러리가 비어있습니다.
           </div>
@@ -228,11 +246,9 @@ const Gallery = () => {
               alt={`감정 이미지 ${idx + 1}`}
               className={styles["gallery-img"]}
             />
-            {/* 🔹 공유된 이미지 좌측 상단 체크 표시 */}
             {selectedTab === "my" && entry.isShared && (
               <div className={styles["shared-check"]}>✅</div>
             )}
-            {/* 🔹 삭제 선택 버튼 */}
             {isDeleteMode && selectedTab === "my" && (
               <button
                 className={`${styles["select-circle"]} ${
@@ -251,7 +267,6 @@ const Gallery = () => {
         ))}
       </div>
 
-      {/* 🔹 하단 버튼 */}
       <div className={styles["bottom-btn-wrapper"]}>
         {selectedTab === "my" && isDeleteMode && (
           <>
@@ -282,7 +297,6 @@ const Gallery = () => {
         </button>
       </div>
 
-      {/* 🔹 공유 확인 팝업 */}
       {confirmShare && (
         <div
           className={styles["popup-overlay"]}
@@ -320,7 +334,6 @@ const Gallery = () => {
         </div>
       )}
 
-      {/* 🔹 상세 이미지 팝업 ― 박스 없는 형식으로 변경 */}
       {popupData && !confirmShare && (
         <div
           className={styles["popup-overlay"]}

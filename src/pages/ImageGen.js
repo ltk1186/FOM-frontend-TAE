@@ -1,91 +1,110 @@
-import React, { useState, useContext, useEffect } from "react"; // 🔹 useContext, useEffect 추가
+import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import styles from "./ImageGen.module.css"; // 🔄 변경됨
+import styles from "./ImageGen.module.css";
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 import Smiley from "../assets/images/image-50.png";
-import { UserContext } from "./UserContext"; // 🔹 추가
+import { UserContext } from "./UserContext";
+import axios from "axios";
 
 const ImageGen = () => {
-  const { state } = useLocation();
+  const { state: diary } = useLocation();
   const navigate = useNavigate();
-  const { setIsLoading } = useContext(UserContext); // 🔹 추가
+  const { setIsLoading } = useContext(UserContext);
 
-  /* ------------------------------------------------------------------
-     🔸 Hook 은 **항상** 컴포넌트 최상단에서 호출되어야 합니다.
-     ------------------------------------------------------------------*/
   const [imageUrl, setImageUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  /* ------------------------------------------------------------------
-     넘어온 일기(Diary) 확인 ― 없으면 홈으로 리디렉션
-     ------------------------------------------------------------------*/
-  const diary = state;
-
+  // diary 없으면 홈으로
   useEffect(() => {
     if (!diary) {
-      setIsLoading(true); // 🔹 로딩 시작
+      setIsLoading(true);
       navigate("/");
     }
-    setIsLoading(false); // 🔹 로딩 종료
+    setIsLoading(false);
   }, [diary, navigate, setIsLoading]);
 
   if (!diary) return null;
 
-  /* ---------------- 이미지 생성 · 저장 ---------------- */
+  // 이미지 생성
   const handleGenerate = async () => {
-    setIsGenerating(true); // ★ 로딩 상태 ON
-    setIsLoading(true); // 🔹 전체 오버레이 ON
-    alert("⚠️  이미지 생성 기능은 구현 준비 중입니다.");
-
-    // TODO: DALLE API 호출 후 setImageUrl(url)
-
-    setIsGenerating(false); // ★ 로딩 상태 OFF
-    setIsLoading(false); // 🔹 오버레이 OFF
+    if (!diary.summary || !diary.diary_id) {
+      alert("요약문 또는 일기 ID가 없습니다.");
+      return;
+    }
+    setIsGenerating(true);
+    setIsLoading(true);
+    try {
+      // 백엔드 API 호출 (summary만 content로 사용)
+      const res = await axios.put(
+        "https://fombackend.azurewebsites.net/api/diary/image/create",
+        {
+          diary_id: diary.diary_id,
+          content: diary.summary,
+          created_at: diary.created_at,
+        }
+      );
+      const url = res.data?.URL || res.data?.url;
+      if (url) {
+        setImageUrl(url);
+      } else {
+        alert("이미지 URL을 받지 못했습니다.");
+      }
+    } catch (err) {
+      alert(
+        "이미지 생성 실패: " + (err?.response?.data?.message || err.message)
+      );
+    }
+    setIsGenerating(false);
+    setIsLoading(false);
   };
 
-  const handleSave = () =>
-    alert("⚠️  저장 API 연결 전입니다. (TODO: POST /api/diary/photo)");
+  // 이미지 URL 저장
+  const handleSave = async () => {
+    if (!imageUrl || !diary.diary_id) {
+      alert("이미지가 없거나 일기 ID가 없습니다.");
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await axios.put(
+        `https://fombackend.azurewebsites.net/api/diary/${diary.diary_id}`,
+        { photo: imageUrl }
+      );
+      alert("저장 성공했습니다.");
+    } catch (err) {
+      alert("저장 실패: " + (err?.response?.data?.message || err.message));
+    }
+    setIsLoading(false);
+  };
 
-  /* ---------------- 렌더링 ---------------- */
   return (
     <div className={styles["imagegen-page"]}>
-      {" "}
-      {/* 🔄 변경됨 */}
-      {/* ── 상단바 ─────────────────────────────────── */}
+      {/* ── 상단바 ───────────────────────────── */}
       <div className={styles["top-bar"]}>
-        {" "}
-        {/* 🔄 변경됨 */}
         <PreviousArrow />
-        <img src={Smiley} alt="마스코트" className={styles.mascot} />{" "}
-        {/* 🔄 변경됨 */}
+        <img src={Smiley} alt="마스코트" className={styles.mascot} />
         <HomeButton />
       </div>
-      {/* ── 이미지(또는 플레이스홀더) ───────────────── */}
+
+      {/* ── 이미지(또는 플레이스홀더) ───────────── */}
       <div className={styles["image-wrapper"]}>
-        {" "}
-        {/* 🔄 변경됨 */}
         {imageUrl ? (
           <img
             src={imageUrl}
             alt="감정 이미지"
-            className={styles["generated-img"]} // 🔄 변경됨
+            className={styles["generated-img"]}
           />
         ) : (
           <div className={styles.placeholder}>
-            {" "}
-            {/* 🔄 변경됨 */}
             {isGenerating ? "이미지 생성중…" : "이미지가 없습니다."}
           </div>
         )}
       </div>
-      {/* ── 일기 카드 ─────────────────────────────── */}
+
+      {/* ── 일기 카드 ───────────────────────── */}
       <div className={styles["diary-card"]}>
-        {" "}
-        {/* 🔄 변경됨 */}
         <div className={styles["diary-date"]}>
-          {" "}
-          {/* 🔄 변경됨 */}
           {new Date(diary.created_at).toLocaleDateString("ko-KR", {
             year: "numeric",
             month: "long",
@@ -93,27 +112,23 @@ const ImageGen = () => {
             weekday: "short",
           })}
         </div>
-        <p className={styles["diary-content"]}>{diary.content}</p>{" "}
-        {/* 🔄 변경됨 */}
+        <p className={styles["diary-content"]}>{diary.summary}</p>
       </div>
-      {/* ── 하단 버튼 ─────────────────────────────── */}
+
+      {/* ── 하단 버튼 ───────────────────────── */}
       <div className={styles["bottom-buttons"]}>
-        {" "}
-        {/* 🔄 변경됨 */}
         <button
           className={`${styles["action-btn"]} ${styles.gen}`}
           onClick={handleGenerate}
+          disabled={isGenerating}
         >
-          {" "}
-          {/* 🔄 변경됨 */}
           이미지 생성하기
         </button>
         <button
           className={`${styles["action-btn"]} ${styles.save}`}
           onClick={handleSave}
+          disabled={!imageUrl}
         >
-          {" "}
-          {/* 🔄 변경됨 */}
           저장하기
         </button>
       </div>

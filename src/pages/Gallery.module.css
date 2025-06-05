@@ -295,10 +295,12 @@
 /* ✅ 큰 이미지 박스 */
 .popup-large-img {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  height: 280px; /* 🔼 더 높은 이미지 박스 */
+  object-fit: contain; /* 🔄 이미지 비율 유지 */
+  background-color: #dddddd; /* ✅ 남는 여백을 회색으로 표현 */
   border-radius: 12px;
   margin-bottom: 16px;
+  border: 2px solid #fff4e0; /* ✅ 얇은 베이지색 테두리 */
 }
 
 /* ✅ 날짜 + 버튼 플로팅 바 */
