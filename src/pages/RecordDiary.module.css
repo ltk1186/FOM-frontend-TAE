@@ -23,9 +23,10 @@
   left: 20px;
   right: 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   z-index: 20;
+  gap: 217px;
 }
 
 .delete-controls {
