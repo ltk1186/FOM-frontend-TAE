@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react"; // 🔄 useState 추가
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import styles from "./Homemenu.module.css";
@@ -61,11 +61,21 @@ const menuItems = [
 const Homemenu = () => {
   const navigate = useNavigate();
   const { user, setIsLoading } = useContext(UserContext); // 🔹 setIsLoading 추가
+  const [isScrolled, setIsScrolled] = useState(false); // 🔄 추가: 스크롤 상태
 
   // 🔹 페이지 진입 시 로딩 해제
   useEffect(() => {
     setIsLoading(false);
   }, [setIsLoading]);
+
+  // 🔄 추가: 스크롤 감지
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   if (!user) {
     navigate("/login"); // 로그인을 하지 않았다면 로그인 화면으로 이동
@@ -93,6 +103,7 @@ const Homemenu = () => {
     <>
       <div className={styles["home-container"]}>
         {/* 네비게이션 바 */}
+        {/* 
         <div className={styles["navigation-bar"]}>
           <div className={styles["back-button"]}>
             <PreviousArrow />
@@ -101,6 +112,22 @@ const Homemenu = () => {
             <Settings />
           </div>
         </div>
+        */}
+        {/* 🔄 navigation-bar 구조 통일 (RecordDiary.js 방식) */}
+        <div
+          className={`${styles["navigation-bar"]} ${
+            isScrolled ? styles["scrolled"] : ""
+          }`} // 🔄 수정됨
+        >
+          <div className={styles["nav-left"]}>
+            <PreviousArrow />
+          </div>
+          <div className={styles["nav-center"]}>{/* 중앙 영역 없음 */}</div>
+          <div className={styles["nav-right"]}>
+            <Settings />
+          </div>
+        </div>
+
         <div className={styles.divider}></div>
 
         {/* 주간 달력 섹션 */}
@@ -146,8 +173,8 @@ const Homemenu = () => {
             {menuItems.map((item) => (
               <div
                 key={item.id}
-                className={styles["menu-item"]} // 🔄 변경됨
-                onClick={() => handleMenuClick(item.route)} // 🔹 수정
+                className={styles["menu-item"]}
+                onClick={() => handleMenuClick(item.route)}
               >
                 <div className={styles["menu-icon-container"]}>
                   <div className={styles["menu-icon-background"]}></div>
@@ -156,7 +183,7 @@ const Homemenu = () => {
                     alt={item.title}
                     className={`${styles["menu-icon"]} ${
                       styles[item.className]
-                    }`} // 🔄 변경됨
+                    }`}
                   />
                   <span className={styles["menu-title"]}>{item.title}</span>
                 </div>

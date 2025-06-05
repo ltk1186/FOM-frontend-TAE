@@ -19,16 +19,6 @@ const RecordSummary = () => {
   );
   const [summary, setSummary] = useState("");
 
-  // 🔄 수정: 스크롤 여부 감지 상태 추가
-  const [isScrolled, setIsScrolled] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   useEffect(() => {
     const formatted = diaries
       .map((entry) => {
@@ -127,25 +117,15 @@ const RecordSummary = () => {
     <div className={styles["summary-page"]}>
       {" "}
       {/* ✅ className 수정 */}
-      {/* 🔄 수정: navigation-bar 통일 */}
-      <div
-        className={`${styles["navigation-bar"]} ${
-          isScrolled ? styles["scrolled"] : ""
-        }`}
-      >
-        <div className={styles["nav-left"]}>
-          <PreviousArrow />
-        </div>
-        <div className={styles["nav-right"]}>
-          <div className={styles["button-settings"]}>
-            <Settings />
-          </div>
-          <div className={styles["button-home"]}>
-            <HomeButton />
-          </div>
+      <div className={styles["summary-header"]}>
+        <PreviousArrow />
+        <div className={styles["header-right-buttons"]}>
+          <Settings />
+          <HomeButton />
         </div>
       </div>
       <img src={Smiley} alt="스마일" className={styles["summary-smiley"]} />{" "}
+      {/* ✅ */}
       {/* ✅ */}
       <textarea
         className={styles["summary-textarea"]}

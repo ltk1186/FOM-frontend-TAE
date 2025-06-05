@@ -15,7 +15,6 @@ const DiaryList = () => {
   const [year, setYear] = useState(thisYear);
   const [month, setMonth] = useState(thisMonth);
   const [diaries, setDiaries] = useState([]);
-  const [isScrolled, setIsScrolled] = useState(false); // 🔄 navigation-bar 리팩토링
 
   useEffect(() => {
     if (!user?.user_id) return;
@@ -24,6 +23,7 @@ const DiaryList = () => {
       setIsLoading(true);
       const result = [];
       const daysInMonth = new Date(year, month, 0).getDate();
+      // 가장 최근 날짜가 위로 오도록 내림차순 순회
       for (let day = daysInMonth; day >= 1; day--) {
         const dateStr = `${year}-${String(month).padStart(2, "0")}-${String(
           day
@@ -38,6 +38,7 @@ const DiaryList = () => {
               },
             }
           );
+          // 일기가 있고 summary가 있으면 추가
           if (Array.isArray(res.data) && res.data.length > 0) {
             const { diary_id, created_at, summary } = res.data[0];
             if (summary && summary.trim() !== "") {
@@ -55,15 +56,6 @@ const DiaryList = () => {
     fetchDiaries();
   }, [user?.user_id, year, month, setIsLoading]);
 
-  // 🔄 navigation-bar 리팩토링
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   // 연/월 선택 옵션
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
   const years = Array.from({ length: 5 }, (_, i) => thisYear - i);
@@ -73,41 +65,29 @@ const DiaryList = () => {
       className={styles["diary-list-page"]}
       style={{ minHeight: "100svh", height: "auto", overflowY: undefined }}
     >
-      {/* 🔄 navigation-bar 리팩토링 시작 */}
-      <div
-        className={`${styles["navigation-bar"]} ${
-          isScrolled ? styles["scrolled"] : ""
-        }`}
-      >
-        <div className={styles["nav-left"]}>
-          <PreviousArrow />
+      {/* top nav */}
+      <div className={styles["list-top-nav"]}>
+        <PreviousArrow />
+        <div className={styles.dropdowns}>
+          <select
+            value={year}
+            onChange={(e) => setYear(Number(e.target.value))}
+          >
+            {years.map((y) => (
+              <option key={y}>{y}</option>
+            ))}
+          </select>
+          <select
+            value={month}
+            onChange={(e) => setMonth(Number(e.target.value))}
+          >
+            {months.map((m) => (
+              <option key={m}>{m}</option>
+            ))}
+          </select>
         </div>
-        <div className={styles["nav-center"]}>
-          <div className={styles.dropdowns}>
-            <select
-              value={year}
-              onChange={(e) => setYear(Number(e.target.value))}
-            >
-              {years.map((y) => (
-                <option key={y}>{y}</option>
-              ))}
-            </select>
-            <select
-              value={month}
-              onChange={(e) => setMonth(Number(e.target.value))}
-            >
-              {months.map((m) => (
-                <option key={m}>{m}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className={styles["nav-right"]}>
-          <HomeButton />
-        </div>
+        <HomeButton />
       </div>
-      {/* 🔄 navigation-bar 리팩토링 끝 */}
-
       {/* diary cards */}
       <div className={styles["list-container"]}>
         {diaries.length === 0 ? (

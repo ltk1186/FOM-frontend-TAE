@@ -6,12 +6,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 100px; /* 🔄 수정: navigation-bar 높이에 맞게 조정 */
+  padding-top: 210px; /* 상단 여유 */
   box-sizing: border-box;
 }
 
-/* ─── 상단바 (구버전) ───────────────────── */
-/* .top-bar {
+/* ─── 상단바 ─────────────────────────────── */
+.top-bar {
   position: fixed;
   top: 30px;
   left: 20px;
@@ -20,62 +20,13 @@
   justify-content: space-between;
   align-items: center;
   z-index: 20;
-} */
-
-/* 🔄 수정: navigation-bar 통일 시작 */
-.navigation-bar {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  z-index: 20;
-  background: none;
-  transition: box-shadow 0.3s ease, background 0.3s ease;
 }
 
-.navigation-bar.scrolled {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  backdrop-filter: blur(6px);
+.mascot {
+  margin-top: 30px;
+  width: 100px;
+  height: 100px;
 }
-
-.nav-left,
-.nav-center,
-.nav-right {
-  display: flex;
-  align-items: center;
-}
-
-.nav-left {
-  flex: 1;
-}
-
-.nav-center {
-  flex: 2;
-  justify-content: center;
-}
-
-.nav-right {
-  flex: 1;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.button-settings {
-  margin-right: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.button-home {
-  display: flex;
-  align-items: center;
-}
-/* 🔄 수정: navigation-bar 통일 끝 */
 
 /* ─── 이미지 영역 ─────────────────────────── */
 .image-wrapper {
@@ -167,12 +118,5 @@
   .action-btn {
     font-size: 14px;
     padding: 10px 20px;
-  }
-
-  /* 🔄 추가: 반응형 navigation-bar 위치 조정 */
-  .navigation-bar {
-    top: 16px;
-    left: 12px;
-    right: 12px;
   }
 }

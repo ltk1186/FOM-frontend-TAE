@@ -34,16 +34,19 @@ const EMOTION_KR = {
 
 const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
+// 🔥 주간 날짜(Y-M-D)를 반환하는 함수 (일~오늘)
 const getFullWeekDates = () => {
   const today = new Date();
-  const dayOfWeek = today.getDay();
+  const dayOfWeek = today.getDay(); // 일:0~토:6
+  // 이번 주 일요일
   const sunday = new Date(today);
   sunday.setDate(today.getDate() - dayOfWeek);
+  // 이번 주 날짜 배열 (일~토)
   const dates = [];
   for (let i = 0; i < 7; i++) {
     const d = new Date(sunday);
     d.setDate(sunday.getDate() + i);
-    dates.push(d.toISOString().slice(0, 10));
+    dates.push(d.toISOString().slice(0, 10)); // "YYYY-MM-DD"
   }
   return dates;
 };
@@ -53,7 +56,7 @@ const CalendarPage = () => {
   const navigate = useNavigate();
 
   const [emotionData, setEmotionData] = useState([]);
-  const [weekDates, setWeekDates] = useState([]);
+  const [weekDates, setWeekDates] = useState([]); // 주간 날짜 배열 저장
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [diaryPopupContent, setDiaryPopupContent] = useState([]);
@@ -62,7 +65,6 @@ const CalendarPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [draftText, setDraftText] = useState("");
   const [diaryId, setDiaryId] = useState(null);
-  const [isScrolled, setIsScrolled] = useState(false); // 🔄 navigation-bar 리팩토링
 
   useEffect(() => {
     const fetchEmotionForThisWeek = async () => {
@@ -73,9 +75,10 @@ const CalendarPage = () => {
 
       const today = new Date();
       const todayStr = today.toISOString().slice(0, 10);
-      const results = [];
 
+      const results = [];
       for (const date of dates) {
+        // 오늘 이후면 0값
         if (date > todayStr) {
           results.push({
             joy: 0,
@@ -91,12 +94,14 @@ const CalendarPage = () => {
           continue;
         }
         try {
+          // Diary ID 먼저 조회
           const diaryRes = await axios.get(
             "https://fombackend.azurewebsites.net/api/diary/read",
             { params: { user_id: user.user_id, selected_date: date } }
           );
           const diary = diaryRes.data[0];
           if (!diary || !diary.diary_id) {
+            // 일기가 없으면 0값
             results.push({
               joy: 0,
               sadness: 0,
@@ -110,7 +115,7 @@ const CalendarPage = () => {
             });
             continue;
           }
-
+          // Emotion 감정값 조회
           const emotionRes = await axios.get(
             "https://fombackend.azurewebsites.net/api/emotion/read",
             { params: { user_id: user.user_id, diary_id: diary.diary_id } }
@@ -127,7 +132,7 @@ const CalendarPage = () => {
             confusion: emotion.bewilderment ?? 0,
             boredom: emotion.boredom ?? 0,
           });
-        } catch {
+        } catch (error) {
           results.push({
             joy: 0,
             sadness: 0,
@@ -150,16 +155,10 @@ const CalendarPage = () => {
       return;
     }
     fetchEmotionForThisWeek();
+    // eslint-disable-next-line
   }, [user, navigate, setIsLoading]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0); // 🔄 navigation-bar 리팩토링
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
+  // (아래 부분은 이전 코드와 동일: 캘린더, 팝업, 저장 등)
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const firstDay = new Date(year, month, 1).getDay();
@@ -221,7 +220,7 @@ const CalendarPage = () => {
         setOriginalDiaryContent(diary);
         setDiaryId(null);
       }
-    } catch {
+    } catch (error) {
       setDiaryPopupContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
       setOriginalDiaryContent([
         { content: "일기 조회 중 오류가 발생했습니다." },
@@ -268,9 +267,7 @@ const CalendarPage = () => {
       if (diaryId) {
         await axios.put(
           `https://fombackend.azurewebsites.net/api/diary/${diaryId}`,
-          {
-            content: draftText,
-          }
+          { content: draftText }
         );
       } else {
         await axios.post(
@@ -295,19 +292,13 @@ const CalendarPage = () => {
     setIsEditing(true);
   };
 
+  // --- 렌더링 ---
   return (
     <>
       <div className={styles["calendar-page"]}>
-        {/* 🔄 navigation-bar 리팩토링 시작 */}
-        <div
-          className={`${styles["navigation-bar"]} ${
-            isScrolled ? styles["scrolled"] : ""
-          }`}
-        >
-          <div className={styles["nav-left"]}>
-            <PreviousArrow />
-          </div>
-          <div className={styles["nav-center"]}>
+        <div className={styles["calendar-header"]}>
+          <PreviousArrow />
+          <div className={styles["calendar-title"]}>
             <button
               className={styles["month-btn"]}
               onClick={() => changeMonth(-1)}
@@ -322,14 +313,9 @@ const CalendarPage = () => {
               &gt;
             </button>
           </div>
-          <div className={styles["nav-right"]}>
-            <Settings />
-            <HomeButton />
-          </div>
+          <Settings />
+          <HomeButton />
         </div>
-        {/* 🔄 navigation-bar 리팩토링 끝 */}
-
-        {/* 기존 calendar-table, chart 등 렌더링은 동일 */}
         <div className={styles["calendar-table"]}>
           <table>
             <thead>
@@ -343,6 +329,7 @@ const CalendarPage = () => {
           </table>
         </div>
 
+        {/* 👇 감정 그래프 - 날짜 표시 추가 */}
         <div className={styles["emotion-chart"]}>
           <div className={styles["chart-title"]}>일주일의 나의 감정</div>
           <div className={styles["chart-bars"]}>
@@ -367,6 +354,7 @@ const CalendarPage = () => {
                   })}
                   <div className={styles["day-label"]}>
                     <div>{DAYS[index]}</div>
+                    {/* 날짜 붙이기 */}
                     <div className={styles["day-date"]}>
                       {weekDates[index]?.slice(8, 10)}일
                     </div>

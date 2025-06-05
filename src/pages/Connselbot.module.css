@@ -1,230 +1,276 @@
 .body-area {
-  margin: 0; /* 기본 여백 초기화 */
-  display: flex; /* 부모 요소로서 내부 콘텐츠를 Flexbox로 배치 */
-  flex-direction: column; /* 콘텐츠를 세로 방향으로 정렬 */
-  justify-content: center; /* 콘텐츠를 중앙에 배치 (수평 중앙) */
-  align-items: center; /* 콘텐츠를 중앙에 배치 (수직 중앙) */
-  min-height: 100dvh; /* 뷰포트 높이를 기준으로 최소 높이 설정 */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100dvh;
 }
+
+/* 🔄 navigation-bar 리팩토링 시작 */
+.navigation-bar {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 20;
+  background: none;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.navigation-bar.scrolled {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+}
+
+.nav-left,
+.nav-center,
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-left {
+  flex: 1;
+}
+
+.nav-center {
+  flex: 2;
+  justify-content: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #653d00;
+}
+
+.nav-right {
+  flex: 1;
+  justify-content: flex-end;
+  gap: 8px;
+}
+/* 🔄 navigation-bar 리팩토링 끝 */
 
 /* 챗봇 전체 박스 */
 .chat-container {
-  width: 100%; /* 부모 요소를 기준으로 전체 너비 */
-  max-width: 480px; /* 박스 전체 크기의 최대 너비 */
-  min-height: 80dvh; /* 뷰포트 높이를 기준으로 최소 높이 */
-  display: flex; /* 내부 콘텐츠를 Flexbox로 배치 */
-  flex-direction: column; /* 세로 방향으로 정렬 */
-  justify-content: flex-start; /* 콘텐츠를 상단에 배치 */
-  align-items: center; /* 콘텐츠를 중앙에 위치시킴 */
-  padding: 5px 0px 0px 0px; /* 상단에 패딩 추가 */
-  gap: 22px; /* 요소들 간의 간격 */
-  background: rgba(255, 251, 222, 0.75); /* 배경 색상 (반투명) */
-  border-radius: 15px; /* 박스 모서리를 둥글게 설정 */
-  flex-shrink: 0; /* 요소 크기가 줄어들지 않도록 제한 */
-  width: 349px; /* 박스의 고정 너비 */
-  height: 550px; /* 박스의 고정 높이 */
-  position: relative; /* 상대적 배치로 위치 설정 가능 */
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
-  margin: 40px 16px; /* 상단과 좌우 여백 설정 */
-  margin-top: 55px; /* 상단 여백 추가 */
+  width: 100%;
+  max-width: 480px;
+  min-height: 80dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 5px 0px 0px 0px;
+  gap: 22px;
+  background: rgba(255, 251, 222, 0.75);
+  border-radius: 15px;
+  flex-shrink: 0;
+  width: 349px;
+  height: 550px;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  margin: 40px 16px;
+  margin-top: 100px; /* 🔄 navigation-bar 높이에 맞춰 여백 조정 */
 }
 
 /* 메시지 영역 */
 .messages {
-  flex: 1; /* 콘텐츠가 남은 공간 모두 사용 */
-  overflow-y: auto; /* 세로 스크롤 활성화 */
-  display: flex; /* 내부 콘텐츠를 Flex 정렬 */
-  flex-direction: column; /* 세로 방향 정렬 */
-  gap: 12px; /* 요소 간의 간격 */
-  padding-bottom: 24px; /* 하단 패딩 추가 */
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 24px;
 }
 
 /* 말풍선 공통 스타일 */
 .message {
-  max-width: 80%; /* 말풍선 최대 너비 설정 (화면 기준 %) */
-  padding: 12px 16px; /* 내부 여백 설정 */
-  font-size: 15px; /* 글꼴 크기 */
-  line-height: 1.5; /* 줄 간격 */
-  border-radius: 18px; /* 모서리를 둥글게 설정 */
-  word-break: break-word; /* 단어 줄바꿈 처리 */
-  position: relative; /* 상대적 배치로 위치 설정 */
+  max-width: 80%;
+  padding: 12px 16px;
+  font-size: 15px;
+  line-height: 1.5;
+  border-radius: 18px;
+  word-break: break-word;
+  position: relative;
 }
 
 /* 사용자 메시지 스타일 */
 .message.user {
-  align-self: flex-end; /* 말풍선을 오른쪽(사용자 쪽) 정렬 */
-  background: #fffdf8; /* 배경색 지정 (밝은색) */
-  font-family: "Pretendard-Regular", sans-serif; /* 글꼴 설정 */
-  font-size: 12px; /* 글꼴 크기 */
-  font-weight: 400; /* 글꼴 두께 */
-  color: #6f3e16; /* 글자 색상 */
-  border-bottom-right-radius: 0; /* 상단 오른쪽 모서리 없음 */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* 말풍선 그림자 효과 */
-  margin: 0 35px 20px 0; /* 오른쪽과 아래에 여백 추가 */
+  align-self: flex-end;
+  background: #fffdf8;
+  font-family: "Pretendard-Regular", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #6f3e16;
+  border-bottom-right-radius: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin: 0 35px 20px 0;
 }
 
 /* 챗봇 메시지 스타일 */
 .message.assistant {
-  display: flex; /* 내부 콘텐츠 Flex 배치 */
-  align-items: flex-start; /* 상단으로 정렬 */
-  background-color: #6f3e16; /* 배경색 설정 */
-  color: var(--foundation-yellow-light, #fef8ee); /* 글자 색상 */
-  font-size: 12px; /* 글꼴 크기 */
-  font-weight: 400; /* 글꼴 두께 */
-  font-family: "Pretendard-Regular", sans-serif; /* 글꼴 설정 */
-  border-radius: 18px; /* 모서리를 둥근 상태로 유지 */
-  border-bottom-left-radius: 0; /* 하단 왼쪽 모서리 없음 */
-  padding: 12px 16px 12px 12px; /* 내부 여백 설정 */
-  margin-left: 40px; /* 챗봇 아이콘 공간 확보 */
-  position: relative; /* 상대적 배치 */
-  max-width: 82%; /* 말풍선 최대 너비 */
-  margin: 0 0 10px 40px; /* 오른쪽과 아래에 여백 추가 */
+  display: flex;
+  align-items: flex-start;
+  background-color: #6f3e16;
+  color: var(--foundation-yellow-light, #fef8ee);
+  font-size: 12px;
+  font-weight: 400;
+  font-family: "Pretendard-Regular", sans-serif;
+  border-radius: 18px;
+  border-bottom-left-radius: 0;
+  padding: 12px 16px 12px 12px;
+  margin-left: 40px;
+  position: relative;
+  max-width: 82%;
+  margin: 0 0 10px 40px;
 }
 
-/* 챗봇 아이콘 (말풍선과 함께 표시) */
+/* 챗봇 아이콘 */
 .message.assistant::before {
-  content: ""; /* 빈 콘텐츠로 아이콘 표시 */
-  background: url("../assets/images/image-50.png") no-repeat center center; /* 아이콘 배경 설정 */
-  background-size: cover; /* 배경이미지 설정 */
-  width: 32px; /* 아이콘 너비 */
-  height: 32px; /* 아이콘 높이 */
-  position: absolute; /* 위치 상대적으로 설정 */
-  left: -36px; /* 말풍선 왼쪽으로 배치 */
-  bottom: -15px; /* 말풍선 위쪽에 배치 */
-  border-radius: 50%; /* 아이콘을 둥글게 설정 */
+  content: "";
+  background: url("../assets/images/image-50.png") no-repeat center center;
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  left: -36px;
+  bottom: -15px;
+  border-radius: 50%;
 }
+
 /* 입력창 컨테이너 */
 .input-container {
-  width: 97%; /* 전체 너비 사용 */
-  background: #fff9e2; /* 배경색 설정 */
-  border-top: 1px solid #ddd; /* 상단 테두리 설정 */
-  display: flex; /* Flexbox 배치 */
-  flex-direction: row; /* 가로 정렬 */
-  align-items: center; /* 입력창과 버튼을 수직 중앙 정렬 */
-  justify-content: space-between; /* 내부 요소를 양 끝에 배치 */
-  padding: 8px 12px; /* 내부 여백 설정 */
-  border-radius: 30px; /* 둥근 모서리 설정 */
-  box-shadow: 5px 4px 20px 0px rgba(0, 0, 0, 0.13); /* 입체감을 위한 그림자 */
-  margin-bottom: 10px; /* 하단 여백 추가 */
-  box-sizing: border-box; /* 패딩과 보더 크기 포함 */
+  width: 97%;
+  background: #fff9e2;
+  border-top: 1px solid #ddd;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 30px;
+  box-shadow: 5px 4px 20px 0px rgba(0, 0, 0, 0.13);
+  margin-bottom: 10px;
+  box-sizing: border-box;
 }
 
 .input-area {
-  width: 100%; /* 입력창이 컨테이너 안에서 전체 너비를 차지 */
-  height: 40px; /* 고정 높이 설정 */
-  resize: none; /* 크기 조정 비활성화 */
-  border: none; /* 테두리 제거 */
-  outline: none; /* 포커스 시 외곽선 없음 */
-  font-size: 14px; /* 글꼴 크기 */
-  padding: 8px; /* 내부 여백 */
-  background: none; /* 배경 없음 */
-  font-family: "Pretendard", sans-serif; /* 글꼴 설정 */
-  border-radius: 12px; /* 내부 입력창 모서리를 둥글게 설정 */
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05); /* 입력창 안쪽 그림자 */
-  white-space: pre-wrap; /* 줄바꿈 반영 */
-  overflow-y: auto; /* 입력창 높이를 초과하면 스크롤 활성화 */
-  transition: height 0.2s ease-in-out; /* 높이 변경 시 부드럽게 애니메이션 적용 */
+  width: 100%;
+  height: 40px;
+  resize: none;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 8px;
+  background: none;
+  font-family: "Pretendard", sans-serif;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+  white-space: pre-wrap;
+  overflow-y: auto;
+  transition: height 0.2s ease-in-out;
 }
 .input-area:focus {
-  border-color: #0078d7; /* 포커스 시 테두리 색 변경 */
-  box-shadow: 0 0 5px rgba(0, 120, 215, 0.5); /* 포커스 시 약간의 그림자 */
+  border-color: #0078d7;
+  box-shadow: 0 0 5px rgba(0, 120, 215, 0.5);
 }
 
 .send-button {
-  background: url("../assets/images/msgsendbutton.svg") no-repeat center center; /* 전송 버튼 아이콘 */
-  background-size: contain; /* 이미지 크기 자동 조정 */
-  width: 24px; /* 버튼 너비 */
-  height: 24px; /* 버튼 높이 */
-  border: none; /* 버튼 테두리 제거 */
-  cursor: pointer; /* 버튼에 포인터 표시 */
-  transition: opacity 0.2s ease; /* 호버 효과 */
-  display: flex; /* 버튼 내부 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
-  justify-content: center; /* 가로 중앙 정렬 */
+  background: url("../assets/images/msgsendbutton.svg") no-repeat center center;
+  background-size: contain;
+  width: 24px;
+  height: 24px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .send-button:hover {
-  background-color: #005fa3; /* 버튼 호버 시 색상 변경 */
+  background-color: #005fa3;
 }
 
 .vuesax-bold-send {
-  flex-shrink: 0; /* 크기를 줄이지 않도록 제한 */
-  width: 24px; /* 버튼 너비 */
-  height: 24px; /* 버튼 높이 */
-  position: absolute; /* 고정된 위치 배치 */
-  left: 293px; /* 입력창 오른쪽 영역에 위치 */
-  top: 10px; /* 입력창 위쪽 영역에 위치 */
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 293px;
+  top: 10px;
 }
 .vuesax-bold-send2 {
-  height: auto; /* 버튼 높이 자동 조정 */
-  position: absolute; /* 고정된 위치 배치 */
-  left: 0px; /* 버튼을 왼쪽으로 이동 */
-  top: 0px; /* 버튼을 위쪽으로 이동 */
-  overflow: visible; /* 내용 넘침 허용 */
+  height: auto;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: visible;
 }
 
-/* 로딩 표시 (메시지 처리 중) */
+/* 로딩 표시 */
 .loading {
-  display: flex; /* Flex 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
-  justify-content: center; /* 가로 중앙 정렬 */
-  font-size: 13px; /* 글꼴 크기 */
-  color: #999; /* 로딩 텍스트 색상 */
-  margin: 5px 0; /* 메시지 아래 여백 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #999;
+  margin: 5px 0;
 }
 
 /* 상담 종료 버튼 */
 .end-button {
-  background-color: #ff9a9a; /* 버튼 배경색 (밝은 빨간색) */
-  border: none; /* 테두리 제거 */
-  color: white; /* 글자 색상 */
-  padding: 10px 16px; /* 내부 여백 */
-  border-radius: 20px; /* 모서리를 둥글게 설정 */
-  cursor: pointer; /* 포인터 표시 */
-  font-size: 14px; /* 글자 크기 */
-  margin: 12px auto 0; /* 상단 여백과 버튼 중앙 정렬 */
-  display: block; /* 블록 요소로 표시 */
-  text-align: center; /* 텍스트 중앙 정렬 */
+  background-color: #ff9a9a;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 12px auto 0;
+  display: block;
+  text-align: center;
 }
 
-/* 상단 버튼 영역 (홈 포함) */
-.top-buttons {
-  position: fixed; /* 화면 상단에 고정 위치 */
-  top: 12px; /* 상단에 위치 */
-  left: 0; /* 왼쪽 시작점 */
-  width: 100%; /* 화면 너비 */
-  height: 57px; /* 버튼 영역 높이 */
-  display: flex; /* 내부 콘텐츠를 Flex 정렬 */
-  justify-content: space-between; /* 양옆 버튼 정렬 */
-  align-items: center; /* 수직 중앙 정렬 */
-  padding: 0 20px; /* 내부 여백 */
-  background-color: transparent; /* 배경색 없음 */
-  z-index: 1000; /* 다른 요소를 덮을 수 있는 우선순위 */
-}
+/* 🔄 navigation-bar 리팩토링: 기존 top-buttons 주석 처리 */
+/* .top-buttons {
+  position: fixed;
+  top: 12px;
+  left: 0;
+  width: 100%;
+  height: 57px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background-color: transparent;
+  z-index: 1000;
+} */
 
-/* 오른쪽 버튼 (홈) 영역 */
 .right-buttons {
-  height: 36px; /* 버튼 높이 */
-  display: flex; /* 내부 콘텐츠를 Flex 배치 */
-  align-items: center; /* 수직 중앙 정렬 */
+  height: 36px;
+  display: flex;
+  align-items: center;
 }
 
-/* 채팅 영역 아래로 내려오게 (전체 화면 레이아웃 적용) */
 .chat-area {
-  margin-top: 110px; /* top-buttons 높이 + 여유 공간 */
-  height: calc(100vh - 110px); /* 화면 높이에서 여유 공간을 뺀 높이 */
-  overflow-y: auto; /* 세로 스크롤 활성화 */
+  margin-top: 110px;
+  height: calc(100vh - 110px);
+  overflow-y: auto;
 }
 
 /* 날짜 표시 영역 */
 .date-container {
-  font-size: 12px; /* 글자 크기 */
-  font-weight: 600; /* 글자 두께 */
-  color: var(--foundation-yellow-dark-active, #6f3e16); /* 글자 색 */
-  margin: 0; /* 여백 초기화 */
-  font-family: "Pretendard-SemiBold", sans-serif; /* 날짜 텍스트 글꼴 */
-  text-align: left; /* 왼쪽 정렬 */
-
-  position: absolute; /* 부모 요소 기준으로 위치 설정 */
-  top: 10px; /* chat-container 요소의 위쪽에서 거리 */
-  left: 10px; /* chat-container 요소의 왼쪽에서 거리 */
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--foundation-yellow-dark-active, #6f3e16);
+  margin: 0;
+  font-family: "Pretendard-SemiBold", sans-serif;
+  text-align: left;
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }

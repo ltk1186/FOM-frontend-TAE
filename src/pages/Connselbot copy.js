@@ -12,17 +12,17 @@ const Connselbot = () => {
   const [input, setInput] = useState(""); // 입력 필드 상태
   const [loading, setLoading] = useState(false); // 로딩 상태
   const textareaRef = useRef(null); // 🔹 텍스트 영역 참조
-  const [isScrolled, setIsScrolled] = useState(false); // 🔄 navigation-bar 리팩토링
 
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
-    textarea.style.height = "auto";
-    textarea.style.height = `${textarea.scrollHeight}px`;
+    textarea.style.height = "auto"; // 높이를 기본값으로 초기화
+    textarea.style.height = `${textarea.scrollHeight}px`; // 내용에 맞춰 높이 조정
   };
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim()) return; // 빈 입력 방지
 
+    // 메시지 전송
     setMessages((prev) => [...prev, { role: "user", content: input }]);
     setLoading(true);
 
@@ -32,6 +32,7 @@ const Connselbot = () => {
         { text: input }
       );
 
+      // 응답 추가
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: res.data.response },
@@ -39,26 +40,26 @@ const Connselbot = () => {
     } catch (error) {
       console.error("Error fetching chatbot response:", error);
     } finally {
-      setInput("");
-      setLoading(false);
+      setInput(""); // 입력 상태 초기화
+      setLoading(false); // 로딩 상태 해제
     }
   };
 
   const handleInputChange = (e) => {
-    setInput(e.target.value);
-    adjustTextareaHeight();
+    setInput(e.target.value); // 입력 값 갱신
+    adjustTextareaHeight(); // 높이 조정 함수 호출
   };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && loading) {
       e.preventDefault();
-      return;
+      return; // 로딩 중일 때 추가 전송 방지
     }
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
+      e.preventDefault(); // 기본 Enter 동작 차단
+      sendMessage(); // 메시지 전송
     } else if (e.key === "Enter" && e.shiftKey) {
-      setInput((prev) => prev + "\n");
+      setInput((prev) => prev + "\n"); // Shift+Enter는 개행 처리
     }
   };
 
@@ -69,14 +70,6 @@ const Connselbot = () => {
     setIsLoading(false);
   }, [setIsLoading]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0); // 🔄 navigation-bar 리팩토링
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   if (!user) {
     navigate("/login");
     return null;
@@ -84,21 +77,12 @@ const Connselbot = () => {
 
   return (
     <div className={styles["body-area"]}>
-      {/* 🔄 navigation-bar 리팩토링 시작 */}
-      <div
-        className={`${styles["navigation-bar"]} ${
-          isScrolled ? styles["scrolled"] : ""
-        }`}
-      >
-        <div className={styles["nav-left"]}>
-          <PreviousArrow />
-        </div>
-        <div className={styles["nav-center"]}>마음상담</div>
-        <div className={styles["nav-right"]}>
+      <div className={styles["top-buttons"]}>
+        <PreviousArrow />
+        <div className={styles["right-buttons"]}>
           <HomeButton />
         </div>
       </div>
-      {/* 🔄 navigation-bar 리팩토링 끝 */}
 
       <div className={styles["chat-container"]}>
         <div className={styles.messages}>
@@ -123,13 +107,13 @@ const Connselbot = () => {
         </div>
         <div className={styles["input-container"]}>
           <textarea
-            ref={textareaRef}
+            ref={textareaRef} // 참조 설정
             className={styles["input-area"]}
             placeholder="메세지를 입력하세요"
             value={input}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyPress}
-            rows="1"
+            onChange={handleInputChange} // 입력 시 높이 조정
+            onKeyDown={handleKeyPress} // 엔터 키 이벤트 처리
+            rows="1" // 기본 1 줄
             disabled={loading}
           />
           <button
