@@ -4,14 +4,14 @@
 
 .calendar-page {
   min-height: 100vh;
-  padding: 140px 24px 24px;
+  padding: 10px 24px 24px;
   font-family: "Pretendard", sans-serif;
   color: #653d00;
   overflow-x: hidden;
 }
 
 .calendar-header {
-  margin-top: 80px;
+  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
