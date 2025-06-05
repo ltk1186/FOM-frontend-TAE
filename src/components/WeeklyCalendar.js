@@ -4,6 +4,7 @@ import styles from "../pages/Homemenu.module.css";
 import { UserContext } from "../pages/UserContext";
 
 const emotionTypes = [
+    "기쁨",
     "슬픔",
     "분노",
     "공포",
@@ -15,6 +16,7 @@ const emotionTypes = [
 ];
 
 const emotionColors = {
+    기쁨: "#ffcc00",
     슬픔: "#0060BA",
     분노: "#FF5640",
     공포: "#656565",
