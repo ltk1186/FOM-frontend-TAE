@@ -32,7 +32,7 @@ const RecordSummary = () => {
             })
           : "날짜 없음";
 
-        return `${formattedDate}\n${entry.title}\n${entry.content}\n-----\n`;
+        return `${formattedDate}\n\n${entry.content}\n`;
       })
       .join("\n");
 
@@ -50,12 +50,12 @@ const RecordSummary = () => {
       const response = await axios.post(
         // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/generate_diary",
         "https://fombackend.azurewebsites.net/generate_diary",
-        { content: summary },
+        { user_id: user.user_id, question_text: summary },
         {
           headers: { "Content-Type": "application/json" },
         }
       );
-      setSummary(response.data.rewritten);
+      setSummary(response.data["일기 변환"]);
     } catch (error) {
       console.error("AI 편집 실패:", error);
       alert("AI 요청에 실패했습니다.");
