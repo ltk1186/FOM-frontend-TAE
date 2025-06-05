@@ -6,10 +6,8 @@
   padding: 26px 20px;
   gap: 15px;
   position: relative;
-  width: 100vw;
-  max-width: 500px;
+  width: 375px;
   height: 812px;
-  background: none;
   margin: 0 auto;
   overflow-y: auto;
 }

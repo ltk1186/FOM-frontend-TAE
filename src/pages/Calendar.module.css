@@ -4,26 +4,25 @@
 
 .calendar-page {
   min-height: 100vh;
-  padding: 10px 24px 24px;
+  padding: 50px 24px 21px;
   font-family: "Pretendard", sans-serif;
   color: #653d00;
   overflow-x: hidden;
 }
 
 .calendar-header {
-  margin-top: 10px;
+  margin-top: 0px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding: 0 10px;
+  margin-bottom: 30px;
 }
 
 .calendar-header button {
   background: none;
   border: none;
-  font-size: 18px;
-  padding: 8px;
+  font-size: 28px;
+  padding: 10px;
   color: #653d00;
   font-weight: bold;
   cursor: pointer;
@@ -36,7 +35,7 @@
 }
 
 .calendar-title {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 600;
 }
 
@@ -44,7 +43,7 @@
   background: rgba(255, 255, 255, 0.9);
   border-radius: 20px;
   padding: 24px;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
   overflow-x: hidden;
 }
 
@@ -57,7 +56,7 @@
 
 .calendar-table th,
 .calendar-table td {
-  padding: 8px;
+  padding: 10px;
   font-size: 14px;
   color: #333;
   font-weight: 500;
@@ -116,40 +115,40 @@
   font-weight: bold;
   font-size: 16px;
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 1px;
 }
 
 .chart-bars {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: space-between; /* 또는 space-around, center */
   align-items: flex-end;
-  height: 160px;
-  gap: 12px;
-  margin-bottom: 20px;
-  padding: 0 8px;
+  width: 100%;
+  gap: 0.5rem; /* 각 요일 bar 사이 간격, 조정 가능 */
+  padding: 0 12px; /* 좌우 여백 */
+  min-height: 140px;
+  box-sizing: border-box;
 }
 
 .chart-column {
+  flex: 1 1 0; /* 모든 column을 같은 크기로 */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  position: relative;
-  width: 24px;
+  align-items: center; /* 중앙 정렬 */
+  justify-content: flex-end;
+  min-width: 28px; /* 모바일에서 너무 좁지 않게 */
 }
 
 .bar {
-  width: 100%;
-  border-radius: 2px;
-  transition: height 0.3s;
+  width: 18px; /* 감정 bar의 두께, 조정 가능 */
+  border-radius: 3px;
 }
 
 .day-label {
-  margin-top: 8px;
-  font-size: 12px;
-  color: #444;
-  position: relative;
-  height: 16px;
-  z-index: 2;
+  margin-top: 0.6rem;
+  text-align: center;
+  font-size: 0.9rem;
+  word-break: keep-all;
 }
 
 .legend {
@@ -211,7 +210,7 @@
   align-items: center;
   background: rgba(50, 50, 50, 0.5);
   backdrop-filter: blur(4px);
-  z-index: 9999;
+  z-index: 1000;
 }
 
 .diary-popup {
@@ -368,6 +367,11 @@
 
 .popup-smiley:hover {
   transform: scale(1.05);
+}
+
+.date-label {
+  font-size: 0.75rem;
+  color: #888;
 }
 
 @media (max-width: 480px) {
