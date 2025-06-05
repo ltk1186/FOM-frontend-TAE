@@ -121,26 +121,26 @@
 .chart-bars {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;  /* 또는 space-around, center */
+  justify-content: space-between; /* 또는 space-around, center */
   align-items: flex-end;
   width: 100%;
   gap: 0.5rem; /* 각 요일 bar 사이 간격, 조정 가능 */
-  padding: 0 12px;  /* 좌우 여백 */
+  padding: 0 12px; /* 좌우 여백 */
   min-height: 140px;
   box-sizing: border-box;
 }
 
 .chart-column {
-  flex: 1 1 0;         /* 모든 column을 같은 크기로 */
+  flex: 1 1 0; /* 모든 column을 같은 크기로 */
   display: flex;
   flex-direction: column;
-  align-items: center;  /* 중앙 정렬 */
+  align-items: center; /* 중앙 정렬 */
   justify-content: flex-end;
-  min-width: 28px;      /* 모바일에서 너무 좁지 않게 */
+  min-width: 28px; /* 모바일에서 너무 좁지 않게 */
 }
 
 .bar {
-  width: 18px;    /* 감정 bar의 두께, 조정 가능 */
+  width: 18px; /* 감정 bar의 두께, 조정 가능 */
   border-radius: 3px;
 }
 

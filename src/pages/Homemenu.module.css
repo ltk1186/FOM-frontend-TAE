@@ -69,8 +69,8 @@
   left: 0;
   right: 0;
   top: 0;
-  height: 24px;
-  background: #ff9f05;
+  height: 26px;
+  background: #f5b654;
   opacity: 0.7;
   border-radius: 15px 15px 0 0;
 }
@@ -80,7 +80,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: 83px;
+  height: 81px;
   background: #ffffff;
   opacity: 0.7;
   border-radius: 0 0 15px 15px;
@@ -94,7 +94,6 @@
   height: 19px;
   z-index: 2;
   justify-content: center;
-  text-align: center;
 }
 
 .calendar-header h3 {
@@ -112,10 +111,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 321px;
   height: 57px;
-  padding: 0 7px;
-  /*left: 7px;*/
+  left: 7px;
   top: 38px;
   z-index: 2;
 }
@@ -124,13 +122,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: 45px;
   height: 58px;
   background: #ffffff;
   border-radius: 4px;
-  padding: 5px 0;
-  box-sizing: border-box;
 }
 
 .date-number {
@@ -140,8 +135,7 @@
   line-height: 24px;
   text-align: center;
   color: #543f1d;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-top: 6px;
 }
 
 .date-indicator {
@@ -149,8 +143,7 @@
   height: 24px;
   border-radius: 50%;
   background: #d9d9d9;
-  margin-top: 1px;
-  flex-shrink: 0;
+  margin-top: 0px;
 }
 
 .date-indicator.active {
@@ -185,7 +178,6 @@
   margin: 0;
   width: 286px;
   height: 24px;
-  text-align: center;
 }
 
 .emotion-result {
@@ -249,8 +241,8 @@
   grid-template-rows: repeat(3, 1fr);
   gap: 5px;
   width: 311px;
-  height: 397px;
   max-width: 300px;
+  height: 397px;
   justify-items: center;
   align-items: center;
 }
@@ -310,7 +302,7 @@
   opacity: 0.88;
   z-index: 2;
   position: relative;
-  margin-top: 5px;
+  margin-top: 3px;
 }
 
 /* 반응형 디자인 */
@@ -344,8 +336,8 @@
 
 .emotion-icon {
   filter: hue-rotate(45deg);
-  width: 54px; /* 🔽 기존 64px보다 작게 */
-  height: 54px;
+  width: 55px; /* 🔽 기존 64px보다 작게 */
+  height: 55px;
 }
 
 .target-icon {
