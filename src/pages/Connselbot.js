@@ -51,12 +51,15 @@ const Connselbot = () => {
     };
 
     const handleKeyPress = (e) => {
-        if (e.key === "Enter" && e.shiftKey) {
+        if (e.key === "Enter" && loading) {
             e.preventDefault();
-            setInput((prevInput) => prevInput + "\n"); // 개행 추가
-        } else if (e.key === "Enter") {
-            e.preventDefault();
-            sendMessage(); // 메시지 전송 시작
+            return; // 로딩 중일 때 추가 전송 방지
+        }
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault(); // 기본 Enter 동작 차단
+            sendMessage(); // 메시지 전송
+        } else if (e.key === "Enter" && e.shiftKey) {
+            setInput((prev) => prev + "\n"); // Shift+Enter는 개행 처리
         }
     };
 
@@ -115,11 +118,12 @@ const Connselbot = () => {
                         onChange={handleInputChange} // 입력 시 높이 조정
                         onKeyDown={handleKeyPress} // 엔터 키 이벤트 처리
                         rows="1" // 기본 1 줄
+                        disabled={loading}
                     />
-
                     <button
                         className={styles["send-button"]}
                         onClick={sendMessage}
+                        disabled={loading}
                     ></button>
                 </div>
             </div>
