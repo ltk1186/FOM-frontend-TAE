@@ -137,7 +137,7 @@ const RecordSummary = () => {
         {/* ✅ */}
         <button onClick={handleAIClick}>AI 일기 완성</button>
         <button onClick={handleSave}>저장하기</button>
-        <button onClick={handleGoReport}>포미와 이야기하기</button>
+        <button onClick={handleGoReport}>포미와 대화</button>
       </div>
     </div>
   );

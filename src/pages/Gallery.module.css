@@ -10,8 +10,8 @@
   align-items: center;
   justify-content: center; /* ✅ 세로 중앙 정렬 */
   position: relative;
-  padding-top: 80px; /* ✅ top-bar가 차지하는 높이만큼 여백 확보 */
-  padding-bottom: 100px; /* ✅ 하단 버튼 공간 확보 */
+  padding-top: 100px; /* ✅ top-bar가 차지하는 높이만큼 여백 확보 */
+  padding-bottom: 120px; /* ✅ 하단 버튼 공간 확보 */
 }
 
 .top-bar {
@@ -24,20 +24,20 @@
   left: 0;
   right: 0;
   z-index: 1000; /* ✅ 다른 요소보다 위 */
-  padding: 12px 20px;
+  padding: 20px 20px;
   box-shadow: var(--elevation-large-box-shadow); /* 선택 */
 }
 
 .back-button {
   position: absolute;
-  left: 0;
-  top: 2px;
+  left: 17px;
+  top: 25px;
 }
 
 .right-buttons {
   position: absolute;
-  right: 0;
-  top: 2px;
+  right: 17px;
+  top: 25px;
   display: flex;
   gap: 8px;
 }
@@ -154,7 +154,7 @@
 
 .bottom-btn-wrapper {
   position: fixed;
-  bottom: 20px;
+  bottom: 40px;
   left: 0;
   right: 0;
   display: flex;
