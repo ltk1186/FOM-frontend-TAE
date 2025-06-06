@@ -12,8 +12,7 @@
   overflow-y: auto;
 }
 
-/* 네비게이션바 (기존 방식) */
-/*
+/* 네비게이션바 */
 .navigation-bar {
   display: flex;
   justify-content: space-between;
@@ -34,51 +33,6 @@
   right: 0;
   top: 2px;
   display: flex;
-  gap: 8px;
-}
-*/
-
-/* 🔄 수정됨: RecordDiary 스타일의 navigation-bar 구조 추가 */
-.navigation-bar {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  z-index: 1000;
-  background: none;
-  transition: box-shadow 0.3s ease, background 0.3s ease;
-}
-
-.navigation-bar.scrolled {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  backdrop-filter: blur(6px);
-}
-
-.nav-left,
-.nav-center,
-.nav-right {
-  display: flex;
-  align-items: center;
-}
-
-.nav-left {
-  flex: 1;
-}
-
-.nav-center {
-  flex: 2;
-  justify-content: center;
-  gap: 8px;
-}
-
-.nav-right {
-  flex: 1;
-  justify-content: flex-end;
   gap: 8px;
 }
 
@@ -382,7 +336,7 @@
 
 .emotion-icon {
   filter: hue-rotate(45deg);
-  width: 55px;
+  width: 55px; /* 🔽 기존 64px보다 작게 */
   height: 55px;
 }
 

@@ -9,7 +9,7 @@
 }
 
 /* 상단 버튼바 */
-/* .top-buttons {
+.top-buttons {
   position: fixed;
   top: 60px;
   left: 0;
@@ -20,66 +20,16 @@
   align-items: center;
   padding: 0 1rem;
   z-index: 10;
-} */
+}
 
 .settings-title {
-  font-size: 40px;
+  font-size: 20px;
   font-weight: bold;
-  color: #fcb65e;
-  margin-bottom: 1.2rem;
-  margin-left: 0; /* ✅ 중앙 정렬에서 좌측 정렬로 변경 */
-  text-align: left; /* ✅ 좌측 정렬 추가 */
 }
 
-/* .right-buttons {
+.right-buttons {
   display: flex;
   align-items: center;
-} */
-
-/* 🔄 수정: navigation-bar 통일 구조 */
-.navigation-bar {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  z-index: 20;
-  background: none;
-  transition: box-shadow 0.3s ease, background 0.3s ease;
-}
-
-.navigation-bar.scrolled {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  backdrop-filter: blur(6px);
-}
-
-.nav-left,
-.nav-center,
-.nav-right {
-  display: flex;
-  align-items: center;
-}
-
-.nav-left {
-  flex: 1;
-}
-
-.nav-center {
-  flex: 1;
-  justify-content: center;
-}
-
-.nav-right {
-  flex: 1;
-  justify-content: flex-end;
-}
-
-.button-home {
-  margin-left: auto;
 }
 
 /* 전체 박스 */
@@ -272,7 +222,7 @@ input.input:read-only {
 /* 반응형 */
 @media (min-width: 768px) {
   .settings-title {
-    font-size: 26px;
+    font-size: 24px;
   }
 
   .settings-wrapper {

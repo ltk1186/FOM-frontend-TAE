@@ -3,7 +3,7 @@
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
-  padding: 100px 20px 40px; /* 🔄 수정: 상단 padding-top을 navigation-bar 기준으로 변경 */
+  padding: 80px 20px 40px;
   font-family: "Pretendard", sans-serif;
   display: flex;
   flex-direction: column;
@@ -16,62 +16,7 @@
   padding-bottom: 300px; /* 키보드가 올라올 때 공간 확보 */
 }
 
-/* 🔄 수정: navigation-bar 통일 시작 */
-.navigation-bar {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  z-index: 20;
-  background: none;
-  transition: box-shadow 0.3s ease, background 0.3s ease;
-}
-
-.navigation-bar.scrolled {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  backdrop-filter: blur(6px);
-}
-
-.nav-left,
-.nav-center,
-.nav-right {
-  display: flex;
-  align-items: center;
-}
-
-.nav-left {
-  flex: 1;
-}
-
-.nav-center {
-  flex: 2;
-  justify-content: center;
-}
-
-.nav-right {
-  flex: 1;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.button-settings {
-  margin-right: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.button-home {
-  display: flex;
-  align-items: center;
-}
-/* 🔄 수정: navigation-bar 통일 끝 */
-
-/* .top-buttons {
+.top-buttons {
   position: absolute;
   top: 30px;
   left: 20px;
@@ -84,7 +29,7 @@
 .right-buttons {
   display: flex;
   gap: 12px;
-} */
+}
 
 .record-edit-box {
   background-color: #fff7e8;
@@ -181,40 +126,4 @@
 .record-toggle-btn.off {
   background-color: #aaa;
   color: white;
-}
-
-/* ✅ 반응형: 레이아웃 유지 + 크기만 조절 */
-@media (max-width: 768px) {
-  .record-edit-box {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 12px 100px;
-  }
-
-  .log-title {
-    font-size: 16px;
-  }
-
-  .log-content {
-    font-size: 14px;
-  }
-
-  .cancel-button,
-  .save-button {
-    font-size: 13px;
-    padding: 10px 16px;
-  }
-
-  .record-toggle-btn {
-    width: 48px;
-    height: 48px;
-    font-size: 22px;
-  }
-
-  /* 🔄 추가: 반응형 navigation-bar 위치 조정 */
-  .navigation-bar {
-    top: 16px;
-    left: 12px;
-    right: 12px;
-  }
 }

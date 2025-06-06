@@ -4,60 +4,21 @@
 
 .calendar-page {
   min-height: 100vh;
-  padding: 100px 24px 21px; /* 🔄 navigation-bar 높이에 맞춰 padding-top 수정 */
+  padding: 50px 24px 21px;
   font-family: "Pretendard", sans-serif;
   color: #653d00;
   overflow-x: hidden;
 }
 
-/* 🔄 navigation-bar 리팩토링 시작 */
-.navigation-bar {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  right: 20px;
+.calendar-header {
+  margin-top: 0px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  z-index: 20;
-  background: none;
-  transition: box-shadow 0.3s ease, background 0.3s ease;
+  margin-bottom: 30px;
 }
 
-.navigation-bar.scrolled {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  backdrop-filter: blur(6px);
-}
-
-.nav-left,
-.nav-center,
-.nav-right {
-  display: flex;
-  align-items: center;
-}
-
-.nav-left {
-  flex: 1;
-}
-
-.nav-center {
-  flex: 2;
-  justify-content: center;
-  gap: 8px;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.nav-right {
-  flex: 1;
-  justify-content: flex-end;
-  gap: 8px;
-}
-/* 🔄 navigation-bar 리팩토링 끝 */
-
-.month-btn {
+.calendar-header button {
   background: none;
   border: none;
   font-size: 28px;
@@ -68,19 +29,10 @@
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.month-btn:hover {
+.calendar-header button:hover {
   transform: scale(1.1);
   color: #f3a93c;
 }
-
-/* 기존 calendar-header 제거 또는 주석 처리 */
-/* .calendar-header {
-  margin-top: 0px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-} */
 
 .calendar-title {
   font-size: 26px;
@@ -169,26 +121,26 @@
 .chart-bars {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-between; /* 또는 space-around, center */
   align-items: flex-end;
   width: 100%;
-  gap: 0.5rem;
-  padding: 0 12px;
+  gap: 0.5rem; /* 각 요일 bar 사이 간격, 조정 가능 */
+  padding: 0 12px; /* 좌우 여백 */
   min-height: 140px;
   box-sizing: border-box;
 }
 
 .chart-column {
-  flex: 1 1 0;
+  flex: 1 1 0; /* 모든 column을 같은 크기로 */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* 중앙 정렬 */
   justify-content: flex-end;
-  min-width: 28px;
+  min-width: 28px; /* 모바일에서 너무 좁지 않게 */
 }
 
 .bar {
-  width: 18px;
+  width: 18px; /* 감정 bar의 두께, 조정 가능 */
   border-radius: 3px;
 }
 
@@ -226,39 +178,23 @@
   .calendar-title {
     font-size: 16px;
   }
-
   .chart-title {
     font-size: 14px;
   }
-
   .chart-bars {
     height: 120px;
     gap: 6px;
     padding: 0 4px;
   }
-
   .chart-column {
     min-width: 22px;
     height: 120px;
   }
-
   .legend-item {
     font-size: 11px;
   }
-
   .day-label {
     font-size: 11px;
-  }
-
-  /* 🔄 navigation-bar 반응형 대응 */
-  .navigation-bar {
-    top: 16px;
-    left: 12px;
-    right: 12px;
-  }
-
-  .nav-center {
-    font-size: 18px;
   }
 }
 

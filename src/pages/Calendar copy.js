@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styles from "./Calendar.module.css";
 import axios from "axios";
 import HomeButton from "../components/HomeButton";
@@ -32,19 +32,21 @@ const EMOTION_KR = {
   boredom: "따분",
 };
 
-const DAYS = ["월", "화", "수", "목", "금", "토", "일"];
+const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
+// 🔥 주간 날짜(Y-M-D)를 반환하는 함수 (일~오늘)
 const getFullWeekDates = () => {
   const today = new Date();
-  let dayOfWeek = today.getDay(); // 일:0~토:6
-  dayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek; // 일요일 7로 변환
-  const monday = new Date(today);
-  monday.setDate(today.getDate() - (dayOfWeek - 1));
+  const dayOfWeek = today.getDay(); // 일:0~토:6
+  // 이번 주 일요일
+  const sunday = new Date(today);
+  sunday.setDate(today.getDate() - dayOfWeek);
+  // 이번 주 날짜 배열 (일~토)
   const dates = [];
   for (let i = 0; i < 7; i++) {
-    const d = new Date(monday);
-    d.setDate(monday.getDate() + i);
-    dates.push(d.toISOString().slice(0, 10));
+    const d = new Date(sunday);
+    d.setDate(sunday.getDate() + i);
+    dates.push(d.toISOString().slice(0, 10)); // "YYYY-MM-DD"
   }
   return dates;
 };
@@ -54,7 +56,7 @@ const CalendarPage = () => {
   const navigate = useNavigate();
 
   const [emotionData, setEmotionData] = useState([]);
-  const [weekDates, setWeekDates] = useState([]);
+  const [weekDates, setWeekDates] = useState([]); // 주간 날짜 배열 저장
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [diaryPopupContent, setDiaryPopupContent] = useState([]);
@@ -64,59 +66,19 @@ const CalendarPage = () => {
   const [draftText, setDraftText] = useState("");
   const [diaryId, setDiaryId] = useState(null);
 
-// 오늘 날짜를 "YYYY-MM-DD" 형태로 반환
-const getTodayString = () => {
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
-}; 
-
-const openPopup = useCallback(async (dateStr) => {
-  setSelectedDate(dateStr);
-  setIsConsulting(false);
-  setIsEditing(false);
-  setIsLoading(true);
-
-  try {
-    const response = await axios.get(
-      "https://fombackend.azurewebsites.net/api/diary/read",
-      { params: { user_id: user.user_id, selected_date: dateStr } }
-    );
-
-    if (Array.isArray(response.data) && response.data.length > 0) {
-      const diary = [{ content: response.data[0].content }];
-      setDiaryPopupContent(diary);
-      setOriginalDiaryContent(diary);
-      setDiaryId(response.data[0].diary_id);
-    } else {
-      const diary = [{ content: "작성된 일기가 없습니다." }];
-      setDiaryPopupContent(diary);
-      setOriginalDiaryContent(diary);
-      setDiaryId(null);
-    }
-  } catch (error) {
-    setDiaryPopupContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
-    setOriginalDiaryContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
-  } finally {
-    setIsLoading(false);
-  }
-}, [user, setIsLoading]);
-  
-// eslint-disable-next-line react-hooks/exhaustive-deps
-useEffect(() => {
-  const fetchEmotionForThisWeek = async () => {
-    if (!user) return;
-    setIsLoading(true);
-    const dates = getFullWeekDates();
-    setWeekDates(dates);
+  useEffect(() => {
+    const fetchEmotionForThisWeek = async () => {
+      if (!user) return;
+      setIsLoading(true);
+      const dates = getFullWeekDates();
+      setWeekDates(dates);
 
       const today = new Date();
       const todayStr = today.toISOString().slice(0, 10);
-      const results = [];
 
+      const results = [];
       for (const date of dates) {
+        // 오늘 이후면 0값
         if (date > todayStr) {
           results.push({
             joy: 0,
@@ -132,12 +94,14 @@ useEffect(() => {
           continue;
         }
         try {
+          // Diary ID 먼저 조회
           const diaryRes = await axios.get(
             "https://fombackend.azurewebsites.net/api/diary/read",
             { params: { user_id: user.user_id, selected_date: date } }
           );
           const diary = diaryRes.data[0];
           if (!diary || !diary.diary_id) {
+            // 일기가 없으면 0값
             results.push({
               joy: 0,
               sadness: 0,
@@ -151,7 +115,7 @@ useEffect(() => {
             });
             continue;
           }
-
+          // Emotion 감정값 조회
           const emotionRes = await axios.get(
             "https://fombackend.azurewebsites.net/api/emotion/read",
             { params: { user_id: user.user_id, diary_id: diary.diary_id } }
@@ -168,7 +132,7 @@ useEffect(() => {
             confusion: emotion.bewilderment ?? 0,
             boredom: emotion.boredom ?? 0,
           });
-        } catch {
+        } catch (error) {
           results.push({
             joy: 0,
             sadness: 0,
@@ -191,15 +155,8 @@ useEffect(() => {
       return;
     }
     fetchEmotionForThisWeek();
+    // eslint-disable-next-line
   }, [user, navigate, setIsLoading]);
-  if (!user) {
-    navigate("/login");
-    return;
-  }
-  fetchEmotionForThisWeek();
-  const todayStr = getTodayString();
-  openPopup(todayStr);
-}, [user, navigate, setIsLoading, openPopup]);
 
   // (아래 부분은 이전 코드와 동일: 캘린더, 팝업, 저장 등)
   const year = currentDate.getFullYear();
@@ -240,6 +197,39 @@ useEffect(() => {
     setCurrentDate(newDate);
   };
 
+  const openPopup = async (dateStr) => {
+    setSelectedDate(dateStr);
+    setIsConsulting(false);
+    setIsEditing(false);
+    setIsLoading(true);
+
+    try {
+      const response = await axios.get(
+        "https://fombackend.azurewebsites.net/api/diary/read",
+        { params: { user_id: user.user_id, selected_date: dateStr } }
+      );
+
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        const diary = [{ content: response.data[0].content }];
+        setDiaryPopupContent(diary);
+        setOriginalDiaryContent(diary);
+        setDiaryId(response.data[0].diary_id);
+      } else {
+        const diary = [{ content: "작성된 일기가 없습니다." }];
+        setDiaryPopupContent(diary);
+        setOriginalDiaryContent(diary);
+        setDiaryId(null);
+      }
+    } catch (error) {
+      setDiaryPopupContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
+      setOriginalDiaryContent([
+        { content: "일기 조회 중 오류가 발생했습니다." },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleMascotClick = () => {
     if (!selectedDate) return;
     setIsConsulting(true);
@@ -277,9 +267,7 @@ useEffect(() => {
       if (diaryId) {
         await axios.put(
           `https://fombackend.azurewebsites.net/api/diary/${diaryId}`,
-          {
-            content: draftText,
-          }
+          { content: draftText }
         );
       } else {
         await axios.post(
@@ -304,19 +292,13 @@ useEffect(() => {
     setIsEditing(true);
   };
 
+  // --- 렌더링 ---
   return (
     <>
       <div className={styles["calendar-page"]}>
-        {/* 🔄 navigation-bar 리팩토링 시작 */}
-        <div
-          className={`${styles["navigation-bar"]} ${
-            isScrolled ? styles["scrolled"] : ""
-          }`}
-        >
-          <div className={styles["nav-left"]}>
-            <PreviousArrow />
-          </div>
-          <div className={styles["nav-center"]}>
+        <div className={styles["calendar-header"]}>
+          <PreviousArrow />
+          <div className={styles["calendar-title"]}>
             <button
               className={styles["month-btn"]}
               onClick={() => changeMonth(-1)}
@@ -331,14 +313,9 @@ useEffect(() => {
               &gt;
             </button>
           </div>
-          <div className={styles["nav-right"]}>
-            <Settings />
-            <HomeButton />
-          </div>
+          <Settings />
+          <HomeButton />
         </div>
-        {/* 🔄 navigation-bar 리팩토링 끝 */}
-
-        {/* 기존 calendar-table, chart 등 렌더링은 동일 */}
         <div className={styles["calendar-table"]}>
           <table>
             <thead>
@@ -352,6 +329,7 @@ useEffect(() => {
           </table>
         </div>
 
+        {/* 👇 감정 그래프 - 날짜 표시 추가 */}
         <div className={styles["emotion-chart"]}>
           <div className={styles["chart-title"]}>일주일의 나의 감정</div>
           <div className={styles["chart-bars"]}>
@@ -376,6 +354,7 @@ useEffect(() => {
                   })}
                   <div className={styles["day-label"]}>
                     <div>{DAYS[index]}</div>
+                    {/* 날짜 붙이기 */}
                     <div className={styles["day-date"]}>
                       {weekDates[index]?.slice(8, 10)}일
                     </div>

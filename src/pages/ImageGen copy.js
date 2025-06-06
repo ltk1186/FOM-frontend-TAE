@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./ImageGen.module.css";
 import PreviousArrow from "../components/PreviousArrow";
-import Settings from "../components/Settings";
 import HomeButton from "../components/HomeButton";
 import Smiley from "../assets/images/image-50.png";
 import { UserContext } from "./UserContext";
@@ -15,16 +14,6 @@ const ImageGen = () => {
 
   const [imageUrl, setImageUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
-
-  // 🔄 추가: 스크롤 상태를 감지하여 navigation-bar 스타일 변경
-  const [isScrolled, setIsScrolled] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // diary 없으면 홈으로
   useEffect(() => {
@@ -46,6 +35,7 @@ const ImageGen = () => {
     setIsGenerating(true);
     setIsLoading(true);
     try {
+      // 백엔드 API 호출 (summary만 content로 사용)
       const res = await axios.put(
         "https://fombackend.azurewebsites.net/api/diary/image/create",
         {
@@ -90,23 +80,11 @@ const ImageGen = () => {
 
   return (
     <div className={styles["imagegen-page"]}>
-      {/* 🔄 수정: navigation-bar 통일 */}
-      <div
-        className={`${styles["navigation-bar"]} ${
-          isScrolled ? styles["scrolled"] : ""
-        }`}
-      >
-        <div className={styles["nav-left"]}>
-          <PreviousArrow />
-        </div>
-        <div className={styles["nav-right"]}>
-          <div className={styles["button-settings"]}>
-            <Settings />
-          </div>
-          <div className={styles["button-home"]}>
-            <HomeButton />
-          </div>
-        </div>
+      {/* ── 상단바 ───────────────────────────── */}
+      <div className={styles["top-bar"]}>
+        <PreviousArrow />
+        <img src={Smiley} alt="마스코트" className={styles.mascot} />
+        <HomeButton />
       </div>
 
       {/* ── 이미지(또는 플레이스홀더) ───────────── */}
