@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import LoginIntro from "./pages/LoginIntro";
 import Login from "./pages/Login";
 import Homemenu from "./pages/Homemenu";
@@ -42,10 +42,13 @@ function App() {
                 <Route path="/recordsummary" element={<RecordSummary />} />
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/diarylist" element={<DiaryList />} />
+                <Route path="/diarylist" element={<DiaryList />} />{" "}
                 <Route path="/connselbot" element={<Connselbot />} />
-                <Route path="/diary/:id" element={<ImageGen />} />
-                <Route path="/imagegen/:id" element={<ImageGen />} />
+                {/* ** 06.01 추가 */}
+                <Route path="/diary/:id" element={<ImageGen />} />{" "}
+                {/* ** 06.01 추가 */}
+                <Route path="/imagegen/:id" element={<ImageGen />} />{" "}
+                {/* ** 06.01 추가 */}
                 <Route path="/gallery" element={<Gallery />} />
             </Routes>
         </div>
