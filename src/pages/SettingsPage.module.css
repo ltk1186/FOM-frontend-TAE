@@ -1,6 +1,6 @@
 .settings-container {
   min-height: 100vh;
-  padding-top: 130px;
+  padding-top: 50px;
   font-family: "Pretendard", sans-serif;
   background-size: cover;
   background-position: center;
@@ -11,10 +11,10 @@
 /* 상단 버튼바 */
 /* .top-buttons {
   position: fixed;
-  top: 60px;
+  top: 20px;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -86,10 +86,10 @@
 .settings-wrapper {
   background-color: #fff7e8;
   border-radius: 25px;
-  padding: 2rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   max-width: 600px;
-  margin: 2rem auto;
+  margin: 1.5rem auto;
 }
 
 .section-wrapper {
