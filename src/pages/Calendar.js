@@ -57,6 +57,7 @@ const getFullWeekDates = () => {
 const CalendarPage = () => {
   const { user, setIsLoading } = useContext(UserContext);
   const navigate = useNavigate();
+  const psyCache = useRef({});
 
   const [emotionData, setEmotionData] = useState([]);
   const [weekDates, setWeekDates] = useState([]);
@@ -79,6 +80,10 @@ const CalendarPage = () => {
 
   // AbortController 관리 (요청취소)
   const requestControllerRef = useRef(null);
+
+  useEffect(() => {
+    psyCache.current = {};
+  }, [user]);
 
   useEffect(() => {
     // 컴포넌트 언마운트 시 마지막 요청 취소
@@ -271,14 +276,45 @@ const CalendarPage = () => {
     setCurrentDate(newDate);
   };
 
-  const handleMascotClick = () => {
-    if (!selectedDate) return;
+const handleMascotClick = async () => {
+  if (!selectedDate || !diaryId || !user || !originalDiaryContent[0]?.content) {
     setIsConsulting(true);
-    setIsEditing(false);
-    setDiaryPopupContent([
-      { content: "오늘의 일기를 읽으며 당신의 하루가 고요하게..." },
-    ]);
-  };
+    setDiaryPopupContent([{ content: "해당 날짜의 상담 보고서가 없습니다." }]);
+    return;
+  }
+
+  setIsConsulting(true);
+  setIsEditing(false);
+
+  // 1. 캐시에 있으면 바로 사용
+  if (psyCache.current[selectedDate]) {
+    setDiaryPopupContent([{ content: psyCache.current[selectedDate] }]);
+    return;
+  }
+
+  setDiaryPopupContent([{ content: "상담 보고서를 생성 중입니다..." }]);
+  setIsLoading(true);
+  try {
+    const res = await axios.post(
+      "https://fombackend.azurewebsites.net/api/psy/create",
+      {
+        user_id: user.user_id,
+        diary_id: diaryId,
+        diary_text: originalDiaryContent[0].content // 반드시 추가!
+      }
+    );
+    if (res.data && typeof res.data.Fome === "string") {
+      psyCache.current[selectedDate] = res.data.Fome;
+      setDiaryPopupContent([{ content: res.data.Fome }]);
+    } else {
+      setDiaryPopupContent([{ content: "해당 날짜의 상담 보고서가 없습니다." }]);
+    }
+  } catch (e) {
+    setDiaryPopupContent([{ content: "상담 보고서 생성에 실패했습니다." }]);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleBack = () => {
     setIsConsulting(false);
