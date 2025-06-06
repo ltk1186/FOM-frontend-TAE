@@ -64,53 +64,62 @@ const CalendarPage = () => {
   const [draftText, setDraftText] = useState("");
   const [diaryId, setDiaryId] = useState(null);
 
-// 오늘 날짜를 "YYYY-MM-DD" 형태로 반환
-const getTodayString = () => {
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, "0");
-  const dd = String(today.getDate()).padStart(2, "0");
-  return `${yyyy}-${mm}-${dd}`;
-}; 
+  // 🔥 navigation-bar용 스크롤 상태
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 0);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-const openPopup = useCallback(async (dateStr) => {
-  setSelectedDate(dateStr);
-  setIsConsulting(false);
-  setIsEditing(false);
-  setIsLoading(true);
+  // 오늘 날짜를 "YYYY-MM-DD" 형태로 반환
+  const getTodayString = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
 
-  try {
-    const response = await axios.get(
-      "https://fombackend.azurewebsites.net/api/diary/read",
-      { params: { user_id: user.user_id, selected_date: dateStr } }
-    );
-
-    if (Array.isArray(response.data) && response.data.length > 0) {
-      const diary = [{ content: response.data[0].content }];
-      setDiaryPopupContent(diary);
-      setOriginalDiaryContent(diary);
-      setDiaryId(response.data[0].diary_id);
-    } else {
-      const diary = [{ content: "작성된 일기가 없습니다." }];
-      setDiaryPopupContent(diary);
-      setOriginalDiaryContent(diary);
-      setDiaryId(null);
-    }
-  } catch (error) {
-    setDiaryPopupContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
-    setOriginalDiaryContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
-  } finally {
-    setIsLoading(false);
-  }
-}, [user, setIsLoading]);
-  
-// eslint-disable-next-line react-hooks/exhaustive-deps
-useEffect(() => {
-  const fetchEmotionForThisWeek = async () => {
-    if (!user) return;
+  // 팝업 열기 함수 (useCallback으로 최적화)
+  const openPopup = useCallback(async (dateStr) => {
+    setSelectedDate(dateStr);
+    setIsConsulting(false);
+    setIsEditing(false);
     setIsLoading(true);
-    const dates = getFullWeekDates();
-    setWeekDates(dates);
+
+    try {
+      const response = await axios.get(
+        "https://fombackend.azurewebsites.net/api/diary/read",
+        { params: { user_id: user.user_id, selected_date: dateStr } }
+      );
+
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        const diary = [{ content: response.data[0].content }];
+        setDiaryPopupContent(diary);
+        setOriginalDiaryContent(diary);
+        setDiaryId(response.data[0].diary_id);
+      } else {
+        const diary = [{ content: "작성된 일기가 없습니다." }];
+        setDiaryPopupContent(diary);
+        setOriginalDiaryContent(diary);
+        setDiaryId(null);
+      }
+    } catch (error) {
+      setDiaryPopupContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
+      setOriginalDiaryContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user, setIsLoading]);
+
+  // effect: 주간 감정 불러오기 & 페이지 진입 시 오늘 일기 자동 팝업
+  useEffect(() => {
+    const fetchEmotionForThisWeek = async () => {
+      if (!user) return;
+      setIsLoading(true);
+      const dates = getFullWeekDates();
+      setWeekDates(dates);
 
       const today = new Date();
       const todayStr = today.toISOString().slice(0, 10);
@@ -191,24 +200,21 @@ useEffect(() => {
       return;
     }
     fetchEmotionForThisWeek();
-  }, [user, navigate, setIsLoading]);
-  if (!user) {
-    navigate("/login");
-    return;
-  }
-  fetchEmotionForThisWeek();
-  const todayStr = getTodayString();
-  openPopup(todayStr);
-}, [user, navigate, setIsLoading, openPopup]);
 
-  // (아래 부분은 이전 코드와 동일: 캘린더, 팝업, 저장 등)
+    // 오늘 페이지 진입 시 오늘 일기 자동 팝업
+    const todayStr = getTodayString();
+    openPopup(todayStr);
+  }, [user, navigate, setIsLoading, openPopup]);
+
+  // 달력 그리기
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const firstDay = new Date(year, month, 1).getDay();
   const lastDate = new Date(year, month + 1, 0).getDate();
 
   const calendarRows = [];
-  let day = 1 - firstDay;
+  let day = 1 - (firstDay === 0 ? 6 : firstDay - 1); // 월요일 시작으로 변경
+
   for (let i = 0; i < 6; i++) {
     const row = [];
     let hasValidDate = false;
@@ -240,6 +246,7 @@ useEffect(() => {
     setCurrentDate(newDate);
   };
 
+  // 팝업 내부 로직
   const handleMascotClick = () => {
     if (!selectedDate) return;
     setIsConsulting(true);
@@ -260,9 +267,7 @@ useEffect(() => {
     try {
       await axios.delete(
         "https://fombackend.azurewebsites.net/api/diary/delete",
-        {
-          params: { diary_id: diaryId },
-        }
+        { params: { diary_id: diaryId } }
       );
       setSelectedDate(null);
     } finally {
@@ -277,9 +282,7 @@ useEffect(() => {
       if (diaryId) {
         await axios.put(
           `https://fombackend.azurewebsites.net/api/diary/${diaryId}`,
-          {
-            content: draftText,
-          }
+          { content: draftText }
         );
       } else {
         await axios.post(
@@ -307,7 +310,7 @@ useEffect(() => {
   return (
     <>
       <div className={styles["calendar-page"]}>
-        {/* 🔄 navigation-bar 리팩토링 시작 */}
+        {/* navigation-bar 최신 구조 */}
         <div
           className={`${styles["navigation-bar"]} ${
             isScrolled ? styles["scrolled"] : ""
@@ -336,9 +339,8 @@ useEffect(() => {
             <HomeButton />
           </div>
         </div>
-        {/* 🔄 navigation-bar 리팩토링 끝 */}
 
-        {/* 기존 calendar-table, chart 등 렌더링은 동일 */}
+        {/* 달력 */}
         <div className={styles["calendar-table"]}>
           <table>
             <thead>
@@ -352,6 +354,7 @@ useEffect(() => {
           </table>
         </div>
 
+        {/* 감정 차트 */}
         <div className={styles["emotion-chart"]}>
           <div className={styles["chart-title"]}>일주일의 나의 감정</div>
           <div className={styles["chart-bars"]}>
@@ -398,6 +401,7 @@ useEffect(() => {
         </div>
       </div>
 
+      {/* 일기 팝업 */}
       {selectedDate && (
         <div className={styles["diary-popup-overlay"]}>
           <div className={styles["diary-popup"]}>
