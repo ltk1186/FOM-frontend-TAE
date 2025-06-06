@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useContext, useCallback, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  useRef,
+} from "react";
 import styles from "./Calendar.module.css";
 import axios from "axios";
 import HomeButton from "../components/HomeButton";
@@ -8,6 +14,7 @@ import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import Smiley from "../assets/images/image-50.png";
 
+// 🔽 감정 색상/한글 정의 등 기존 상수 유지
 const EMOTION_COLORS = {
   joy: "#FFD93D",
   sadness: "#5DA2D5",
@@ -34,18 +41,16 @@ const EMOTION_KR = {
 
 const DAYS = ["월", "화", "수", "목", "금", "토", "일"];
 
-// 월요일~일요일 날짜 배열, toISOString() 대신 직접 YYYY-MM-DD 생성
 const getFullWeekDates = () => {
   const today = new Date();
   let dayOfWeek = today.getDay();
-  dayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek; // 일요일은 7로
+  dayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek;
   const monday = new Date(today);
   monday.setDate(today.getDate() - (dayOfWeek - 1));
   const dates = [];
   for (let i = 0; i < 7; i++) {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
-    // toISOString 대신 로컬 YYYY-MM-DD
     const yyyy = d.getFullYear();
     const mm = String(d.getMonth() + 1).padStart(2, "0");
     const dd = String(d.getDate()).padStart(2, "0");
@@ -69,7 +74,6 @@ const CalendarPage = () => {
   const [draftText, setDraftText] = useState("");
   const [diaryId, setDiaryId] = useState(null);
 
-  // 스크롤 상태 (헤더용)
   const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 0);
@@ -77,17 +81,26 @@ const CalendarPage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // AbortController 관리 (요청취소)
   const requestControllerRef = useRef(null);
 
   useEffect(() => {
-    // 컴포넌트 언마운트 시 마지막 요청 취소
     return () => {
       requestControllerRef.current?.abort();
     };
   }, []);
 
-  // 오늘 날짜 반환
+  // 🔽 팝업 활성화 시 body 스크롤 방지
+  useEffect(() => {
+    if (selectedDate) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [selectedDate]);
+
   const getTodayString = () => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -96,10 +109,8 @@ const CalendarPage = () => {
     return `${yyyy}-${mm}-${dd}`;
   };
 
-  // 팝업 열기 (이전요청 취소/새요청)
   const openPopup = useCallback(
     async (dateStr) => {
-      // 이전 요청 취소
       requestControllerRef.current?.abort();
       const controller = new AbortController();
       requestControllerRef.current = controller;
@@ -133,8 +144,12 @@ const CalendarPage = () => {
         }
       } catch (error) {
         if (controller.signal.aborted) return;
-        setDiaryPopupContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
-        setOriginalDiaryContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
+        setDiaryPopupContent([
+          { content: "일기 조회 중 오류가 발생했습니다." },
+        ]);
+        setOriginalDiaryContent([
+          { content: "일기 조회 중 오류가 발생했습니다." },
+        ]);
       } finally {
         if (!controller.signal.aborted) setIsLoading(false);
       }
@@ -142,7 +157,6 @@ const CalendarPage = () => {
     [user, setIsLoading]
   );
 
-  // 주간 감정/오늘 자동팝업
   useEffect(() => {
     const fetchEmotionForThisWeek = async () => {
       if (!user) return;
@@ -228,27 +242,24 @@ const CalendarPage = () => {
       return;
     }
     fetchEmotionForThisWeek();
-
-    // 오늘 일기 자동 팝업
-    const todayStr = getTodayString();
-    openPopup(todayStr);
-    // eslint-disable-next-line
+    openPopup(getTodayString());
   }, [user, navigate, setIsLoading, openPopup]);
 
-  // 달력
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const firstDay = new Date(year, month, 1).getDay();
   const lastDate = new Date(year, month + 1, 0).getDate();
 
   const calendarRows = [];
-  let day = 1 - (firstDay === 0 ? 6 : firstDay - 1); // 월요일 시작
+  let day = 1 - (firstDay === 0 ? 6 : firstDay - 1);
   for (let i = 0; i < 6; i++) {
     const row = [];
     let hasValidDate = false;
     for (let j = 0; j < 7; j++) {
       const valid = day >= 1 && day <= lastDate;
-      const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(
+        day
+      ).padStart(2, "0")}`;
       row.push(
         <td key={j}>
           {valid ? (
@@ -261,15 +272,8 @@ const CalendarPage = () => {
       if (valid) hasValidDate = true;
       day++;
     }
-    if (hasValidDate) {
-      calendarRows.push(<tr key={i}>{row}</tr>);
-    }
+    if (hasValidDate) calendarRows.push(<tr key={i}>{row}</tr>);
   }
-
-  const changeMonth = (offset) => {
-    const newDate = new Date(year, month + offset, 1);
-    setCurrentDate(newDate);
-  };
 
   const handleMascotClick = () => {
     if (!selectedDate) return;
@@ -285,18 +289,9 @@ const CalendarPage = () => {
     setDiaryPopupContent(originalDiaryContent);
   };
 
-  const handleDelete = async () => {
-    if (!diaryId) return;
-    setIsLoading(true);
-    try {
-      await axios.delete(
-        "https://fombackend.azurewebsites.net/api/diary/delete",
-        { params: { diary_id: diaryId } }
-      );
-      setSelectedDate(null);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleDelete = () => {
+    setIsEditing(false);
+    setDiaryPopupContent(originalDiaryContent);
   };
 
   const handleSave = async () => {
@@ -318,15 +313,15 @@ const CalendarPage = () => {
           }
         );
       }
-      setIsEditing(false);
+      setDiaryPopupContent([{ content: draftText }]);
       setOriginalDiaryContent([{ content: draftText }]);
+      setIsEditing(false);
     } finally {
       setIsLoading(false);
     }
   };
 
   const startEdit = () => {
-    if (isConsulting) return;
     setDraftText(diaryPopupContent[0]?.content || "");
     setIsEditing(true);
   };
@@ -343,7 +338,8 @@ const CalendarPage = () => {
           <div className={styles["nav-left"]}>
             <PreviousArrow />
           </div>
-          <div className={styles["nav-center"]}>
+          {/* 기존 연월 설정 방식 */}
+          {/* <div className={styles["nav-center"]}>
             <button
               className={styles["month-btn"]}
               onClick={() => changeMonth(-1)}
@@ -357,6 +353,42 @@ const CalendarPage = () => {
             >
               &gt;
             </button>
+          </div> */}
+          <div className={styles["nav-center"]}>
+            <div className={styles.dropdowns}>
+              <select
+                value={year}
+                onChange={(e) =>
+                  setCurrentDate(
+                    new Date(Number(e.target.value), currentDate.getMonth(), 1)
+                  )
+                }
+              >
+                {Array.from({ length: 100 }, (_, i) => year - i).map((y) => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={currentDate.getMonth() + 1}
+                onChange={(e) =>
+                  setCurrentDate(
+                    new Date(
+                      currentDate.getFullYear(),
+                      Number(e.target.value) - 1,
+                      1
+                    )
+                  )
+                }
+              >
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className={styles["nav-right"]}>
             <Settings />
@@ -451,7 +483,7 @@ const CalendarPage = () => {
                 </div>
               )}
             </div>
-            <div className={styles["popup-content"]} onClick={startEdit}>
+            <div className={styles["popup-content"]}>
               {isConsulting || !isEditing ? (
                 diaryPopupContent.map(({ content }, i) => (
                   <p key={i}>{content}</p>
@@ -479,9 +511,11 @@ const CalendarPage = () => {
                 <>
                   <button
                     className={`${styles["popup-button"]} ${styles.delete}`}
-                    onClick={handleDelete}
+                    onClick={
+                      isEditing ? handleDelete : () => setSelectedDate(null)
+                    }
                   >
-                    삭제하기
+                    {isEditing ? "취소하기" : "삭제하기"}
                   </button>
                   <img
                     src={Smiley}
@@ -491,16 +525,9 @@ const CalendarPage = () => {
                   />
                   <button
                     className={`${styles["popup-button"]} ${styles.save}`}
-                    onClick={async () => {
-                      if (isEditing) {
-                        setDiaryPopupContent([{ content: draftText }]);
-                        setOriginalDiaryContent([{ content: draftText }]);
-                        setIsEditing(false);
-                      }
-                      await handleSave();
-                    }}
+                    onClick={isEditing ? handleSave : startEdit}
                   >
-                    저장하기
+                    {isEditing ? "저장하기" : "수정하기"}
                   </button>
                 </>
               )}
