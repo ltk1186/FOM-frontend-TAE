@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext, useCallback, useRef } from "react";
 import styles from "./Calendar.module.css";
 import axios from "axios";
 import HomeButton from "../components/HomeButton";
@@ -34,17 +34,22 @@ const EMOTION_KR = {
 
 const DAYS = ["월", "화", "수", "목", "금", "토", "일"];
 
+// 월요일~일요일 날짜 배열, toISOString() 대신 직접 YYYY-MM-DD 생성
 const getFullWeekDates = () => {
   const today = new Date();
-  let dayOfWeek = today.getDay(); // 일:0~토:6
-  dayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek; // 일요일 7로 변환
+  let dayOfWeek = today.getDay();
+  dayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek; // 일요일은 7로
   const monday = new Date(today);
   monday.setDate(today.getDate() - (dayOfWeek - 1));
   const dates = [];
   for (let i = 0; i < 7; i++) {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
-    dates.push(d.toISOString().slice(0, 10));
+    // toISOString 대신 로컬 YYYY-MM-DD
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    dates.push(`${yyyy}-${mm}-${dd}`);
   }
   return dates;
 };
@@ -64,7 +69,7 @@ const CalendarPage = () => {
   const [draftText, setDraftText] = useState("");
   const [diaryId, setDiaryId] = useState(null);
 
-  // 🔥 navigation-bar용 스크롤 상태
+  // 스크롤 상태 (헤더용)
   const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 0);
@@ -72,7 +77,17 @@ const CalendarPage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 오늘 날짜를 "YYYY-MM-DD" 형태로 반환
+  // AbortController 관리 (요청취소)
+  const requestControllerRef = useRef(null);
+
+  useEffect(() => {
+    // 컴포넌트 언마운트 시 마지막 요청 취소
+    return () => {
+      requestControllerRef.current?.abort();
+    };
+  }, []);
+
+  // 오늘 날짜 반환
   const getTodayString = () => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -81,39 +96,53 @@ const CalendarPage = () => {
     return `${yyyy}-${mm}-${dd}`;
   };
 
-  // 팝업 열기 함수 (useCallback으로 최적화)
-  const openPopup = useCallback(async (dateStr) => {
-    setSelectedDate(dateStr);
-    setIsConsulting(false);
-    setIsEditing(false);
-    setIsLoading(true);
+  // 팝업 열기 (이전요청 취소/새요청)
+  const openPopup = useCallback(
+    async (dateStr) => {
+      // 이전 요청 취소
+      requestControllerRef.current?.abort();
+      const controller = new AbortController();
+      requestControllerRef.current = controller;
 
-    try {
-      const response = await axios.get(
-        "https://fombackend.azurewebsites.net/api/diary/read",
-        { params: { user_id: user.user_id, selected_date: dateStr } }
-      );
+      setSelectedDate(dateStr);
+      setIsConsulting(false);
+      setIsEditing(false);
+      setIsLoading(true);
 
-      if (Array.isArray(response.data) && response.data.length > 0) {
-        const diary = [{ content: response.data[0].content }];
-        setDiaryPopupContent(diary);
-        setOriginalDiaryContent(diary);
-        setDiaryId(response.data[0].diary_id);
-      } else {
-        const diary = [{ content: "작성된 일기가 없습니다." }];
-        setDiaryPopupContent(diary);
-        setOriginalDiaryContent(diary);
-        setDiaryId(null);
+      try {
+        const response = await axios.get(
+          "https://fombackend.azurewebsites.net/api/diary/read",
+          {
+            params: { user_id: user.user_id, selected_date: dateStr },
+            signal: controller.signal,
+          }
+        );
+
+        if (controller.signal.aborted) return;
+
+        if (Array.isArray(response.data) && response.data.length > 0) {
+          const diary = [{ content: response.data[0].content }];
+          setDiaryPopupContent(diary);
+          setOriginalDiaryContent(diary);
+          setDiaryId(response.data[0].diary_id);
+        } else {
+          const diary = [{ content: "작성된 일기가 없습니다." }];
+          setDiaryPopupContent(diary);
+          setOriginalDiaryContent(diary);
+          setDiaryId(null);
+        }
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        setDiaryPopupContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
+        setOriginalDiaryContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
+      } finally {
+        if (!controller.signal.aborted) setIsLoading(false);
       }
-    } catch (error) {
-      setDiaryPopupContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
-      setOriginalDiaryContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [user, setIsLoading]);
+    },
+    [user, setIsLoading]
+  );
 
-  // effect: 주간 감정 불러오기 & 페이지 진입 시 오늘 일기 자동 팝업
+  // 주간 감정/오늘 자동팝업
   useEffect(() => {
     const fetchEmotionForThisWeek = async () => {
       if (!user) return;
@@ -121,8 +150,7 @@ const CalendarPage = () => {
       const dates = getFullWeekDates();
       setWeekDates(dates);
 
-      const today = new Date();
-      const todayStr = today.toISOString().slice(0, 10);
+      const todayStr = getTodayString();
       const results = [];
 
       for (const date of dates) {
@@ -201,29 +229,26 @@ const CalendarPage = () => {
     }
     fetchEmotionForThisWeek();
 
-    // 오늘 페이지 진입 시 오늘 일기 자동 팝업
+    // 오늘 일기 자동 팝업
     const todayStr = getTodayString();
     openPopup(todayStr);
+    // eslint-disable-next-line
   }, [user, navigate, setIsLoading, openPopup]);
 
-  // 달력 그리기
+  // 달력
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const firstDay = new Date(year, month, 1).getDay();
   const lastDate = new Date(year, month + 1, 0).getDate();
 
   const calendarRows = [];
-  let day = 1 - (firstDay === 0 ? 6 : firstDay - 1); // 월요일 시작으로 변경
-
+  let day = 1 - (firstDay === 0 ? 6 : firstDay - 1); // 월요일 시작
   for (let i = 0; i < 6; i++) {
     const row = [];
     let hasValidDate = false;
-
     for (let j = 0; j < 7; j++) {
       const valid = day >= 1 && day <= lastDate;
-      const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(
-        day
-      ).padStart(2, "0")}`;
+      const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
       row.push(
         <td key={j}>
           {valid ? (
@@ -246,7 +271,6 @@ const CalendarPage = () => {
     setCurrentDate(newDate);
   };
 
-  // 팝업 내부 로직
   const handleMascotClick = () => {
     if (!selectedDate) return;
     setIsConsulting(true);
