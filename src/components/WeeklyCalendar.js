@@ -36,7 +36,7 @@ const WeeklyCalendar = () => {
         const getLastSevenDays = () => {
             const days = [];
             const today = new Date();
-            for (let i = 6; i >= 0; i--) {
+            for (let i = 7; i >= 1; i--) {
                 const date = new Date();
                 date.setDate(today.getDate() - i); // Calculate the date
                 const formattedDate = date
