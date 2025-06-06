@@ -5,28 +5,36 @@ import Login from "./pages/Login";
 import Homemenu from "./pages/Homemenu";
 import Signup from "./pages/Signup";
 import Logout from "./pages/Logout";
-import Diarylist from "./pages/Diarylist";
+import RecordDiary from "./pages/RecordDiary";
+import RecordGen from "./pages/RecordGen";
+import RecordEdit from "./pages/RecordEdit";
+import RecordSummary from "./pages/RecordSummary";
+import Calendar from "./pages/Calendar";
+import SettingsPage from "./pages/SettingsPage";
+import Connselbot from "./pages/Connselbot"; // 추가
+import DiaryList from "./pages/DiaryList"; // ** 06.01 추가
+import ImageGen from "./pages/ImageGen"; // ** 06.01 추가
+import Gallery from "./pages/Gallery";
+
+import { UserContext } from "./pages/UserContext"; // 🔹 추가
+import LoadingOverlay from "./components/LoadingOverlay"; // 🔹 추가
+
+import styles from "./App.module.css"; // 🔄 변경됨
 
 function App() {
     const { isLoading } = useContext(UserContext); // 🔹 로딩 상태 가져오기
 
     return (
-        <>
-            <nav>
-                <Link to="/">Home</Link> | <Link to="/login">Login</Link> |{" "}
-                <Link to="/signup">Signup</Link> |{" "}
-                <Link to="/diarylist">Diarylist</Link> |{" "}
-                <Link to="/record1">Record1</Link> |{" "}
-                <Link to="/logout">Logout</Link>
-            </nav>
-
+        <div className={styles.App}>
+            {" "}
+            {/* 🔄 변경됨 */}
+            {isLoading && <LoadingOverlay />} {/* 🔹 로딩 중일 때만 오버레이 */}
+            <header className="header"> {/* 🔄 변경됨 */}</header>
             <Routes>
                 <Route path="/" element={<LoginIntro />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/homemenu" element={<Homemenu />} />
                 <Route path="/signup" element={<Signup />} />
-                <Route path="/diarylist" element={<Diarylist />} />
-                <Route path="/record1" element={<Record1 />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/recorddiary" element={<RecordDiary />} />
                 <Route path="/recordgen" element={<RecordGen />} />
