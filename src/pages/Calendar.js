@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import styles from "./Calendar.module.css";
 import axios from "axios";
 import HomeButton from "../components/HomeButton";
@@ -32,21 +32,20 @@ const EMOTION_KR = {
   boredom: "따분",
 };
 
-const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
+const DAYS = ["월", "화", "수", "목", "금", "토", "일"];
 
 // 🔥 주간 날짜(Y-M-D)를 반환하는 함수 (일~오늘)
 const getFullWeekDates = () => {
   const today = new Date();
-  const dayOfWeek = today.getDay(); // 일:0~토:6
-  // 이번 주 일요일
-  const sunday = new Date(today);
-  sunday.setDate(today.getDate() - dayOfWeek);
-  // 이번 주 날짜 배열 (일~토)
+  let dayOfWeek = today.getDay(); // 일:0~토:6
+  dayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek; // 일요일 7로 변환
+  const monday = new Date(today);
+  monday.setDate(today.getDate() - (dayOfWeek - 1));
   const dates = [];
   for (let i = 0; i < 7; i++) {
-    const d = new Date(sunday);
-    d.setDate(sunday.getDate() + i);
-    dates.push(d.toISOString().slice(0, 10)); // "YYYY-MM-DD"
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    dates.push(d.toISOString().slice(0, 10));
   }
   return dates;
 };
@@ -66,6 +65,47 @@ const CalendarPage = () => {
   const [draftText, setDraftText] = useState("");
   const [diaryId, setDiaryId] = useState(null);
 
+// 오늘 날짜를 "YYYY-MM-DD" 형태로 반환
+const getTodayString = () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}; 
+
+const openPopup = useCallback(async (dateStr) => {
+  setSelectedDate(dateStr);
+  setIsConsulting(false);
+  setIsEditing(false);
+  setIsLoading(true);
+
+  try {
+    const response = await axios.get(
+      "https://fombackend.azurewebsites.net/api/diary/read",
+      { params: { user_id: user.user_id, selected_date: dateStr } }
+    );
+
+    if (Array.isArray(response.data) && response.data.length > 0) {
+      const diary = [{ content: response.data[0].content }];
+      setDiaryPopupContent(diary);
+      setOriginalDiaryContent(diary);
+      setDiaryId(response.data[0].diary_id);
+    } else {
+      const diary = [{ content: "작성된 일기가 없습니다." }];
+      setDiaryPopupContent(diary);
+      setOriginalDiaryContent(diary);
+      setDiaryId(null);
+    }
+  } catch (error) {
+    setDiaryPopupContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
+    setOriginalDiaryContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
+  } finally {
+    setIsLoading(false);
+  }
+}, [user, setIsLoading]);
+  
+// eslint-disable-next-line react-hooks/exhaustive-deps
 useEffect(() => {
   const fetchEmotionForThisWeek = async () => {
     if (!user) return;
@@ -137,8 +177,9 @@ useEffect(() => {
     return;
   }
   fetchEmotionForThisWeek();
-  // eslint-disable-next-line
-}, [user, navigate, setIsLoading]);
+  const todayStr = getTodayString();
+  openPopup(todayStr);
+}, [user, navigate, setIsLoading, openPopup]);
 
   // (아래 부분은 이전 코드와 동일: 캘린더, 팝업, 저장 등)
   const year = currentDate.getFullYear();
@@ -177,37 +218,6 @@ useEffect(() => {
   const changeMonth = (offset) => {
     const newDate = new Date(year, month + offset, 1);
     setCurrentDate(newDate);
-  };
-
-  const openPopup = async (dateStr) => {
-    setSelectedDate(dateStr);
-    setIsConsulting(false);
-    setIsEditing(false);
-    setIsLoading(true);
-
-    try {
-      const response = await axios.get(
-        "https://fombackend.azurewebsites.net/api/diary/read",
-        { params: { user_id: user.user_id, selected_date: dateStr } }
-      );
-
-      if (Array.isArray(response.data) && response.data.length > 0) {
-        const diary = [{ content: response.data[0].content }];
-        setDiaryPopupContent(diary);
-        setOriginalDiaryContent(diary);
-        setDiaryId(response.data[0].diary_id);
-      } else {
-        const diary = [{ content: "작성된 일기가 없습니다." }];
-        setDiaryPopupContent(diary);
-        setOriginalDiaryContent(diary);
-        setDiaryId(null);
-      }
-    } catch (error) {
-      setDiaryPopupContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
-      setOriginalDiaryContent([{ content: "일기 조회 중 오류가 발생했습니다." }]);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleMascotClick = () => {
