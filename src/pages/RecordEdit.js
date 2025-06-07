@@ -21,6 +21,7 @@ const RecordEdit = () => {
   const [logTime, setLogTime] = useState("");
   const [logTitle, setLogTitle] = useState(diaryTitle);
   const [logContent, setLogContent] = useState(diaryContent);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // ✅ 삭제 확인 팝업 상태
 
   // 🔄 수정: 스크롤 시 navigation-bar 스타일 적용을 위한 상태
   const [isScrolled, setIsScrolled] = useState(false);
@@ -150,13 +151,50 @@ const RecordEdit = () => {
       <div className={styles["record-edit-footer"]}>
         {" "}
         {/* 🔄 변경됨 */}
-        <button className={styles["delete-button"]} onClick={handleDelete}>
+        <button
+          className={styles["delete-button"]}
+          onClick={() => setShowDeleteConfirm(true)} // ✅ 팝업 표시
+        >
           <img src={trashIcon} alt="삭제" className="trash-icon" />
         </button>
         <button className={styles["save-button"]} onClick={handleSave}>
-          저장하기
+          저장
         </button>
       </div>
+      {/* ✅ 삭제 확인 팝업창 */}
+      {showDeleteConfirm && (
+        <div
+          className={styles["popup-overlay"]}
+          onClick={() => setShowDeleteConfirm(false)}
+        >
+          <div
+            className={styles["popup-content"]}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={trashIcon}
+              alt="삭제 확인"
+              className={styles["popup-image"]}
+            />
+            <div className={styles["popup-info"]}>
+              <span className={styles["popup-message"]}>
+                정말 삭제하시겠어요?
+              </span>
+            </div>
+            <div className={styles["popup-actions"]}>
+              <button className={styles["popup-btn"]} onClick={handleDelete}>
+                예
+              </button>
+              <button
+                className={styles["popup-btn"]}
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                아니요
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
