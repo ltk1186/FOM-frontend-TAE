@@ -116,68 +116,54 @@ const CalendarPage = () => {
 
   /* ──────────────── 데이터: 주간 감정 ──────────────── */
   useEffect(() => {
-    if (!user) return;
+  if (!user) return;
 
-    const fetchWeeklyEmotion = async () => {
-      setIsLoading(true);
-      const dates = getFullWeekDates();
-      setWeekDates(dates);
+  const blankEmotion = Object.fromEntries(Object.keys(EMOTION_COLORS).map((k) => [k, 0]));
+  const mapEmotion = (e) => ({
+    joy: e.joy ?? 0,
+    sadness: e.sadness ?? 0,
+    anger: e.anger ?? 0,
+    fear: e.fear ?? 0,
+    disgust: e.disgust ?? 0,
+    shame: e.shame ?? 0,
+    surprise: e.surprise ?? 0,
+    confusion: e.confusion ?? 0,  // confusion 필드 이름도 이걸로
+    boredom: e.boredom ?? 0,
+  });
 
-      const todayStr = getTodayString();
-      const resultArr = [];
+  const fetchWeeklyEmotion = async () => {
+    setIsLoading(true);
+    const dates = getFullWeekDates();
+    setWeekDates(dates);
 
-      for (const date of dates) {
-        if (date > todayStr) {
-          resultArr.push(
-            Object.fromEntries(
-              Object.keys(EMOTION_COLORS).map((k) => [k, 0])
-            )
-          );
-          continue;
-        }
-        try {
-          const diaryRes = await axios.get(
-            "https://fombackend.azurewebsites.net/api/diary/read",
-            { params: { user_id: user.user_id, selected_date: date } }
-          );
-          const diary = diaryRes.data[0];
-          if (!diary?.diary_id) {
-            resultArr.push(
-              Object.fromEntries(
-                Object.keys(EMOTION_COLORS).map((k) => [k, 0])
-              )
-            );
-            continue;
-          }
-          const emoRes = await axios.get(
-            "https://fombackend.azurewebsites.net/api/emotion/read",
-            { params: { user_id: user.user_id, diary_id: diary.diary_id } }
-          );
-          const e = emoRes.data;
-          resultArr.push({
-            joy: e.joy ?? 0,
-            sadness: e.sadness ?? 0,
-            anger: e.anger ?? 0,
-            fear: e.fear ?? 0,
-            disgust: e.disgust ?? 0,
-            shame: e.shame ?? 0,
-            surprise: e.surprise ?? 0,
-            confusion: e.bewilderment ?? 0,
-            boredom: e.boredom ?? 0,
-          });
-        } catch {
-          resultArr.push(
-            Object.fromEntries(
-              Object.keys(EMOTION_COLORS).map((k) => [k, 0])
-            )
-          );
-        }
+    const todayStr = getTodayString();
+
+    const promises = dates.map(async (date) => {
+      if (date > todayStr) return blankEmotion;
+      try {
+        const { data: diaryArr } = await axios.get(
+          "https://fombackend.azurewebsites.net/api/diary/read",
+          { params: { user_id: user.user_id, selected_date: date } }
+        );
+        if (!diaryArr?.[0]?.diary_id) return blankEmotion;
+
+        const { data: e } = await axios.get(
+          "https://fombackend.azurewebsites.net/api/emotion/read",
+          { params: { user_id: user.user_id, diary_id: diaryArr[0].diary_id } }
+        );
+        return mapEmotion(e);
+      } catch {
+        return blankEmotion;
       }
-      setEmotionData(resultArr);
-      setIsLoading(false);
-    };
-    fetchWeeklyEmotion();
-  }, [user, setIsLoading]);
+    });
+
+    const resultArr = await Promise.all(promises);
+    setEmotionData(resultArr);
+    setIsLoading(false);
+  };
+
+  fetchWeeklyEmotion();
+}, [user, setIsLoading]);
 
   /* ──────────────── 팝업 로직 공통 함수 ──────────────── */
   const openPopup = useCallback(
