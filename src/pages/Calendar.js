@@ -295,11 +295,6 @@ const CalendarPage = () => {
     setDiaryPopupContent(originalDiaryContent);
   };
 
-  const handleDelete = () => {
-    setIsEditing(false);
-    setDiaryPopupContent(originalDiaryContent);
-  };
-
   const handleConfirmDelete = async () => {
     if (!diaryId || !user) return;
     setIsLoading(true);
