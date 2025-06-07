@@ -219,12 +219,17 @@ const CalendarPage = () => {
   useEffect(() => {
     if (!user) return;
 
-    // URL state(다른 페이지에서 넘어온 날짜)가 있으면 그걸 우선,
-    // 없으면 오늘 날짜로 자동 팝업
-    const fallbackDate = location.state?.selectedDate || getTodayString();
+    // 📌 수정된 부분 시작
+    const fromState = location.state?.selectedDate;
+
+    // "selectedDate"가 명시적으로 null이거나 "_blank"일 경우 → 팝업 열지 않음
+    if (fromState === null || fromState === "_blank") return;
+
+    // 그 외는 날짜로 간주하여 팝업 오픈
+    const fallbackDate = fromState || getTodayString();
     openPopup(fallbackDate);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]); // openPopup은 useCallback이라 안전
+    // 📌 수정된 부분 끝
+  }, [user]);
 
   /* ──────────────── 상담(마스코트) ──────────────── */
   const handleMascotClick = async () => {
@@ -528,12 +533,18 @@ const CalendarPage = () => {
                     className={`${styles["popup-button"]} ${styles.delete}`}
                     onClick={
                       isEditing
-                        ? () => setSelectedDate(null)
+                        ? () => {
+                            setIsEditing(false);
+                            setDraftText(
+                              originalDiaryContent[0]?.content || ""
+                            );
+                          }
                         : () => setShowDeleteConfirm(true)
                     }
                   >
                     {isEditing ? "취소" : "삭제"}
                   </button>
+
                   <img
                     src={Smiley}
                     alt="마스코트"

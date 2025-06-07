@@ -80,11 +80,10 @@ const SettingsPage = () => {
         setOriginalEmail(userData.email || "");
 
         // ✅ 템플릿 문체와 비교하여 selectedStyle 설정
-        const matchedStyle = templateStyles.find((style) => {
-          console.log("style.text:", style.text); // style.text 값 출력
-          console.log;
-          return style.text.trim() === (userData.reference_text || "").trim();
-        });
+        const matchedStyle = templateStyles.find(
+          (style) =>
+            style.text.trim() === (userData.reference_text || "").trim()
+        );
 
         if (matchedStyle) {
           setSelectedStyle(matchedStyle.id); // 템플릿 문체 선택
