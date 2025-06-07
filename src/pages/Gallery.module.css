@@ -203,7 +203,7 @@
 
 .bottom-btn-wrapper {
   position: fixed;
-  bottom: 40px;
+  bottom: 60px;
   left: 0;
   right: 0;
   display: flex;
@@ -224,7 +224,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: #ff7f4e;
+  background-color: #d34242;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -235,12 +235,12 @@
 
 .delete-count-button,
 .cancel-delete-button {
-  background-color: #ff7f4e;
+  background-color: #e25c5c;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 20px;
-  font-weight: bold;
+  font-weight: normal;
   cursor: pointer;
   font-size: 14px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -251,7 +251,7 @@
   color: white;
   padding: 12px 24px;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: normal;
   border: none;
   border-radius: 25px;
   box-shadow: var(--elevation-large-box-shadow);
