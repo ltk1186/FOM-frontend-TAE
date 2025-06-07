@@ -29,6 +29,9 @@ const Gallery = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [confirmShare, setConfirmShare] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false); // ✅ 추가: 스크롤 여부 상태
+  const [confirmDeleteSingle, setConfirmDeleteSingle] = useState(false); // ✅ 단일 삭제 확인
+  const [confirmDeleteBulk, setConfirmDeleteBulk] = useState(false); // ✅ 일괄 삭제 확인
+  const [confirmUnshare, setConfirmUnshare] = useState(false); // ✅ 공유 취소 확인
 
   useEffect(() => {
     const loadGallery = async () => {
@@ -275,10 +278,11 @@ const Gallery = () => {
           <>
             <button
               className={styles["delete-count-button"]}
-              onClick={handleBulkDelete}
+              onClick={() => setConfirmDeleteBulk(true)}
             >
               {selectedIds.length}개 항목 삭제
             </button>
+
             <button
               className={styles["cancel-delete-button"]}
               onClick={toggleDeleteMode}
@@ -366,10 +370,11 @@ const Gallery = () => {
                 <div className={styles["popup-actions"]}>
                   <button
                     className={styles["popup-btn"]}
-                    onClick={() => handleDeletePhoto(popupData.diary_id)}
+                    onClick={() => setConfirmDeleteSingle(true)}
                   >
                     🗑️
                   </button>
+
                   {!popupData.isShared ? (
                     <button
                       className={styles["popup-btn"]}
@@ -380,7 +385,7 @@ const Gallery = () => {
                   ) : (
                     <button
                       className={styles["popup-btn"]}
-                      onClick={handleCancelShare}
+                      onClick={() => setConfirmUnshare(true)}
                     >
                       공유 취소
                     </button>
@@ -392,6 +397,128 @@ const Gallery = () => {
               {selectedTab === "shared"
                 ? popupData.anonymous_summary
                 : popupData.summary}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* ✅ 단일 삭제 확인 */}
+      {confirmDeleteSingle && (
+        <div
+          className={styles["popup-overlay"]}
+          onClick={() => setConfirmDeleteSingle(false)}
+        >
+          <div
+            className={styles["popup-content"]}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={Smiley}
+              alt="삭제 확인"
+              className={styles["popup-image"]}
+            />
+            <div className={styles["popup-info"]}>
+              <span className={styles["popup-message"]}>
+                정말 삭제하시겠어요?
+              </span>
+            </div>
+            <div className={styles["popup-actions"]}>
+              <button
+                className={styles["popup-btn"]}
+                onClick={() => {
+                  handleDeletePhoto(popupData.diary_id);
+                  setConfirmDeleteSingle(false);
+                }}
+              >
+                예
+              </button>
+              <button
+                className={styles["popup-btn"]}
+                onClick={() => setConfirmDeleteSingle(false)}
+              >
+                아니요
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ✅ 공유 취소 확인 */}
+      {confirmUnshare && (
+        <div
+          className={styles["popup-overlay"]}
+          onClick={() => setConfirmUnshare(false)}
+        >
+          <div
+            className={styles["popup-content"]}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={Smiley}
+              alt="공유 취소"
+              className={styles["popup-image"]}
+            />
+            <div className={styles["popup-info"]}>
+              <span className={styles["popup-message"]}>
+                공유를 정말 취소할까요?
+              </span>
+            </div>
+            <div className={styles["popup-actions"]}>
+              <button
+                className={styles["popup-btn"]}
+                onClick={() => {
+                  handleCancelShare();
+                  setConfirmUnshare(false);
+                }}
+              >
+                예
+              </button>
+              <button
+                className={styles["popup-btn"]}
+                onClick={() => setConfirmUnshare(false)}
+              >
+                아니요
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ✅ bulk 삭제 확인 */}
+      {confirmDeleteBulk && (
+        <div
+          className={styles["popup-overlay"]}
+          onClick={() => setConfirmDeleteBulk(false)}
+        >
+          <div
+            className={styles["popup-content"]}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={Smiley}
+              alt="일괄 삭제"
+              className={styles["popup-image"]}
+            />
+            <div className={styles["popup-info"]}>
+              <span className={styles["popup-message"]}>
+                {selectedIds.length}개 항목을 정말 삭제할까요?
+              </span>
+            </div>
+            <div className={styles["popup-actions"]}>
+              <button
+                className={styles["popup-btn"]}
+                onClick={() => {
+                  handleBulkDelete();
+                  setConfirmDeleteBulk(false);
+                }}
+              >
+                예
+              </button>
+              <button
+                className={styles["popup-btn"]}
+                onClick={() => setConfirmDeleteBulk(false)}
+              >
+                아니요
+              </button>
             </div>
           </div>
         </div>

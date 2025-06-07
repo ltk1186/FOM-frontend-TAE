@@ -16,6 +16,8 @@ const ImageGen = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   // 🔄 추가: 스크롤 상태를 감지하여 navigation-bar 스타일 변경
   const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
@@ -82,6 +84,7 @@ const ImageGen = () => {
         { photo: imageUrl }
       );
       alert("저장 성공했습니다.");
+      navigate("/gallery");
     } catch (err) {
       alert("저장 실패: " + (err?.response?.data?.message || err.message));
     }
@@ -116,6 +119,8 @@ const ImageGen = () => {
             src={imageUrl}
             alt="감정 이미지"
             className={styles["generated-img"]}
+            onClick={() => setIsPopupOpen(true)} // 🔹 클릭 시 팝업 열기
+            style={{ cursor: "pointer" }} // 🔹 클릭 가능 UI
           />
         ) : (
           <div className={styles.placeholder}>
@@ -144,16 +149,28 @@ const ImageGen = () => {
           onClick={handleGenerate}
           disabled={isGenerating}
         >
-          이미지 생성하기
+          이미지 생성
         </button>
         <button
           className={`${styles["action-btn"]} ${styles.save}`}
           onClick={handleSave}
           disabled={!imageUrl}
         >
-          저장하기
+          저장
         </button>
       </div>
+      {isPopupOpen && (
+        <div
+          className={styles["popup-overlay"]}
+          onClick={() => setIsPopupOpen(false)}
+        >
+          <img
+            src={imageUrl}
+            alt="확대 이미지"
+            className={styles["popup-image"]}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -85,7 +85,7 @@ const RecordSummary = () => {
       createdAt.getMinutes()
     ).padStart(2, "0")}:${String(createdAt.getSeconds()).padStart(2, "0")}`;
 
-    setIsLoading(true); // 🔹 로딩 시작
+    setIsLoading(true);
     try {
       await axios.post(
         // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/diary/create/",
@@ -99,24 +99,32 @@ const RecordSummary = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
-      navigate("/recorddiary");
+      // ✅ 저장 후 오늘 날짜를 포함한 캘린더로 이동
+      const getTodayString = () => {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        return `${yyyy}-${mm}-${dd}`;
+      };
+      navigate("/calendar", { state: { selectedDate: getTodayString() } });
     } catch (error) {
       console.error("DB 저장 오류:", error);
       alert("일기 저장에 실패했습니다.");
     } finally {
-      setIsLoading(false); // 🔹 로딩 종료
+      setIsLoading(false);
     }
   };
 
-  const handleGoBack = () => {
-    setIsLoading(true); // 🔹 뒤로 가기 로딩
-    navigate(-1);
-  };
+  // const handleGoBack = () => {
+  //   setIsLoading(true); // 🔹 뒤로 가기 로딩
+  //   navigate(-1);
+  // };
 
-  const handleGoReport = () => {
-    setIsLoading(true); // 🔹 포미와 이야기하기 로딩
-    navigate("/report");
-  };
+  // const handleGoReport = () => {
+  //   setIsLoading(true); // 🔹 포미와 이야기하기 로딩
+  //   navigate("/report");
+  // };
 
   if (!user) {
     navigate("/login");
@@ -156,8 +164,8 @@ const RecordSummary = () => {
         {" "}
         {/* ✅ */}
         <button onClick={handleAIClick}>AI 일기 완성</button>
-        <button onClick={handleSave}>저장하기</button>
-        <button onClick={handleGoReport}>포미와 대화</button>
+        <button onClick={handleSave}>저장</button>
+        {/* <button onClick={handleGoReport}>포미와 대화</button> */}
       </div>
     </div>
   );

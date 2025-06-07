@@ -13,6 +13,7 @@ import PreviousArrow from "../components/PreviousArrow";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import Smiley from "../assets/images/image-50.png";
+import { useLocation } from "react-router-dom";
 
 // 🔽 감정 색상/한글 정의 등 기존 상수 유지
 const EMOTION_COLORS = {
@@ -60,6 +61,8 @@ const getFullWeekDates = () => {
 };
 
 const CalendarPage = () => {
+  const location = useLocation();
+  const passedSelectedDate = location.state?.selectedDate || null;
   const { user, setIsLoading } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -73,6 +76,7 @@ const CalendarPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [draftText, setDraftText] = useState("");
   const [diaryId, setDiaryId] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // ✅ 삭제 확인 팝업 상태
 
   const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
@@ -242,7 +246,9 @@ const CalendarPage = () => {
       return;
     }
     fetchEmotionForThisWeek();
-    openPopup(getTodayString());
+    if (passedSelectedDate) {
+      openPopup(passedSelectedDate);
+    }
   }, [user, navigate, setIsLoading, openPopup]);
 
   const year = currentDate.getFullYear();
@@ -292,6 +298,25 @@ const CalendarPage = () => {
   const handleDelete = () => {
     setIsEditing(false);
     setDiaryPopupContent(originalDiaryContent);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!diaryId || !user) return;
+    setIsLoading(true);
+    try {
+      await axios.delete(
+        `https://fombackend.azurewebsites.net/api/diary/delete?diary_id=${diaryId}`
+      );
+      setSelectedDate(null); // 팝업 닫기
+      setDiaryPopupContent([]); // 내용 초기화
+      setOriginalDiaryContent([]);
+      setDiaryId(null);
+    } catch (error) {
+      console.error("❌ 삭제 실패:", error);
+    } finally {
+      setIsLoading(false);
+      setShowDeleteConfirm(false);
+    }
   };
 
   const handleSave = async () => {
@@ -512,10 +537,12 @@ const CalendarPage = () => {
                   <button
                     className={`${styles["popup-button"]} ${styles.delete}`}
                     onClick={
-                      isEditing ? handleDelete : () => setSelectedDate(null)
+                      isEditing
+                        ? () => setSelectedDate(null)
+                        : () => setShowDeleteConfirm(true) // ✅ 팝업 열기
                     }
                   >
-                    {isEditing ? "취소하기" : "삭제하기"}
+                    {isEditing ? "취소" : "삭제"}
                   </button>
                   <img
                     src={Smiley}
@@ -527,10 +554,47 @@ const CalendarPage = () => {
                     className={`${styles["popup-button"]} ${styles.save}`}
                     onClick={isEditing ? handleSave : startEdit}
                   >
-                    {isEditing ? "저장하기" : "수정하기"}
+                    {isEditing ? "저장" : "수정"}
                   </button>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* ✅ 삭제 확인 팝업창 */}
+      {showDeleteConfirm && (
+        <div
+          className={styles["popup-overlay"]}
+          onClick={() => setShowDeleteConfirm(false)}
+        >
+          <div
+            className={styles["popup-confirm-content"]}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={Smiley}
+              alt="삭제 확인"
+              className={styles["popup-image"]}
+            />
+            <div className={styles["popup-info"]}>
+              <span className={styles["popup-message"]}>
+                정말 삭제하시겠어요?
+              </span>
+            </div>
+            <div className={styles["popup-actions"]}>
+              <button
+                className={styles["popup-btn"]}
+                onClick={handleConfirmDelete}
+              >
+                예
+              </button>
+              <button
+                className={styles["popup-btn"]}
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                아니요
+              </button>
             </div>
           </div>
         </div>

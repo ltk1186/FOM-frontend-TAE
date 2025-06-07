@@ -154,6 +154,29 @@
   background: #d34242;
 }
 
+/* ─── 이미지 팝업 ─────────────────────────── */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+}
+
+.popup-image {
+  width: 90%;
+  height: 40vh; /* ✅ 높이를 더 크게 설정 */
+  background-color: #dcdcdc; /* ✅ 회색 여백 추가 */
+  object-fit: contain; /* ✅ 이미지 비율 유지하며 회색 여백 생김 */
+  border: 2px solid #fff4e0;
+  border-radius: 12px;
+}
+
 /* ─── 모바일 대응 ────────────────────────── */
 @media (max-width: 480px) {
   .mascot {
