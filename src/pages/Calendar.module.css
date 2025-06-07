@@ -57,7 +57,8 @@
 }
 /* 🔄 navigation-bar 리팩토링 끝 */
 
-.month-btn {
+/* 기존 연월 설정 방식 */
+/* .month-btn {
   background: none;
   border: none;
   font-size: 28px;
@@ -71,7 +72,7 @@
 .month-btn:hover {
   transform: scale(1.1);
   color: #f3a93c;
-}
+} */
 
 /* 기존 calendar-header 제거 또는 주석 처리 */
 /* .calendar-header {
@@ -81,6 +82,22 @@
   align-items: center;
   margin-bottom: 30px;
 } */
+
+.dropdowns {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.dropdowns select {
+  padding: 6px 18px;
+  border-radius: 16px;
+  border: 1px solid #d6b980;
+  background: #fff9e9;
+  font-weight: 600;
+  font-size: 15px;
+}
 
 .calendar-title {
   font-size: 26px;
@@ -453,5 +470,10 @@
 
   .popup-smiley {
     margin: 0 auto;
+  }
+
+  .dropdowns select {
+    font-size: 14px;
+    padding: 4px 12px;
   }
 }
