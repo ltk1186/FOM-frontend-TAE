@@ -231,7 +231,7 @@ const RecordGen = () => {
           취소
         </button>
         <button className={styles["save-button"]} onClick={handleSave}>
-          저장하기
+          저장
         </button>
       </div>
     </div>
