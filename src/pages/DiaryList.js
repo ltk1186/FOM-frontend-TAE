@@ -38,7 +38,7 @@ const DiaryList = () => {
 
             try {
                 const res = await axios.get(
-                    "https://fombackend.azurewebsites.net/api/diary/read",
+                    "https://fombackend.azurewebsites.net//api/diary/read_mte",
                     {
                         params: {
                             user_id: user.user_id,
