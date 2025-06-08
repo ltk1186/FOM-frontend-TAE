@@ -155,17 +155,20 @@
   font-size: 13px;
   margin-bottom: 4px;
   color: #5a4033;
+  text-align: justify;
 }
 
 .diary-title {
   font-size: 17px;
   font-weight: bold;
   margin-bottom: 4px;
+  text-align: justify;
 }
 
 .diary-content {
   font-size: 15px;
   color: #333;
+  text-align: justify;
 }
 
 .add-diary-btn {

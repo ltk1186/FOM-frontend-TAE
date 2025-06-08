@@ -116,54 +116,58 @@ const CalendarPage = () => {
 
   /* ──────────────── 데이터: 주간 감정 ──────────────── */
   useEffect(() => {
-  if (!user) return;
+    if (!user) return;
 
-  const blankEmotion = Object.fromEntries(Object.keys(EMOTION_COLORS).map((k) => [k, 0]));
-  const mapEmotion = (e) => ({
-    joy: e.joy ?? 0,
-    sadness: e.sadness ?? 0,
-    anger: e.anger ?? 0,
-    fear: e.fear ?? 0,
-    disgust: e.disgust ?? 0,
-    shame: e.shame ?? 0,
-    surprise: e.surprise ?? 0,
-    confusion: e.confusion ?? 0,  // confusion 필드 이름도 이걸로
-    boredom: e.boredom ?? 0,
-  });
-
-  const fetchWeeklyEmotion = async () => {
-    setIsLoading(true);
-    const dates = getFullWeekDates();
-    setWeekDates(dates);
-
-    const todayStr = getTodayString();
-
-    const promises = dates.map(async (date) => {
-      if (date > todayStr) return blankEmotion;
-      try {
-        const { data: diaryArr } = await axios.get(
-          "https://fombackend.azurewebsites.net/api/diary/read",
-          { params: { user_id: user.user_id, selected_date: date } }
-        );
-        if (!diaryArr?.[0]?.diary_id) return blankEmotion;
-
-        const { data: e } = await axios.get(
-          "https://fombackend.azurewebsites.net/api/emotion/read",
-          { params: { user_id: user.user_id, diary_id: diaryArr[0].diary_id } }
-        );
-        return mapEmotion(e);
-      } catch {
-        return blankEmotion;
-      }
+    const blankEmotion = Object.fromEntries(
+      Object.keys(EMOTION_COLORS).map((k) => [k, 0])
+    );
+    const mapEmotion = (e) => ({
+      joy: e.joy ?? 0,
+      sadness: e.sadness ?? 0,
+      anger: e.anger ?? 0,
+      fear: e.fear ?? 0,
+      disgust: e.disgust ?? 0,
+      shame: e.shame ?? 0,
+      surprise: e.surprise ?? 0,
+      confusion: e.confusion ?? 0, // confusion 필드 이름도 이걸로
+      boredom: e.boredom ?? 0,
     });
 
-    const resultArr = await Promise.all(promises);
-    setEmotionData(resultArr);
-    setIsLoading(false);
-  };
+    const fetchWeeklyEmotion = async () => {
+      setIsLoading(true);
+      const dates = getFullWeekDates();
+      setWeekDates(dates);
 
-  fetchWeeklyEmotion();
-}, [user, setIsLoading]);
+      const todayStr = getTodayString();
+
+      const promises = dates.map(async (date) => {
+        if (date > todayStr) return blankEmotion;
+        try {
+          const { data: diaryArr } = await axios.get(
+            "https://fombackend.azurewebsites.net/api/diary/read",
+            { params: { user_id: user.user_id, selected_date: date } }
+          );
+          if (!diaryArr?.[0]?.diary_id) return blankEmotion;
+
+          const { data: e } = await axios.get(
+            "https://fombackend.azurewebsites.net/api/emotion/read",
+            {
+              params: { user_id: user.user_id, diary_id: diaryArr[0].diary_id },
+            }
+          );
+          return mapEmotion(e);
+        } catch {
+          return blankEmotion;
+        }
+      });
+
+      const resultArr = await Promise.all(promises);
+      setEmotionData(resultArr);
+      setIsLoading(false);
+    };
+
+    fetchWeeklyEmotion();
+  }, [user, setIsLoading]);
 
   /* ──────────────── 팝업 로직 공통 함수 ──────────────── */
   const openPopup = useCallback(
@@ -215,18 +219,30 @@ const CalendarPage = () => {
   useEffect(() => {
     if (!user) return;
 
-    // URL state(다른 페이지에서 넘어온 날짜)가 있으면 그걸 우선,
-    // 없으면 오늘 날짜로 자동 팝업
-    const fallbackDate = location.state?.selectedDate || getTodayString();
+    // 📌 수정된 부분 시작
+    const fromState = location.state?.selectedDate;
+
+    // "selectedDate"가 명시적으로 null이거나 "_blank"일 경우 → 팝업 열지 않음
+    if (fromState === null || fromState === "_blank") return;
+
+    // 그 외는 날짜로 간주하여 팝업 오픈
+    const fallbackDate = fromState || getTodayString();
     openPopup(fallbackDate);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]); // openPopup은 useCallback이라 안전
+    // 📌 수정된 부분 끝
+  }, [user]);
 
   /* ──────────────── 상담(마스코트) ──────────────── */
   const handleMascotClick = async () => {
-    if (!selectedDate || !diaryId || !user || !originalDiaryContent[0]?.content) {
+    if (
+      !selectedDate ||
+      !diaryId ||
+      !user ||
+      !originalDiaryContent[0]?.content
+    ) {
       setIsConsulting(true);
-      setDiaryPopupContent([{ content: "해당 날짜의 상담 보고서가 없습니다." }]);
+      setDiaryPopupContent([
+        { content: "해당 날짜의 상담 보고서가 없습니다." },
+      ]);
       return;
     }
 
@@ -259,9 +275,7 @@ const CalendarPage = () => {
         ]);
       }
     } catch {
-      setDiaryPopupContent([
-        { content: "상담 보고서 생성에 실패했습니다." },
-      ]);
+      setDiaryPopupContent([{ content: "상담 보고서 생성에 실패했습니다." }]);
     } finally {
       setIsLoading(false);
     }
@@ -278,11 +292,14 @@ const CalendarPage = () => {
           { content: draftText }
         );
       } else {
-        await axios.post("https://fombackend.azurewebsites.net/api/diary/create", {
-          user_id: user.user_id,
-          content: draftText,
-          created_at: selectedDate + "T09:00:00",
-        });
+        await axios.post(
+          "https://fombackend.azurewebsites.net/api/diary/create",
+          {
+            user_id: user.user_id,
+            content: draftText,
+            created_at: selectedDate + "T09:00:00",
+          }
+        );
       }
       setDiaryPopupContent([{ content: draftText }]);
       setOriginalDiaryContent([{ content: draftText }]);
@@ -293,17 +310,18 @@ const CalendarPage = () => {
   };
 
   const handleConfirmDelete = async () => {
-    if (!diaryId) return;
+    if (!diaryId || !user) return;
     setIsLoading(true);
     try {
       await axios.delete(
-        "https://fombackend.azurewebsites.net/api/diary/delete",
-        { params: { diary_id: diaryId } }
+        `https://fombackend.azurewebsites.net/api/diary/delete?diary_id=${diaryId}`
       );
       setSelectedDate(null); // 팝업 닫기
-      setDiaryPopupContent([]);
+      setDiaryPopupContent([]); // 내용 초기화
       setOriginalDiaryContent([]);
       setDiaryId(null);
+    } catch (error) {
+      console.error("❌ 삭제 실패:", error);
     } finally {
       setIsLoading(false);
       setShowDeleteConfirm(false);
@@ -372,9 +390,7 @@ const CalendarPage = () => {
               <select
                 value={currentDate.getMonth() + 1}
                 onChange={(e) =>
-                  setCurrentDate(
-                    new Date(year, Number(e.target.value) - 1, 1)
-                  )
+                  setCurrentDate(new Date(year, Number(e.target.value) - 1, 1))
                 }
               >
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
@@ -394,7 +410,11 @@ const CalendarPage = () => {
         <div className={styles["calendar-table"]}>
           <table>
             <thead>
-              <tr>{DAYS.map((d) => <th key={d}>{d}</th>)}</tr>
+              <tr>
+                {DAYS.map((d) => (
+                  <th key={d}>{d}</th>
+                ))}
+              </tr>
             </thead>
             <tbody>{calendarRows}</tbody>
           </table>
@@ -472,7 +492,9 @@ const CalendarPage = () => {
               )}
               <div className={styles["popup-title"]}>{selectedDate}</div>
               {isConsulting && (
-                <div className={styles["popup-subtitle"]}>포미의 상담 보고서</div>
+                <div className={styles["popup-subtitle"]}>
+                  포미의 상담 보고서
+                </div>
               )}
             </div>
 
@@ -484,13 +506,13 @@ const CalendarPage = () => {
                   onChange={(e) => setDraftText(e.target.value)}
                   autoFocus
                 />
+              ) : // "작성된 일기가 없습니다."는 편집 모드가 아닐 때만 보여줌
+              diaryPopupContent[0]?.content === "작성된 일기가 없습니다." ? (
+                <p>{diaryPopupContent[0].content}</p>
               ) : (
-                // "작성된 일기가 없습니다."는 편집 모드가 아닐 때만 보여줌
-                diaryPopupContent[0]?.content === "작성된 일기가 없습니다." ? (
-                  <p>{diaryPopupContent[0].content}</p>
-                ) : (
-                  diaryPopupContent.map(({ content }, i) => <p key={i}>{content}</p>)
-                )
+                diaryPopupContent.map(({ content }, i) => (
+                  <p key={i}>{content}</p>
+                ))
               )}
             </div>
 
@@ -511,12 +533,18 @@ const CalendarPage = () => {
                     className={`${styles["popup-button"]} ${styles.delete}`}
                     onClick={
                       isEditing
-                        ? () => setSelectedDate(null)
+                        ? () => {
+                            setIsEditing(false);
+                            setDraftText(
+                              originalDiaryContent[0]?.content || ""
+                            );
+                          }
                         : () => setShowDeleteConfirm(true)
                     }
                   >
                     {isEditing ? "취소" : "삭제"}
                   </button>
+
                   <img
                     src={Smiley}
                     alt="마스코트"
@@ -525,11 +553,19 @@ const CalendarPage = () => {
                   />
                   <button
                     className={`${styles["popup-button"]} ${styles.save}`}
-                    onClick={isEditing ? handleSave : () => {
-                      const content = originalDiaryContent[0]?.content;
-                      setDraftText(content === "작성된 일기가 없습니다." ? "" : (content || ""));
-                      setIsEditing(true);
-                    }}
+                    onClick={
+                      isEditing
+                        ? handleSave
+                        : () => {
+                            const content = originalDiaryContent[0]?.content;
+                            setDraftText(
+                              content === "작성된 일기가 없습니다."
+                                ? ""
+                                : content || ""
+                            );
+                            setIsEditing(true);
+                          }
+                    }
                   >
                     {isEditing ? "저장" : "수정"}
                   </button>
@@ -539,8 +575,7 @@ const CalendarPage = () => {
           </div>
         </div>
       )}
-
-      {/* ───── 삭제 확인 모달 ───── */}
+      {/* ✅ 삭제 확인 팝업창 */}
       {showDeleteConfirm && (
         <div
           className={styles["popup-overlay"]}
@@ -550,8 +585,16 @@ const CalendarPage = () => {
             className={styles["popup-confirm-content"]}
             onClick={(e) => e.stopPropagation()}
           >
-            <img src={Smiley} alt="" className={styles["popup-image"]} />
-            <div className={styles["popup-message"]}>정말 삭제하시겠어요?</div>
+            <img
+              src={Smiley}
+              alt="삭제 확인"
+              className={styles["popup-image"]}
+            />
+            <div className={styles["popup-info"]}>
+              <span className={styles["popup-message"]}>
+                정말 삭제하시겠어요?
+              </span>
+            </div>
             <div className={styles["popup-actions"]}>
               <button
                 className={styles["popup-btn"]}
