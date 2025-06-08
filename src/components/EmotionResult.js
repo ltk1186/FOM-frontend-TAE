@@ -33,6 +33,7 @@ const EmotionResult = () => {
         const fetchEmotionData = async () => {
             try {
                 const response = await axios.get(
+                    // "https://fombackend.azurewebsites.net/api/feeling/"
                     "https://fomeapi.eastus2.cloudapp.azure.com/feeling/"
                 );
                 const data = response.data;
