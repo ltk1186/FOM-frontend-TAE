@@ -155,17 +155,20 @@
   font-size: 13px;
   margin-bottom: 4px;
   color: #5a4033;
+  text-align: justify;
 }
 
 .diary-title {
   font-size: 17px;
   font-weight: bold;
   margin-bottom: 4px;
+  text-align: justify;
 }
 
 .diary-content {
   font-size: 15px;
   color: #333;
+  text-align: justify;
 }
 
 .add-diary-btn {
@@ -213,6 +216,94 @@
 .fab-button:hover {
   transform: scale(1.1);
 }
+
+/* ✅ 삭제 확인 팝업창 관련 스타일 시작 */
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.popup-content {
+  background-color: #fff4e0;
+  border-radius: 20px;
+  padding: 24px;
+  width: 280px;
+  text-align: center;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  border: 6px solid #f28b82;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-image {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 12px;
+}
+
+.popup-info {
+  font-size: 16px;
+  font-weight: bold;
+  color: #5a4033;
+  margin-bottom: 16px;
+}
+
+.popup-message {
+  font-size: 16px;
+  font-weight: bold;
+  color: #5a4033;
+  margin-bottom: 16px;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.popup-btn {
+  background-color: #f28b82;
+  color: white;
+  border: none;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+/* ✅ 반응형 대응 */
+@media (max-width: 400px) {
+  .popup-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .popup-btn {
+    padding: 6px 16px;
+    font-size: 13px;
+  }
+
+  .popup-image {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* ✅ 삭제 확인 팝업창 관련 스타일 끝 */
 
 /* 🔹 반응형 대응 */
 @media (max-width: 768px) {

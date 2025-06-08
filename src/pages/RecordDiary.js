@@ -18,6 +18,7 @@ const RecordDiary = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [diaries, setDiaries] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false); // 🔹 추가: 스크롤 여부 상태
+  const [confirmDelete, setConfirmDelete] = useState(false); // ✅ 삭제 확인 팝업 상태 추가
 
   useEffect(() => {
     const fetchDiaries = async (userID) => {
@@ -65,6 +66,7 @@ const RecordDiary = () => {
   };
 
   const handleBulkDelete = async () => {
+    setConfirmDelete(false); // ✅ 팝업 닫기
     setIsLoading(true); // 🔹 삭제 중 로딩
     for (const id of selectedIds) {
       try {
@@ -112,7 +114,7 @@ const RecordDiary = () => {
           <div className={styles["nav-center"]}>
             <button
               className={styles["delete-count-button"]}
-              onClick={handleBulkDelete}
+              onClick={() => setConfirmDelete(true)} // ✅ 팝업 띄우기
             >
               {selectedIds.length}개 항목 삭제
             </button>
@@ -212,7 +214,43 @@ const RecordDiary = () => {
       >
         일기 완성하기
       </button>
-
+      {/* ✅ 삭제 확인 팝업창 */}
+      {confirmDelete && (
+        <div
+          className={styles["popup-overlay"]}
+          onClick={() => setConfirmDelete(false)}
+        >
+          <div
+            className={styles["popup-content"]}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={TrashIcon}
+              alt="삭제 확인"
+              className={styles["popup-image"]}
+            />
+            <div className={styles["popup-info"]}>
+              <span className={styles["popup-message"]}>
+                정말 삭제하시겠어요?
+              </span>
+            </div>
+            <div className={styles["popup-actions"]}>
+              <button
+                className={styles["popup-btn"]}
+                onClick={handleBulkDelete}
+              >
+                예
+              </button>
+              <button
+                className={styles["popup-btn"]}
+                onClick={() => setConfirmDelete(false)}
+              >
+                아니요
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className={styles["bottom-icons"]}>
         <img
           src={WriteIcon}
@@ -238,7 +276,7 @@ const RecordDiary = () => {
           className={styles["fab-button"]}
           onClick={() => {
             setIsLoading(true); // 🔹 캘린더 이동
-            navigate("/calendar");
+            navigate("/calendar", { state: { selectedDate: "_blank" } }); // ✅ 팝업 방지
           }}
         />
       </div>

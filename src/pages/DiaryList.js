@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./DiaryList.module.css";
 import PreviousArrow from "../components/PreviousArrow";
+import Settings from "../components/Settings";
 import HomeButton from "../components/HomeButton";
 import { UserContext } from "./UserContext";
 import axios from "axios";
@@ -103,6 +104,7 @@ const DiaryList = () => {
           </div>
         </div>
         <div className={styles["nav-right"]}>
+          <Settings />
           <HomeButton />
         </div>
       </div>
