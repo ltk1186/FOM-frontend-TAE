@@ -216,6 +216,25 @@
   word-break: keep-all;
 }
 
+/* Calendar.module.css */
+
+.today {
+  border: 2px solid #ff4c4c;
+  border-radius: 50% !important;
+  color: #000000 !important;
+  font-weight: bold !important;
+  background: #d63232 !important;
+  width: 2.2em !important;
+  height: 2.2em !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+
 .legend {
   display: flex;
   flex-wrap: wrap;

@@ -37,7 +37,7 @@ const EMOTION_KR = {
     confusion: "당황",
     boredom: "따분",
 };
-const DAYS = ["월", "화", "수", "목", "금", "토", "일"];
+const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
 /* ───────────────────────── 유틸 ───────────────────────── */
 const getTodayString = () => {
@@ -350,7 +350,8 @@ const CalendarPage = () => {
     const firstDay = new Date(year, month, 1).getDay();
     const lastDate = new Date(year, month + 1, 0).getDate();
     const calendarRows = [];
-    let day = 1 - (firstDay === 0 ? 6 : firstDay - 1);
+    const todayStr = getTodayString();
+    let day = 1 - firstDay;
     for (let i = 0; i < 6; i++) {
         const row = [];
         let hasValid = false;
@@ -360,10 +361,13 @@ const CalendarPage = () => {
                 2,
                 "0"
             )}-${String(day).padStart(2, "0")}`;
+            const isToday = dateStr === todayStr;
             row.push(
                 <td key={j}>
                     {valid ? (
-                        <button onClick={() => openPopup(dateStr)}>
+                        <button onClick={() => openPopup(dateStr)}
+                        className={isToday ? styles.today : undefined}
+                        >
                             {day}
                         </button>
                     ) : (
