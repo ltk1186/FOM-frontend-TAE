@@ -96,7 +96,7 @@
 .list-container {
   width: 100%;
   max-width: 480px;
-  margin-top: 30px; /* 상단바 높이에 맞게 */
+  margin-top: 5px; /* 상단바 높이에 맞게 */
   margin-left: auto;
   margin-right: auto;
   display: flex;

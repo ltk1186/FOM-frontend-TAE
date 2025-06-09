@@ -147,14 +147,22 @@ const CalendarPage = () => {
         try {
           const { data: diaryArr } = await axios.get(
             "https://fombackend.azurewebsites.net/api/diary/read",
-            { params: { user_id: user.user_id, selected_date: date } }
+            {
+              params: {
+                user_id: user.user_id,
+                selected_date: date,
+              },
+            }
           );
           if (!diaryArr?.[0]?.diary_id) return blankEmotion;
 
           const { data: e } = await axios.get(
             "https://fombackend.azurewebsites.net/api/emotion/read",
             {
-              params: { user_id: user.user_id, diary_id: diaryArr[0].diary_id },
+              params: {
+                user_id: user.user_id,
+                diary_id: diaryArr[0].diary_id,
+              },
             }
           );
           return mapEmotion(e);
@@ -187,7 +195,10 @@ const CalendarPage = () => {
         const res = await axios.get(
           "https://fombackend.azurewebsites.net/api/diary/read",
           {
-            params: { user_id: user.user_id, selected_date: dateStr },
+            params: {
+              user_id: user.user_id,
+              selected_date: dateStr,
+            },
             signal: controller.signal,
           }
         );
@@ -232,6 +243,48 @@ const CalendarPage = () => {
     openPopup(fallbackDate);
     // 📌 수정된 부분 끝
   }, [user]);
+
+  // 🔽 VisualViewport API를 활용한 키보드 감지
+  useEffect(() => {
+    const handleViewportResize = () => {
+      if (window.visualViewport) {
+        const viewportHeight = window.visualViewport.height;
+        const windowHeight = window.innerHeight;
+        setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 100px 여유
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleViewportResize);
+      window.visualViewport.addEventListener("scroll", handleViewportResize);
+      handleViewportResize(); // 초기 감지
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener(
+          "resize",
+          handleViewportResize
+        );
+        window.visualViewport.removeEventListener(
+          "scroll",
+          handleViewportResize
+        );
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (showDeleteConfirm) {
+      document.body.style.overflow = "hidden";
+    } else if (!selectedDate) {
+      // selectedDate도 false여야 완전히 닫힌 상태 → 스크롤 복원
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [showDeleteConfirm, selectedDate]);
 
   /* ──────────────── 상담(마스코트) ──────────────── */
   const handleMascotClick = async () => {
@@ -329,48 +382,6 @@ const CalendarPage = () => {
       setShowDeleteConfirm(false);
     }
   };
-
-  useEffect(() => {
-    if (showDeleteConfirm) {
-      document.body.style.overflow = "hidden";
-    } else if (!selectedDate) {
-      // selectedDate도 false여야 완전히 닫힌 상태 → 스크롤 복원
-      document.body.style.overflow = "auto";
-    }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [showDeleteConfirm, selectedDate]);
-
-  // 🔽 VisualViewport API를 활용한 키보드 감지
-  useEffect(() => {
-    const handleViewportResize = () => {
-      if (window.visualViewport) {
-        const viewportHeight = window.visualViewport.height;
-        const windowHeight = window.innerHeight;
-        setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 100px 여유
-      }
-    };
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", handleViewportResize);
-      window.visualViewport.addEventListener("scroll", handleViewportResize);
-      handleViewportResize(); // 초기 감지
-    }
-
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener(
-          "resize",
-          handleViewportResize
-        );
-        window.visualViewport.removeEventListener(
-          "scroll",
-          handleViewportResize
-        );
-      }
-    };
-  }, []);
 
   /* ─────────────── 렌더링 ─────────────── */
   /* ---- 캘린더 테이블 (위에서 calendarRows 계산) ---- */
@@ -645,13 +656,13 @@ const CalendarPage = () => {
             </div>
             <div className={styles["popup-actions"]}>
               <button
-                className={styles["popup-btn-yes"]}
+                className={styles["popup-btn"]}
                 onClick={handleConfirmDelete}
               >
                 예
               </button>
               <button
-                className={styles["popup-btn-no"]}
+                className={styles["popup-btn"]}
                 onClick={() => setShowDeleteConfirm(false)}
               >
                 아니요

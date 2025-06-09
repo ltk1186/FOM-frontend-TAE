@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./EmotionResult.css";
-const emotions = [
-    "기쁨",
-    "슬픔",
-    "분노",
-    "공포",
-    "혐오",
-    "불안",
-    "부러움",
-    "당황",
-    "따분",
-];
+
 const EmotionResult = () => {
     const [maxEmotion, setMaxEmotion] = useState({});
 
@@ -33,17 +23,41 @@ const EmotionResult = () => {
         const fetchEmotionData = async () => {
             try {
                 const response = await axios.get(
-                    "https://fomeapi.eastus2.cloudapp.azure.com/feeling/"
+                    "https://fombackend.azurewebsites.net/api/feeling/"
+                    // "https://fomeapi.eastus2.cloudapp.azure.com/feeling/"
                 );
                 const data = response.data;
 
-                // 최대값과 해당 감정 찾기
-                const maxValue = Math.max(...data);
-                const maxIndex = data.indexOf(maxValue);
+                // 한글 감정으로 매핑
+                const emotionMapping = {
+                    joy: "기쁨",
+                    sadness: "슬픔",
+                    anger: "분노",
+                    fear: "공포",
+                    disgust: "혐오",
+                    anxiety: "불안",
+                    envy: "부러움",
+                    bewilderment: "당황",
+                    boredom: "따분",
+                };
+
+                const mappedData = Object.entries(data).reduce(
+                    (result, [key, value]) => {
+                        const koreanEmotion = emotionMapping[key];
+                        if (koreanEmotion) result[koreanEmotion] = value;
+                        return result;
+                    },
+                    {}
+                );
+
+                const maxEntry = Object.entries(mappedData).reduce(
+                    (max, current) => (current[1] > max[1] ? current : max),
+                    ["", 0]
+                );
 
                 setMaxEmotion({
-                    type: emotions[maxIndex],
-                    percentage: maxValue,
+                    type: maxEntry[0],
+                    percentage: maxEntry[1],
                 });
             } catch (error) {
                 console.error("Error fetching emotion data:", error);

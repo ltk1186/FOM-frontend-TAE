@@ -6,6 +6,7 @@ import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 import Settings from "../components/Settings";
 import { UserContext } from "./UserContext";
+import micIcon from "../assets/images/mic.png";
 import axios from "axios";
 
 const RecordGen = () => {
@@ -239,7 +240,7 @@ const RecordGen = () => {
           }`} // 🔄
           onClick={handleToggleMic}
         >
-          🎤
+          <img src={micIcon} alt="Mic" className={styles["mic-icon"]} />
         </button>
       )}
 
