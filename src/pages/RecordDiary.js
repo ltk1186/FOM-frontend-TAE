@@ -54,6 +54,19 @@ const RecordDiary = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // ✅ 팝업이 뜰 때 body 스크롤 방지
+  useEffect(() => {
+    if (confirmDelete) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = ""; // 컴포넌트 언마운트 시 복원
+    };
+  }, [confirmDelete]);
+
   const toggleDeleteMode = () => {
     setIsDeleteMode((prev) => !prev);
     setSelectedIds([]);
@@ -212,7 +225,7 @@ const RecordDiary = () => {
           navigate("/recordsummary", { state: { diaries } });
         }}
       >
-        일기 완성하기
+        일기 완성
       </button>
       {/* ✅ 삭제 확인 팝업창 */}
       {confirmDelete && (
@@ -251,6 +264,7 @@ const RecordDiary = () => {
           </div>
         </div>
       )}
+
       <div className={styles["bottom-icons"]}>
         <img
           src={WriteIcon}

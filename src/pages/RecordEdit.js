@@ -22,6 +22,19 @@ const RecordEdit = () => {
   const [logTitle, setLogTitle] = useState(diaryTitle);
   const [logContent, setLogContent] = useState(diaryContent);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // ✅ 삭제 확인 팝업 상태
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); // 🔹 소프트 키보드 상태
+
+  useEffect(() => {
+    if (showDeleteConfirm) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showDeleteConfirm]);
 
   // 🔄 수정: 스크롤 시 navigation-bar 스타일 적용을 위한 상태
   const [isScrolled, setIsScrolled] = useState(false);
@@ -55,6 +68,36 @@ const RecordEdit = () => {
     // 🔹 정상 진입 시 로딩 해제
     setIsLoading(false);
   }, [location.state, navigate, setIsLoading]);
+
+  // 🔽 VisualViewport API로 키보드 열림 감지
+  useEffect(() => {
+    const handleViewportResize = () => {
+      if (window.visualViewport) {
+        const viewportHeight = window.visualViewport.height;
+        const windowHeight = window.innerHeight;
+        setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 100px 여유
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleViewportResize);
+      window.visualViewport.addEventListener("scroll", handleViewportResize);
+      handleViewportResize(); // 초기 감지
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener(
+          "resize",
+          handleViewportResize
+        );
+        window.visualViewport.removeEventListener(
+          "scroll",
+          handleViewportResize
+        );
+      }
+    };
+  }, []);
 
   const handleSave = async () => {
     if (!diaryId) {
@@ -108,8 +151,9 @@ const RecordEdit = () => {
 
   return (
     <div
-      className={styles["record-edit-container"]} // 🔄 변경됨
-      // style={{ backgroundImage: `url(${backgroundImage})` }} // ❌ 제거됨: 전역 배경으로 대체
+      className={`${styles["record-edit-container"]} ${
+        isKeyboardOpen ? styles["keyboard-open"] : ""
+      }`}
     >
       {/* 🔄 수정: navigation-bar 통일 */}
       <div

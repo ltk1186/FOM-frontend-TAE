@@ -63,9 +63,16 @@
   gap: 8px;
 }
 
+.delete-count-button {
+  background-color: rgba(255, 2, 27, 0.658);
+}
+
+.cancel-delete-button {
+  background-color: #ff7f4e;
+}
+
 .delete-count-button,
 .cancel-delete-button {
-  background-color: #e25c5c;
   color: white;
   border: none;
   padding: 6px 12px;
@@ -172,7 +179,7 @@
 }
 
 .add-diary-btn {
-  background-color: #f28b82;
+  background-color: #ff7f4e;
   color: white;
   font-size: 15px;
   padding: 12px 24px;

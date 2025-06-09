@@ -10,6 +10,11 @@
   padding-top: 100px; /* 🔄 수정: navigation-bar 높이 보정 */
 }
 
+/* 🔽 키보드 올라왔을 때 padding-bottom 확보 */
+.record-edit-container.keyboard-open {
+  padding-bottom: 300px;
+}
+
 /* 🔼 상단 버튼 영역 (기존) */
 /* .top-buttons {
   position: absolute;
@@ -135,7 +140,7 @@
 }
 
 .save-button {
-  background-color: #ff9a9e;
+  background-color: #ff7f4e;
   border: none;
   color: white;
   padding: 10px 24px;
@@ -161,11 +166,11 @@
 }
 
 .delete-button:hover {
-  background-color: red; /* 마우스 올렸을 때 연한 빨간색 */
+  background-color: rgba(255, 2, 27, 0.658); /* 마우스 올렸을 때 연한 빨간색 */
 }
 
 .delete-button:active {
-  background-color: red; /* 클릭하고 있는 동안 빨간색 */
+  background-color: rgba(255, 2, 27, 0.658); /* 클릭하고 있는 동안 빨간색 */
 }
 
 .delete-button img {

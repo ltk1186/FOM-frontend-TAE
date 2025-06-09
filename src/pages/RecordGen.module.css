@@ -102,12 +102,6 @@
   flex-grow: 1;
 }
 
-.log-time-label {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
-}
-
 .log-title {
   font-weight: 700;
   font-size: 18px;
@@ -149,12 +143,12 @@
 }
 
 .cancel-button {
-  background-color: #e25c5c;
+  background-color: rgba(255, 2, 27, 0.658);
   color: white;
 }
 
 .save-button {
-  background-color: #e25c5c;
+  background-color: #ff7f4e;
   color: white;
 }
 
