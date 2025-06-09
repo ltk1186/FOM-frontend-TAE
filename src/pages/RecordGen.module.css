@@ -102,12 +102,6 @@
   flex-grow: 1;
 }
 
-.log-time-label {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
-}
-
 .log-title {
   font-weight: 700;
   font-size: 18px;
@@ -149,18 +143,18 @@
 }
 
 .cancel-button {
-  background-color: #ff7f4e;
+  background-color: rgba(255, 2, 27, 0.658);
   color: white;
 }
 
 .save-button {
-  background-color: #ff956d;
+  background-color: #ff7f4e;
   color: white;
 }
 
 .record-toggle-btn {
   position: fixed;
-  bottom: 90px;
+  bottom: 75px;
   left: 50%;
   transform: translateX(-50%);
   width: 56px;
@@ -174,7 +168,7 @@
 }
 
 .record-toggle-btn.on {
-  background-color: #f44336;
+  background-color: #e42030;
   color: white;
 }
 
@@ -216,5 +210,13 @@
     top: 16px;
     left: 12px;
     right: 12px;
+  }
+
+  .mic-icon {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
   }
 }

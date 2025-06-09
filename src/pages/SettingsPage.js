@@ -13,10 +13,16 @@ const SettingsPage = () => {
   const [password, setPassword] = useState("");
   const [originalEmail, setOriginalEmail] = useState("");
   const [editable, setEditable] = useState(false);
+  const [imageEditable, setImageEditable] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [referenceText, setReferenceText] = useState("");
   const [customText, setCustomText] = useState("");
   const [selectedStyle, setSelectedStyle] = useState("");
+  const [nation, setNation] = useState("");
+  const [sex, setSex] = useState("");
+  const [age, setAge] = useState("");
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); // 🔹 키보드 열림 여부 상태
+
   const navigate = useNavigate();
   const user_id = user?.user_id || "local_test_user";
 
@@ -62,45 +68,76 @@ const SettingsPage = () => {
     },
   ];
 
+  const fetchUserInfo = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `https://fombackend.azurewebsites.net/api/users/${user_id}`
+      );
+      const userData = response.data;
+      console.log(userData);
+      setEmail(userData.email || "");
+      setOriginalEmail(userData.email || "");
+
+      setNation(userData.nation || "");
+      setSex(userData.sex || "");
+      setAge(userData.age || "");
+
+      const matchedStyle = templateStyles.find(
+        (style) => style.text.trim() === (userData.reference_text || "").trim()
+      );
+
+      if (matchedStyle) {
+        setSelectedStyle(matchedStyle.id);
+        setCustomText("");
+      } else {
+        setSelectedStyle("custom");
+        setCustomText(userData.reference_text || "");
+      }
+    } catch (error) {
+      console.error("회원 정보 불러오기 실패:", error);
+      alert("회원 정보를 불러오는 데 실패했습니다.");
+    }
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     if (!user_id) {
       navigate("/login");
       return;
     }
-
-    const fetchUserInfo = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get(
-          `https://fombackend.azurewebsites.net/api/users/${user_id}`
-        );
-        const userData = response.data;
-
-        setEmail(userData.email || "");
-        setOriginalEmail(userData.email || "");
-
-        // ✅ 템플릿 문체와 비교하여 selectedStyle 설정
-        const matchedStyle = templateStyles.find(
-          (style) =>
-            style.text.trim() === (userData.reference_text || "").trim()
-        );
-
-        if (matchedStyle) {
-          setSelectedStyle(matchedStyle.id); // 템플릿 문체 선택
-          setCustomText(""); // 사용자 지정 문체는 비움
-        } else {
-          setSelectedStyle("custom"); // 사용자 지정 문체 선택
-          setCustomText(userData.reference_text || ""); // 텍스트 입력란에 표시
-        }
-      } catch (error) {
-        console.error("회원 정보 불러오기 실패:", error);
-        alert("회원 정보를 불러오는 데 실패했습니다.");
-      }
-      setIsLoading(false);
-    };
-
     fetchUserInfo();
   }, [user_id, navigate, setIsLoading]);
+
+  // 🔽 VisualViewport API를 활용한 소프트 키보드 감지
+  useEffect(() => {
+    const handleViewportResize = () => {
+      if (window.visualViewport) {
+        const viewportHeight = window.visualViewport.height;
+        const windowHeight = window.innerHeight;
+        setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 100px 여유
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleViewportResize);
+      window.visualViewport.addEventListener("scroll", handleViewportResize);
+      handleViewportResize(); // 초기 상태 감지
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener(
+          "resize",
+          handleViewportResize
+        );
+        window.visualViewport.removeEventListener(
+          "scroll",
+          handleViewportResize
+        );
+      }
+    };
+  }, []);
 
   const handleToggleEdit = () => {
     if (editable) {
@@ -109,6 +146,15 @@ const SettingsPage = () => {
       setEditable(false);
     } else {
       setEditable(true);
+    }
+  };
+
+  const handleToggleImageEdit = () => {
+    if (imageEditable) {
+      setImageEditable(false);
+      fetchUserInfo(); // 취소 시 원래 값 복원
+    } else {
+      setImageEditable(true);
     }
   };
 
@@ -126,10 +172,31 @@ const SettingsPage = () => {
       setEditable(false);
       setOriginalEmail(email);
       setPassword("");
-      alert("회원 정보가 수정되었습니다.");
+      alert("로그인 정보가 수정되었습니다.");
     } catch (error) {
-      console.error("회원정보 수정 에러:", error);
-      alert("회원정보 수정 실패");
+      console.error("로그인 수정 에러:", error);
+      alert("로그인 수정 실패");
+    }
+    setIsLoading(false);
+  };
+
+  const handleSaveImageSetting = async () => {
+    setIsLoading(true);
+    try {
+      await axios.put(
+        "https://fombackend.azurewebsites.net/api/image/setting",
+        {
+          user_id,
+          nation,
+          sex,
+          age: Number(age),
+        }
+      );
+      setImageEditable(false);
+      alert("사용자 정보가 수정되었습니다.");
+    } catch (error) {
+      console.error("사용자 정보 수정 실패:", error);
+      alert("사용자 정보 수정 실패");
     }
     setIsLoading(false);
   };
@@ -155,7 +222,11 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className={styles["settings-container"]}>
+    <div
+      className={`${styles["settings-container"]} ${
+        isKeyboardOpen ? styles["keyboard-open"] : ""
+      }`}
+    >
       {/* 🔄 수정: navigation-bar 통일 */}
       <div
         className={`${styles["navigation-bar"]} ${
@@ -177,7 +248,7 @@ const SettingsPage = () => {
         <div className={styles["settings-title"]}>설정</div>
 
         <div className={styles["section-wrapper"]}>
-          <div className={styles["section-title"]}>사용자 정보</div>
+          <div className={styles["section-title"]}>로그인 정보</div>
           <div className={styles["settings-box"]}>
             <label className={styles["label"]}>이메일</label>
             <input
@@ -214,18 +285,20 @@ const SettingsPage = () => {
               )}
             </div>
             <div className={styles["button-group"]}>
-              <button
-                className={styles["logout-button"]}
-                onClick={() => navigate("/logout")}
-              >
-                로그아웃
-              </button>
+              {!editable && ( // 🔹 수정: editable 아닐 때만 로그아웃 버튼 표시
+                <button
+                  className={styles["logout-button"]}
+                  onClick={() => navigate("/logout")}
+                >
+                  로그아웃
+                </button>
+              )}
               {editable && (
                 <button
                   className={styles["save-button"]}
                   onClick={handleSaveUserInfo}
                 >
-                  저장하기
+                  저장
                 </button>
               )}
               <button
@@ -234,7 +307,71 @@ const SettingsPage = () => {
                 }`}
                 onClick={handleToggleEdit}
               >
-                {editable ? "수정 취소" : "회원정보 수정"}
+                {editable ? "수정 취소" : "수정"}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles["section-wrapper"]}>
+          <div className={styles["section-title"]}>사용자 정보</div>
+          <div className={styles["settings-box"]}>
+            <label className={styles["label"]}>국적</label>
+            <input
+              className={
+                imageEditable
+                  ? `${styles.input} ${styles.editable}`
+                  : styles.input
+              }
+              type="text"
+              value={nation}
+              onChange={(e) => setNation(e.target.value)}
+              readOnly={!imageEditable}
+            />
+
+            <label className={styles["label"]}>성별</label>
+            <input
+              className={
+                imageEditable
+                  ? `${styles.input} ${styles.editable}`
+                  : styles.input
+              }
+              type="text"
+              value={sex}
+              onChange={(e) => setSex(e.target.value)}
+              readOnly={!imageEditable}
+            />
+
+            <label className={styles["label"]}>나이</label>
+            <input
+              className={
+                imageEditable
+                  ? `${styles.input} ${styles.editable}`
+                  : styles.input
+              }
+              type="number"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              readOnly={!imageEditable}
+            />
+
+            {/* 🔽 버튼 그룹: 저장/취소 or 수정 진입 */}
+            <div className={styles["button-group"]}>
+              {imageEditable && (
+                <button
+                  className={styles["save-button"]}
+                  onClick={handleSaveImageSetting}
+                >
+                  저장
+                </button>
+              )}
+              <button
+                className={`${styles["edit-button"]} ${
+                  imageEditable ? styles.cancel : ""
+                }`}
+                onClick={handleToggleImageEdit}
+              >
+                {imageEditable ? "수정 취소" : "수정"}
               </button>
             </div>
           </div>
@@ -285,7 +422,7 @@ const SettingsPage = () => {
               </div>
             </div>
             <div className={styles["style-save"]}>
-              <button onClick={handleSaveStyle}>저장하기</button>
+              <button onClick={handleSaveStyle}>저장</button>
             </div>
           </div>
         </div>

@@ -9,6 +9,8 @@ import { UserContext } from "./UserContext";
 import axios from "axios";
 
 const RecordSummary = () => {
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); // 🔹 키보드 열림 여부 상태
+
   const { user, setIsLoading } = useContext(UserContext); // 🔹 setIsLoading 추가
   const navigate = useNavigate();
   const location = useLocation();
@@ -53,6 +55,36 @@ const RecordSummary = () => {
   useEffect(() => {
     setIsLoading(false);
   }, [setIsLoading]);
+
+  // 🔽 VisualViewport API를 활용한 소프트 키보드 감지
+  useEffect(() => {
+    const handleViewportResize = () => {
+      if (window.visualViewport) {
+        const viewportHeight = window.visualViewport.height;
+        const windowHeight = window.innerHeight;
+        setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 100px 여유
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleViewportResize);
+      window.visualViewport.addEventListener("scroll", handleViewportResize);
+      handleViewportResize(); // 초기 상태 감지
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener(
+          "resize",
+          handleViewportResize
+        );
+        window.visualViewport.removeEventListener(
+          "scroll",
+          handleViewportResize
+        );
+      }
+    };
+  }, []);
 
   const handleAIClick = async () => {
     setIsLoading(true); // 🔹 로딩 시작
@@ -132,7 +164,11 @@ const RecordSummary = () => {
   }
 
   return (
-    <div className={styles["summary-page"]}>
+    <div
+      className={`${styles["summary-page"]} ${
+        isKeyboardOpen ? styles["keyboard-open"] : ""
+      }`}
+    >
       {" "}
       {/* ✅ className 수정 */}
       {/* 🔄 수정: navigation-bar 통일 */}
