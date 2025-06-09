@@ -78,8 +78,20 @@ const SettingsPage = () => {
 
         setEmail(userData.email || "");
         setOriginalEmail(userData.email || "");
-        setSelectedStyle(userData.reference_text ? "custom" : "");
-        setCustomText(userData.reference_text || "");
+
+        // ✅ 템플릿 문체와 비교하여 selectedStyle 설정
+        const matchedStyle = templateStyles.find(
+          (style) =>
+            style.text.trim() === (userData.reference_text || "").trim()
+        );
+
+        if (matchedStyle) {
+          setSelectedStyle(matchedStyle.id); // 템플릿 문체 선택
+          setCustomText(""); // 사용자 지정 문체는 비움
+        } else {
+          setSelectedStyle("custom"); // 사용자 지정 문체 선택
+          setCustomText(userData.reference_text || ""); // 텍스트 입력란에 표시
+        }
       } catch (error) {
         console.error("회원 정보 불러오기 실패:", error);
         alert("회원 정보를 불러오는 데 실패했습니다.");

@@ -276,7 +276,7 @@ const RecordDiary = () => {
           className={styles["fab-button"]}
           onClick={() => {
             setIsLoading(true); // 🔹 캘린더 이동
-            navigate("/calendar");
+            navigate("/calendar", { state: { selectedDate: "_blank" } }); // ✅ 팝업 방지
           }}
         />
       </div>

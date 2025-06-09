@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./DiaryList.module.css";
 import PreviousArrow from "../components/PreviousArrow";
+import Settings from "../components/Settings";
 import HomeButton from "../components/HomeButton";
 import { UserContext } from "./UserContext";
 import axios from "axios";
