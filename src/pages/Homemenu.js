@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"; // 🔄 useState 추가
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import styles from "./Homemenu.module.css";
@@ -12,6 +12,19 @@ import homemenu5 from "../assets/images/homemenu6.png";
 import homemenu6 from "../assets/images/homemenu5.png";
 import EmotionResult from "../components/EmotionResult";
 import WeeklyCalendar from "../components/WeeklyCalendar";
+
+// 감정 색상 정보를 추가합니다
+const emotionColors = {
+    기쁨: "#ffcc00",
+    슬픔: "#0060BA",
+    분노: "#FF5640",
+    공포: "#656565",
+    혐오: "#009200",
+    불안: "#FF8801",
+    부러움: "#2EC19C",
+    당황: "#FF83EA",
+    따분: "#A19CA0",
+};
 
 const menuItems = [
     {
@@ -60,15 +73,16 @@ const menuItems = [
 
 const Homemenu = () => {
     const navigate = useNavigate();
-    const { user, setIsLoading } = useContext(UserContext); // 🔹 setIsLoading 추가
-    const [isScrolled, setIsScrolled] = useState(false); // 🔄 추가: 스크롤 상태
+    const { user, setIsLoading } = useContext(UserContext);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [selectedEmotionInfo, setSelectedEmotionInfo] = useState(null);
 
-    // 🔹 페이지 진입 시 로딩 해제
+    // 페이지 진입 시 로딩 해제
     useEffect(() => {
         setIsLoading(false);
     }, [setIsLoading]);
 
-    // 🔄 추가: 스크롤 감지
+    // 스크롤 감지
     useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 0);
@@ -78,22 +92,10 @@ const Homemenu = () => {
     }, []);
 
     if (!user) {
-        navigate("/login"); // 로그인을 하지 않았다면 로그인 화면으로 이동
+        navigate("/login");
         return null;
     }
 
-    // 주간 날짜 데이터 (예시)
-    const weekDays = [
-        { day: "01", hasActivity: true },
-        { day: "02", hasActivity: false },
-        { day: "03", hasActivity: true },
-        { day: "04", hasActivity: false },
-        { day: "05", hasActivity: true },
-        { day: "06", hasActivity: false },
-        { day: "07", hasActivity: true },
-    ];
-
-    // 🔹 기능 클릭 시 로딩 시작 후 페이지 이동
     const handleMenuClick = (route) => {
         setIsLoading(true);
         navigate(route);
@@ -102,29 +104,15 @@ const Homemenu = () => {
     return (
         <>
             <div className={styles["home-container"]}>
-                {/* 네비게이션 바 */}
-                {/* 
-        <div className={styles["navigation-bar"]}>
-          <div className={styles["back-button"]}>
-            <PreviousArrow />
-          </div>
-          <div className={styles["right-buttons"]}>
-            <Settings />
-          </div>
-        </div>
-        */}
-                {/* 🔄 navigation-bar 구조 통일 (RecordDiary.js 방식) */}
                 <div
                     className={`${styles["navigation-bar"]} ${
                         isScrolled ? styles["scrolled"] : ""
-                    }`} // 🔄 수정됨
+                    }`}
                 >
                     <div className={styles["nav-left"]}>
                         <PreviousArrow />
                     </div>
-                    <div className={styles["nav-center"]}>
-                        {/* 중앙 영역 없음 */}
-                    </div>
+                    <div className={styles["nav-center"]}></div>
                     <div className={styles["nav-right"]}>
                         <Settings />
                     </div>
@@ -132,35 +120,51 @@ const Homemenu = () => {
 
                 <div className={styles.divider}></div>
 
-                {/* 주간 달력 섹션 */}
-                {/* <div className={styles["weekly-calendar-container"]}>
-          <div className={styles["weekly-calendar-frame"]}>
-            <div className={styles["calendar-background-top"]}></div>
-            <div className={styles["calendar-background-bottom"]}></div>
-            <div className={styles["calendar-header"]}>
-              <h3>주간 달력</h3>
-            </div>
-            <div className={styles["weekly-dates"]}>
-              {weekDays.map((day, index) => (
-                <div key={index} className={styles["date-component"]}>
-                  <div className={styles["date-number"]}>{day.day}</div>
-                  <div
-                    className={`${styles["date-indicator"]} ${
-                      day.hasActivity ? styles.active : ""
-                    }`}
-                  ></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div> */}
-                <WeeklyCalendar />
+                {/* ⭐ 주간 달력 & 감정 클릭 시 선택 감정 표시 */}
+                <WeeklyCalendar
+                    onDateEmotionClick={({ day, emotion }) => {
+                        // 이미 선택된 상태와 같으면 사라짐
+                        if (
+                            selectedEmotionInfo &&
+                            selectedEmotionInfo.day === day &&
+                            selectedEmotionInfo.emotion === emotion
+                        ) {
+                            setSelectedEmotionInfo(null);
+                        } else {
+                            setSelectedEmotionInfo({ day, emotion });
+                        }
+                    }}
+                />
+                {selectedEmotionInfo && (
+                    <div
+                        style={{
+                            background:
+                                emotionColors[selectedEmotionInfo.emotion] ||
+                                "#ddd",
+                            color: "#fff",
+                            fontWeight: "bold",
+                            borderRadius: "20px",
+                            padding: "10px 18px",
+                            fontSize: "16px",
+                            display: "inline-block",
+                            border: "2px solid #fff", // 배경의 윤곽선
+                            textShadow: `  
+      -1px -1px 2px #222,   
+      1px -1px 2px #222,   
+      -1px 1px 2px #222,   
+      1px 1px 2px #222  
+    `, // 글씨 윤곽선(검은색)
+                        }}
+                    >
+                        {selectedEmotionInfo.day}일의 감정은 "
+                        {selectedEmotionInfo.emotion}" 입니다
+                    </div>
+                )}
 
-                {/* 감정 지수 섹션 */}
                 <div className={styles["emotion-index-container"]}>
                     <div className={styles["emotion-index-content"]}>
                         <h3 className={styles["emotion-question"]}>
-                            <p>오늘 포미사용자의 감정지수는?{user.id}</p>
+                            <p>오늘 포미사용자의 감정지수는?</p>
                         </h3>
                         <div className={styles["emotion-result"]}>
                             <EmotionResult />
