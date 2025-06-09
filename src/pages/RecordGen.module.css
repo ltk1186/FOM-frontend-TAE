@@ -160,7 +160,7 @@
 
 .record-toggle-btn {
   position: fixed;
-  bottom: 90px;
+  bottom: 75px;
   left: 50%;
   transform: translateX(-50%);
   width: 56px;
@@ -174,7 +174,7 @@
 }
 
 .record-toggle-btn.on {
-  background-color: #f44336;
+  background-color: #e42030;
   color: white;
 }
 
@@ -216,5 +216,13 @@
     top: 16px;
     left: 12px;
     right: 12px;
+  }
+
+  .mic-icon {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
   }
 }
