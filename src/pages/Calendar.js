@@ -87,6 +87,8 @@ const CalendarPage = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); // 🔹 키보드 열림 여부
+
   /* ------- refs ------- */
   const requestControllerRef = useRef(null); // Axios 취소
   const psyCache = useRef({}); // 상담 보고서 캐시
@@ -328,6 +330,48 @@ const CalendarPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (showDeleteConfirm) {
+      document.body.style.overflow = "hidden";
+    } else if (!selectedDate) {
+      // selectedDate도 false여야 완전히 닫힌 상태 → 스크롤 복원
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [showDeleteConfirm, selectedDate]);
+
+  // 🔽 VisualViewport API를 활용한 키보드 감지
+  useEffect(() => {
+    const handleViewportResize = () => {
+      if (window.visualViewport) {
+        const viewportHeight = window.visualViewport.height;
+        const windowHeight = window.innerHeight;
+        setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 100px 여유
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleViewportResize);
+      window.visualViewport.addEventListener("scroll", handleViewportResize);
+      handleViewportResize(); // 초기 감지
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener(
+          "resize",
+          handleViewportResize
+        );
+        window.visualViewport.removeEventListener(
+          "scroll",
+          handleViewportResize
+        );
+      }
+    };
+  }, []);
+
   /* ─────────────── 렌더링 ─────────────── */
   /* ---- 캘린더 테이블 (위에서 calendarRows 계산) ---- */
   const year = currentDate.getFullYear();
@@ -362,7 +406,11 @@ const CalendarPage = () => {
   return (
     <>
       {/* ───── 페이지 상단(네비) ───── */}
-      <div className={styles["calendar-page"]}>
+      <div
+        className={`${styles["calendar-page"]} ${
+          isKeyboardOpen ? styles["keyboard-open"] : ""
+        }`}
+      >
         <div
           className={`${styles["navigation-bar"]} ${
             isScrolled ? styles["scrolled"] : ""
@@ -597,13 +645,13 @@ const CalendarPage = () => {
             </div>
             <div className={styles["popup-actions"]}>
               <button
-                className={styles["popup-btn"]}
+                className={styles["popup-btn-yes"]}
                 onClick={handleConfirmDelete}
               >
                 예
               </button>
               <button
-                className={styles["popup-btn"]}
+                className={styles["popup-btn-no"]}
                 onClick={() => setShowDeleteConfirm(false)}
               >
                 아니요

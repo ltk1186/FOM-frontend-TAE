@@ -7,6 +7,11 @@
   min-height: 100dvh;
 }
 
+/* 🔽 키보드 올라올 때 하단 여백 확보 */
+.body-area.keyboard-open {
+  padding-bottom: 300px;
+}
+
 /* 🔄 navigation-bar 리팩토링 시작 */
 .navigation-bar {
   position: fixed;

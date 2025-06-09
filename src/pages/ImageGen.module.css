@@ -143,17 +143,11 @@
 }
 
 .action-btn.gen {
-  background: #f3a93c;
-}
-.action-btn.gen:hover {
-  background: #e69726;
+  background: rgba(255, 2, 27, 0.658);
 }
 
 .action-btn.save {
-  background: #e25c5c;
-}
-.action-btn.save:hover {
-  background: #d34242;
+  background: #ff7f4e;
 }
 
 /* ─── 이미지 팝업 ─────────────────────────── */

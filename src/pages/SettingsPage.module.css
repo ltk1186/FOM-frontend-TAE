@@ -8,6 +8,11 @@
   box-sizing: border-box;
 }
 
+/* 🔽 키보드가 올라왔을 때 하단 여백 확보 */
+.settings-container.keyboard-open {
+  padding-bottom: 300px;
+}
+
 /* 상단 버튼바 */
 /* .top-buttons {
   position: fixed;
@@ -192,8 +197,12 @@ input.input:read-only {
   cursor: pointer;
 }
 
+.logout-button {
+  background-color: rgba(255, 2, 27, 0.658);
+}
+
 .edit-button.cancel {
-  background-color: #ef4444;
+  background-color: rgba(255, 2, 27, 0.658);
 }
 
 /* 스타일 옵션 */

@@ -224,13 +224,22 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: #ff7f4e;
+  background-color: transparent;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
 }
 
 .trash-button img {
   width: 18px;
   height: 18px;
+}
+
+.trash-button:hover {
+  background-color: rgba(255, 2, 27, 0.658); /* 마우스 올렸을 때 연한 빨간색 */
+}
+
+.trash-button:active {
+  background-color: rgba(255, 2, 27, 0.658); /* 마우스 올렸을 때 연한 빨간색 */
 }
 
 .delete-count-button,
@@ -247,7 +256,7 @@
 }
 
 .go-generate-btn {
-  background-color: #f28b82;
+  background-color: #ff7f4e;
   color: white;
   padding: 12px 24px;
   font-size: 16px;
@@ -320,8 +329,31 @@
   gap: 12px;
 }
 
-.popup-btn {
-  background-color: #f28b82;
+.popup-btn-yes {
+  background-color: #fcb65e;
+}
+
+.popup-btn-no {
+  background-color: rgba(255, 2, 27, 0.658);
+}
+
+.popup-btn-delete {
+  background-color: rgba(255, 2, 27, 0.658);
+}
+
+.popup-btn-share {
+  background-color: #fcb65e;
+}
+
+.popup-btn-cancel {
+  background-color: rgba(255, 2, 27, 0.658);
+}
+
+.popup-btn-yes,
+.popup-btn-no,
+.popup-btn-delete,
+.popup-btn-share,
+.popup-btn-cancel {
   color: white;
   border: none;
   padding: 6px 18px;
@@ -418,7 +450,11 @@
     padding: 20px;
   }
 
-  .popup-btn {
+  .popup-btn-yes,
+  .popup-btn-no,
+  .popup-btn-delete,
+  .popup-btn-share,
+  .popup-btn-cancel {
     padding: 6px 16px;
     font-size: 13px;
   }

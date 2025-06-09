@@ -13,6 +13,7 @@ const Connselbot = () => {
   const [loading, setLoading] = useState(false); // 로딩 상태
   const textareaRef = useRef(null); // 🔹 텍스트 영역 참조
   const [isScrolled, setIsScrolled] = useState(false); // 🔄 navigation-bar 리팩토링
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); // 🔹 키보드 열림 여부
 
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
@@ -77,13 +78,47 @@ const Connselbot = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // 🔽 VisualViewport API로 키보드 열림 감지
+  useEffect(() => {
+    const handleViewportResize = () => {
+      if (window.visualViewport) {
+        const viewportHeight = window.visualViewport.height;
+        const windowHeight = window.innerHeight;
+        setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 약간 여유
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleViewportResize);
+      window.visualViewport.addEventListener("scroll", handleViewportResize);
+      handleViewportResize();
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener(
+          "resize",
+          handleViewportResize
+        );
+        window.visualViewport.removeEventListener(
+          "scroll",
+          handleViewportResize
+        );
+      }
+    };
+  }, []);
+
   if (!user) {
     navigate("/login");
     return null;
   }
 
   return (
-    <div className={styles["body-area"]}>
+    <div
+      className={`${styles["body-area"]} ${
+        isKeyboardOpen ? styles["keyboard-open"] : ""
+      }`}
+    >
       {/* 🔄 navigation-bar 리팩토링 시작 */}
       <div
         className={`${styles["navigation-bar"]} ${

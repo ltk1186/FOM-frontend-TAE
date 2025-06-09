@@ -33,12 +33,32 @@ const RecordGen = () => {
   }, []);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsKeyboardOpen(window.innerHeight < 500);
+    const handleViewportResize = () => {
+      if (window.visualViewport) {
+        const viewportHeight = window.visualViewport.height;
+        const windowHeight = window.innerHeight;
+        setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 여유 바닥값 100px
+      }
     };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleViewportResize);
+      window.visualViewport.addEventListener("scroll", handleViewportResize); // 일부 기기에서 scroll로도 변화 감지됨
+      handleViewportResize(); // 초기 상태 반영
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener(
+          "resize",
+          handleViewportResize
+        );
+        window.visualViewport.removeEventListener(
+          "scroll",
+          handleViewportResize
+        );
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -197,10 +217,9 @@ const RecordGen = () => {
       <div className={styles["record-edit-box"]}>
         {" "}
         {/* 🔄 */}
-        <div className={styles["log-time-label"]}>제목을 입력하세요</div>
         <input
           className={styles["log-title"]}
-          placeholder="제목"
+          placeholder="제목을 입력하세요"
           value={logTitle}
           onChange={(e) => setLogTitle(e.target.value)}
         />
