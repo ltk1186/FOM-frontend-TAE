@@ -15,7 +15,6 @@ import sample4 from "../assets/images/sample4.jpg";
 import sample5 from "../assets/images/sample5.jpg";
 import sample6 from "../assets/images/sample6.jpg";
 import TrashIcon from "../assets/images/trash.png"; // ✅ 삭제 아이콘
-import ShareIcon from "../assets/images/public.png";
 import Smiley from "../assets/images/image-50.png"; // ✅ 공유 확인 팝업 이미지
 
 const Gallery = () => {
@@ -346,9 +345,7 @@ const Gallery = () => {
               className={styles["popup-image"]}
             />
             <div className={styles["popup-info"]}>
-              <span className={styles["popup-message"]}>
-                정말정말 공유 할까요?
-              </span>
+              <span className={styles["popup-message"]}>정말 공유할까요?</span>
             </div>
             <div className={styles["popup-actions"]}>
               <button
@@ -443,9 +440,7 @@ const Gallery = () => {
               className={styles["popup-image"]}
             />
             <div className={styles["popup-info"]}>
-              <span className={styles["popup-message"]}>
-                정말 삭제하시겠어요?
-              </span>
+              <span className={styles["popup-message"]}>정말 삭제할까요?</span>
             </div>
             <div className={styles["popup-actions"]}>
               <button
@@ -484,9 +479,7 @@ const Gallery = () => {
               className={styles["popup-image"]}
             />
             <div className={styles["popup-info"]}>
-              <span className={styles["popup-message"]}>
-                공유를 정말 취소할까요?
-              </span>
+              <span className={styles["popup-message"]}>정말 취소할까요?</span>
             </div>
             <div className={styles["popup-actions"]}>
               <button

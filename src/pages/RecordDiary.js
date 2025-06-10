@@ -8,6 +8,7 @@ import MicIcon from "../assets/images/group-70.svg";
 import CalendarIcon from "../assets/images/group-90.svg";
 import WriteIcon from "../assets/images/Group 19.svg";
 import TrashIcon from "../assets/images/trash.png";
+import Smiley from "../assets/images/image-50.png";
 import { UserContext } from "./UserContext";
 import axios from "axios";
 
@@ -238,7 +239,7 @@ const RecordDiary = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={TrashIcon}
+              src={Smiley}
               alt="삭제 확인"
               className={styles["popup-image"]}
             />

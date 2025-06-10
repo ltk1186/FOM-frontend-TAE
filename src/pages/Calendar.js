@@ -650,19 +650,17 @@ const CalendarPage = () => {
               className={styles["popup-image"]}
             />
             <div className={styles["popup-info"]}>
-              <span className={styles["popup-message"]}>
-                정말 삭제하시겠어요?
-              </span>
+              <span className={styles["popup-message"]}>정말 삭제할까요?</span>
             </div>
             <div className={styles["popup-actions"]}>
               <button
-                className={styles["popup-btn"]}
+                className={styles["popup-btn-yes"]}
                 onClick={handleConfirmDelete}
               >
                 예
               </button>
               <button
-                className={styles["popup-btn"]}
+                className={styles["popup-btn-no"]}
                 onClick={() => setShowDeleteConfirm(false)}
               >
                 아니요

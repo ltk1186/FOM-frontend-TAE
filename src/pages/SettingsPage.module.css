@@ -283,6 +283,80 @@ input.input:read-only {
   color: #a16207;
 }
 
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.popup-confirm-content {
+  background-color: #fff4e0;
+  border-radius: 20px;
+  padding: 24px;
+  width: 280px;
+  text-align: center;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  border: 6px solid #f28b82;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-image {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 12px;
+}
+
+.popup-info {
+  font-size: 16px;
+  font-weight: bold;
+  color: #5a4033;
+  margin-bottom: 16px;
+}
+
+.popup-message {
+  font-size: 16px;
+  font-weight: bold;
+  color: #5a4033;
+  margin-bottom: 16px;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.popup-btn-yes {
+  background-color: #fcb65e;
+}
+
+.popup-btn-no {
+  background-color: rgba(255, 2, 27, 0.658);
+}
+
+.popup-btn-yes,
+.popup-btn-no {
+  color: white;
+  border: none;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
 /* 반응형 */
 @media (min-width: 768px) {
   .settings-title {
