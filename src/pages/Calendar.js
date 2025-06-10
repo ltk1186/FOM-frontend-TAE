@@ -48,22 +48,6 @@ const getTodayString = () => {
     )}-${String(d.getDate()).padStart(2, "0")}`;
 };
 
-const getFullWeekDates = () => {
-    const today = new Date();
-    let dow = today.getDay(); // 0(일)‒6
-    dow = dow === 0 ? 7 : dow;
-    const monday = new Date(today);
-    monday.setDate(today.getDate() - (dow - 1));
-    return Array.from({ length: 7 }).map((_, i) => {
-        const d = new Date(monday);
-        d.setDate(monday.getDate() + i);
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
-            2,
-            "0"
-        )}-${String(d.getDate()).padStart(2, "0")}`;
-    });
-};
-
 /* ──────────────────────── 컴포넌트 ─────────────────────── */
 const CalendarPage = () => {
     const { user, setIsLoading } = useContext(UserContext);
@@ -71,7 +55,7 @@ const CalendarPage = () => {
     const navigate = useNavigate();
 
     /* ------- states ------- */
-    const [weekDates, setWeekDates] = useState([]);
+    
     const [emotionData, setEmotionData] = useState([]);
     const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -89,7 +73,7 @@ const CalendarPage = () => {
 
     /* ------- refs ------- */
     const requestControllerRef = useRef(null); // Axios 취소
-    const psyCache = useRef({}); // 상담 보고서 캐시
+    const psyCache = useRef({}); // 포미의 한마디 캐시
 
     /* ────────────── 라이프사이클: 공통 정리 ────────────── */
     // 스크롤 헤더 효과
@@ -113,6 +97,19 @@ const CalendarPage = () => {
     useEffect(() => {
         psyCache.current = {};
     }, [user]);
+
+    //  팝업/삭제 확인창 등장 시 스크롤 제어 (주찬님 코드) 
+    useEffect(() => {
+        if (showDeleteConfirm) {
+            document.body.style.overflow = "hidden";
+        } else if (!selectedDate) {
+            // selectedDate도 false여야 완전히 닫힌 상태 → 스크롤 복원
+            document.body.style.overflow = "auto";
+        }
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+        }, [showDeleteConfirm, selectedDate]);
 
     /* ──────────────── 데이터: 주간 감정 ──────────────── */
     useEffect(() => {
@@ -204,17 +201,11 @@ const CalendarPage = () => {
     useEffect(() => {
         if (!user) return;
 
-        // 📌 수정된 부분 시작
         const fromState = location.state?.selectedDate;
-
-        // "selectedDate"가 명시적으로 null이거나 "_blank"일 경우 → 팝업 열지 않음
         if (fromState === null || fromState === "_blank") return;
-
-        // 그 외는 날짜로 간주하여 팝업 오픈
         const fallbackDate = fromState || getTodayString();
         openPopup(fallbackDate);
-        // 📌 수정된 부분 끝
-    }, [user]);
+    }, [user, openPopup, location.state?.selectedDate]);
 
     /* ──────────────── 상담(마스코트) ──────────────── */
     const handleMascotClick = async () => {
@@ -240,7 +231,7 @@ const CalendarPage = () => {
             return;
         }
 
-        setDiaryPopupContent([{ content: "상담 보고서를 생성 중입니다..." }]);
+        setDiaryPopupContent([{ content: "포미의 한마디를 생성 중입니다..." }]);
         setIsLoading(true);
         try {
             const res = await axios.post(
@@ -256,12 +247,12 @@ const CalendarPage = () => {
                 setDiaryPopupContent([{ content: res.data.Fome }]);
             } else {
                 setDiaryPopupContent([
-                    { content: "해당 날짜의 상담 보고서가 없습니다." },
+                    { content: "해당 날짜의 포미의 한마디가 없습니다." },
                 ]);
             }
         } catch {
             setDiaryPopupContent([
-                { content: "상담 보고서 생성에 실패했습니다." },
+                { content: "포미의 한마디 생성에 실패했습니다." },
             ]);
         } finally {
             setIsLoading(false);
@@ -314,6 +305,33 @@ const CalendarPage = () => {
         }
     };
 
+    /* ──────────────── 키보드 열림 감지 ──────────────── */
+    // 주찬님 코드
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); // 🔹 키보드 열림 여부
+
+    useEffect(() => {
+    const handleViewportResize = () => {
+        if (window.visualViewport) {
+        const viewportHeight = window.visualViewport.height;
+        const windowHeight = window.innerHeight;
+        setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 100px 여유
+        }
+    };
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", handleViewportResize);
+        window.visualViewport.addEventListener("scroll", handleViewportResize);
+        handleViewportResize(); // 초기 감지
+    }
+
+    return () => {
+        if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", handleViewportResize);
+        window.visualViewport.removeEventListener("scroll", handleViewportResize);
+        }
+    };
+    }, []);
+
     /* ─────────────── 렌더링 ─────────────── */
     /* ---- 캘린더 테이블 (위에서 calendarRows 계산) ---- */
     const year = currentDate.getFullYear();
@@ -355,7 +373,11 @@ const CalendarPage = () => {
     return (
         <>
             {/* ───── 페이지 상단(네비) ───── */}
-            <div className={styles["calendar-page"]}>
+            <div
+                className={`${styles["calendar-page"]} ${
+                    isKeyboardOpen ? styles["keyboard-open"] : ""
+                }`}
+            >
                 <div
                     className={`${styles["navigation-bar"]} ${
                         isScrolled ? styles["scrolled"] : ""
@@ -514,7 +536,7 @@ const CalendarPage = () => {
                             </div>
                             {isConsulting && (
                                 <div className={styles["popup-subtitle"]}>
-                                    포미의 상담 보고서
+                                    포미의 한마디
                                 </div>
                             )}
                         </div>
@@ -625,18 +647,18 @@ const CalendarPage = () => {
                         />
                         <div className={styles["popup-info"]}>
                             <span className={styles["popup-message"]}>
-                                정말 삭제하시겠어요?
+                                정말 삭제할까요?
                             </span>
                         </div>
                         <div className={styles["popup-actions"]}>
                             <button
-                                className={styles["popup-btn"]}
+                                className={styles["popup-btn-yes"]}
                                 onClick={handleConfirmDelete}
                             >
                                 예
                             </button>
                             <button
-                                className={styles["popup-btn"]}
+                                className={styles["popup-btn-no"]}
                                 onClick={() => setShowDeleteConfirm(false)}
                             >
                                 아니요

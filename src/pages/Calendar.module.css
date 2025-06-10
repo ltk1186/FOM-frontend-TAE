@@ -10,6 +10,11 @@
   overflow-x: hidden;
 }
 
+/* 🔽 키보드 올라왔을 때 하단 공간 확보 */
+.calendar-page.keyboard-open {
+  padding-bottom: 300px;
+}
+
 /* 🔄 navigation-bar 리팩토링 시작 */
 .navigation-bar {
   position: fixed;
@@ -314,8 +319,16 @@
   gap: 12px;
 }
 
-.popup-btn {
-  background-color: #f28b82;
+.popup-btn-yes {
+  background-color: #fcb65e;
+}
+
+.popup-btn-no {
+  background-color: rgba(255, 2, 27, 0.658);
+}
+
+.popup-btn-yes,
+.popup-btn-no {
   color: white;
   border: none;
   padding: 6px 18px;
@@ -521,24 +534,22 @@
   font: 700 14px/1 "Pretendard";
   color: #fff;
   cursor: pointer;
-  background: #e25c5c;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: background 0.2s;
 }
 
-.popup-button:hover {
-  background: #d34242;
-}
-
 .popup-button.delete {
+  background: rgba(255, 2, 27, 0.658);
   order: 1;
 }
 
 .popup-button.save {
+  background: #fcb65e;
   order: 3;
 }
 
 .popup-button.consult {
+  background: #fcb65e;
   order: 2;
   margin: 0 auto;
   min-width: 140px;

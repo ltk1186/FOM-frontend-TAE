@@ -27,7 +27,7 @@ const emotionColors = {
     따분: "#A19CA0",
 };
 
-const WeeklyCalendar = ({ onDateEmotionClick }) => {
+const WeeklyCalendar = () => {
     const { user } = useContext(UserContext);
     const [weekDays, setWeekDays] = useState([]);
 
@@ -104,16 +104,7 @@ const WeeklyCalendar = ({ onDateEmotionClick }) => {
                                 }`}
                                 style={{
                                     backgroundColor: emotionColors[day.emotion],
-                                }}
-                                // ✅ 클릭 핸들러 추가
-                                onClick={() => {
-                                    if (onDateEmotionClick) {
-                                        onDateEmotionClick({
-                                            day: day.day,
-                                            emotion: day.emotion,
-                                        });
-                                    }
-                                }}
+                                }} // 색상 적용
                             ></div>
                         </div>
                     ))}

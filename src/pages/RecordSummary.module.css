@@ -7,6 +7,11 @@
   color: #653d00;
 }
 
+/* 🔽 소프트 키보드 대응: 하단 여백 확보 */
+.summary-page.keyboard-open {
+  padding-bottom: 300px;
+}
+
 /* .summary-header {
   display: flex;
   justify-content: space-between;

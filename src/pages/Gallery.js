@@ -15,6 +15,7 @@ import sample4 from "../assets/images/sample4.jpg";
 import sample5 from "../assets/images/sample5.jpg";
 import sample6 from "../assets/images/sample6.jpg";
 import TrashIcon from "../assets/images/trash.png"; // ✅ 삭제 아이콘
+import ShareIcon from "../assets/images/public.png";
 import Smiley from "../assets/images/image-50.png"; // ✅ 공유 확인 팝업 이미지
 
 const Gallery = () => {
@@ -32,6 +33,31 @@ const Gallery = () => {
   const [confirmDeleteSingle, setConfirmDeleteSingle] = useState(false); // ✅ 단일 삭제 확인
   const [confirmDeleteBulk, setConfirmDeleteBulk] = useState(false); // ✅ 일괄 삭제 확인
   const [confirmUnshare, setConfirmUnshare] = useState(false); // ✅ 공유 취소 확인
+
+  useEffect(() => {
+    const isAnyPopupOpen =
+      popupData ||
+      confirmShare ||
+      confirmDeleteSingle ||
+      confirmDeleteBulk ||
+      confirmUnshare;
+
+    if (isAnyPopupOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [
+    popupData,
+    confirmShare,
+    confirmDeleteSingle,
+    confirmDeleteBulk,
+    confirmUnshare,
+  ]);
 
   useEffect(() => {
     const loadGallery = async () => {
@@ -300,7 +326,7 @@ const Gallery = () => {
           className={styles["go-generate-btn"]}
           onClick={handleGoToDiaryList}
         >
-          이미지 만들러가기
+          갤러리 이미지 생성
         </button>
       </div>
 
@@ -326,13 +352,13 @@ const Gallery = () => {
             </div>
             <div className={styles["popup-actions"]}>
               <button
-                className={styles["popup-btn"]}
+                className={styles["popup-btn-yes"]}
                 onClick={handleShareConfirm}
               >
                 예
               </button>
               <button
-                className={styles["popup-btn"]}
+                className={styles["popup-btn-no"]}
                 onClick={() => setConfirmShare(false)}
               >
                 아니요
@@ -369,22 +395,22 @@ const Gallery = () => {
               {selectedTab === "my" && (
                 <div className={styles["popup-actions"]}>
                   <button
-                    className={styles["popup-btn"]}
+                    className={styles["popup-btn-delete"]}
                     onClick={() => setConfirmDeleteSingle(true)}
                   >
-                    🗑️
+                    삭제
                   </button>
 
                   {!popupData.isShared ? (
                     <button
-                      className={styles["popup-btn"]}
+                      className={styles["popup-btn-share"]}
                       onClick={() => setConfirmShare(true)}
                     >
-                      🔗
+                      공유
                     </button>
                   ) : (
                     <button
-                      className={styles["popup-btn"]}
+                      className={styles["popup-btn-cancel"]}
                       onClick={() => setConfirmUnshare(true)}
                     >
                       공유 취소
@@ -423,7 +449,7 @@ const Gallery = () => {
             </div>
             <div className={styles["popup-actions"]}>
               <button
-                className={styles["popup-btn"]}
+                className={styles["popup-btn-yes"]}
                 onClick={() => {
                   handleDeletePhoto(popupData.diary_id);
                   setConfirmDeleteSingle(false);
@@ -432,7 +458,7 @@ const Gallery = () => {
                 예
               </button>
               <button
-                className={styles["popup-btn"]}
+                className={styles["popup-btn-no"]}
                 onClick={() => setConfirmDeleteSingle(false)}
               >
                 아니요
@@ -464,7 +490,7 @@ const Gallery = () => {
             </div>
             <div className={styles["popup-actions"]}>
               <button
-                className={styles["popup-btn"]}
+                className={styles["popup-btn-yes"]}
                 onClick={() => {
                   handleCancelShare();
                   setConfirmUnshare(false);
@@ -473,7 +499,7 @@ const Gallery = () => {
                 예
               </button>
               <button
-                className={styles["popup-btn"]}
+                className={styles["popup-btn-no"]}
                 onClick={() => setConfirmUnshare(false)}
               >
                 아니요
@@ -505,7 +531,7 @@ const Gallery = () => {
             </div>
             <div className={styles["popup-actions"]}>
               <button
-                className={styles["popup-btn"]}
+                className={styles["popup-btn-yes"]}
                 onClick={() => {
                   handleBulkDelete();
                   setConfirmDeleteBulk(false);
@@ -514,7 +540,7 @@ const Gallery = () => {
                 예
               </button>
               <button
-                className={styles["popup-btn"]}
+                className={styles["popup-btn-no"]}
                 onClick={() => setConfirmDeleteBulk(false)}
               >
                 아니요
