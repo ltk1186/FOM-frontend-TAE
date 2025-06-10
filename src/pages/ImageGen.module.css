@@ -6,7 +6,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 70px; /* 🔄 수정: navigation-bar 높이에 맞게 조정 */
+  justify-content: center; /* ✅ 중앙 정렬 추가 */
+  padding-top: 100px; /* ✅ nav-bar 영역 확보 */
   box-sizing: border-box;
 }
 

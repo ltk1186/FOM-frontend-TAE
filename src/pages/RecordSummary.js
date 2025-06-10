@@ -119,7 +119,7 @@ const RecordSummary = () => {
 
     setIsLoading(true);
     try {
-      await axios.post(
+      await axios.put(
         // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/diary/create/",
         "https://fombackend.azurewebsites.net/api/diary/create",
         {
@@ -197,11 +197,8 @@ const RecordSummary = () => {
         onChange={(e) => setSummary(e.target.value)}
       />
       <div className={styles["summary-buttons"]}>
-        {" "}
-        {/* ✅ */}
         <button onClick={handleAIClick}>AI 일기 완성</button>
         <button onClick={handleSave}>저장</button>
-        {/* <button onClick={handleGoReport}>포미와 대화</button> */}
       </div>
     </div>
   );
