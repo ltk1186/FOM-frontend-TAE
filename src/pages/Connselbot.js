@@ -17,6 +17,8 @@ const Connselbot = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const messagesEndRef = useRef(null);
+
     const adjustTextareaHeight = () => {
         const textarea = textareaRef.current;
         if (textarea) {
@@ -41,6 +43,11 @@ const Connselbot = () => {
             window.history.replaceState({}, document.title);
         }
     }, [location.state]);
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
 
     const sendMessage = async (message) => {
         if (!message.trim()) return;
@@ -114,6 +121,7 @@ const Connselbot = () => {
                             {msg.content}
                         </div>
                     ))}
+                    <div ref={messagesEndRef} />
                 </div>
                 {loading && (
                     <div className={styles.loading}>Bot is typing...</div>
