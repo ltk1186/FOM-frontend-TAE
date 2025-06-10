@@ -116,66 +116,38 @@ const CalendarPage = () => {
 
     /* ──────────────── 데이터: 주간 감정 ──────────────── */
     useEffect(() => {
-        if (!user) return;
+    if (!user) return;
 
-        const blankEmotion = Object.fromEntries(
-            Object.keys(EMOTION_COLORS).map((k) => [k, 0])
-        );
-        const mapEmotion = (e) => ({
-            joy: e.joy ?? 0,
-            sadness: e.sadness ?? 0,
-            anger: e.anger ?? 0,
-            fear: e.fear ?? 0,
-            disgust: e.disgust ?? 0,
-            shame: e.shame ?? 0,
-            surprise: e.surprise ?? 0,
-            confusion: e.confusion ?? 0, // confusion 필드 이름도 이걸로
-            boredom: e.boredom ?? 0,
-        });
+    setIsLoading(true);
 
-        const fetchWeeklyEmotion = async () => {
-            setIsLoading(true);
-            const dates = getFullWeekDates();
-            setWeekDates(dates);
+    // 오늘 날짜 계산
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    // 7일 전 날짜 계산
+    const start = new Date(today);
+    start.setDate(today.getDate() - 6);
+    const startYyyy = start.getFullYear();
+    const startMm = String(start.getMonth() + 1).padStart(2, "0");
+    const startDd = String(start.getDate()).padStart(2, "0");
 
-            const todayStr = getTodayString();
+    // API 파라미터: 250603(6월 3일)250609(6월 9일)
+    const selected_date = `${String(startYyyy).slice(2)}${startMm}${startDd}${String(yyyy).slice(2)}${mm}${dd}`;
 
-            const promises = dates.map(async (date) => {
-                if (date > todayStr) return blankEmotion;
-                try {
-                    const { data: diaryArr } = await axios.get(
-                        "https://fombackend.azurewebsites.net/api/diary/read",
-                        {
-                            params: {
-                                user_id: user.user_id,
-                                selected_date: date,
-                            },
-                        }
-                    );
-                    if (!diaryArr?.[0]?.diary_id) return blankEmotion;
-
-                    const { data: e } = await axios.get(
-                        "https://fombackend.azurewebsites.net/api/emotion/read",
-                        {
-                            params: {
-                                user_id: user.user_id,
-                                diary_id: diaryArr[0].diary_id,
-                            },
-                        }
-                    );
-                    return mapEmotion(e);
-                } catch {
-                    return blankEmotion;
-                }
-            });
-
-            const resultArr = await Promise.all(promises);
-            setEmotionData(resultArr);
-            setIsLoading(false);
-        };
-
-        fetchWeeklyEmotion();
-    }, [user, setIsLoading]);
+    axios.get("https://fombackend.azurewebsites.net/api/emotion/read", {
+        params: {
+            user_id: user.user_id,
+            selected_date,
+        },
+    })
+    .then(res => {
+        // res.data: [{...created_at: "2025-06-03T.."}, ...]
+        setEmotionData(res.data);
+    })
+    .catch(() => setEmotionData([]))
+    .finally(() => setIsLoading(false));
+}, [user, setIsLoading]);
 
     /* ──────────────── 팝업 로직 공통 함수 ──────────────── */
     const openPopup = useCallback(
@@ -307,14 +279,13 @@ const CalendarPage = () => {
                     { content: draftText }
                 );
             } else {
-                await axios.post(
-                    "https://fombackend.azurewebsites.net/api/diary/create",
-                    {
-                        user_id: user.user_id,
-                        content: draftText,
-                        created_at: selectedDate + "T09:00:00",
-                    }
-                );
+                const createUrl = "https://fombackend.azurewebsites.net/api/diary/create";
+                const createdAt = selectedDate + "T00:00:00";
+                await axios.put(createUrl, {
+                    user_id: user.user_id,
+                    content: draftText,
+                    created_at: createdAt,
+                });
             }
             setDiaryPopupContent([{ content: draftText }]);
             setOriginalDiaryContent([{ content: draftText }]);
@@ -464,38 +435,40 @@ const CalendarPage = () => {
                         일주일의 나의 감정
                     </div>
                     <div className={styles["chart-bars"]}>
-                        {emotionData.map((day, idx) => {
-                            let offset = 0;
-                            return (
+                      {emotionData.map((e, idx) => {
+                        // 날짜 객체 생성
+                        const date = new Date(e.created_at);
+                        const dayIdx = date.getDay(); // 0(일)~6(토)
+                        const dayName = DAYS[dayIdx];
+                        const dayNum = String(date.getDate()).padStart(2, "0");
+
+                        // 감정 필드(joy, sadness...) 뽑기
+                        let offset = 0;
+                        return (
+                          <div key={e.created_at || idx} className={styles["chart-column"]}>
+                            {Object.entries(EMOTION_COLORS).map(([emo, color]) => {
+                              const val = e[emo] ?? 0;
+                              const bar = (
                                 <div
-                                    key={idx}
-                                    className={styles["chart-column"]}
-                                >
-                                    {Object.entries(day).map(([emo, val]) => {
-                                        const bar = (
-                                            <div
-                                                key={emo}
-                                                className={styles.bar}
-                                                style={{
-                                                    backgroundColor:
-                                                        EMOTION_COLORS[emo],
-                                                    height: `${val}px`,
-                                                    bottom: `${offset}px`,
-                                                }}
-                                            />
-                                        );
-                                        offset += val;
-                                        return bar;
-                                    })}
-                                    <div className={styles["day-label"]}>
-                                        <div>{DAYS[idx]}</div>
-                                        <div className={styles["day-date"]}>
-                                            {weekDates[idx]?.slice(8, 10)}일
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                  key={emo}
+                                  className={styles.bar}
+                                  style={{
+                                    backgroundColor: color,
+                                    height: `${val}px`,
+                                    bottom: `${offset}px`,
+                                  }}
+                                />
+                              );
+                              offset += val;
+                              return bar;
+                            })}
+                            <div className={styles["day-label"]}>
+                              <div>{dayName}</div>
+                              <div className={styles["day-date"]}>{dayNum}일</div>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                     <div className={styles.legend}>
                         {Object.entries(EMOTION_COLORS).map(([k, c]) => (
