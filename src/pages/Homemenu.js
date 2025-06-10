@@ -39,7 +39,7 @@ const menuItems = [
         title: "캐릭터",
         image: homemenu2,
         className: "character-icon",
-        route: "/login",
+        route: "/homemenu",
     },
     {
         id: 3,
@@ -60,7 +60,7 @@ const menuItems = [
         title: "목표",
         image: homemenu5,
         className: "target-icon",
-        route: "/login",
+        route: "/homemenu",
     },
     {
         id: 6,
