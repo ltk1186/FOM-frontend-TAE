@@ -119,7 +119,7 @@ const RecordSummary = () => {
 
     setIsLoading(true);
     try {
-      await axios.post(
+      await axios.put(
         // "https://ms-fom-backend-hwcudkcfgedgcagj.eastus2-01.azurewebsites.net/api/diary/create/",
         "https://fombackend.azurewebsites.net/api/diary/create",
         {
