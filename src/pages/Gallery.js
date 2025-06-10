@@ -66,35 +66,42 @@ const Gallery = () => {
         );
         const diaryList = response.data;
 
-        // ✅ 공유 데이터 가져오기
+        // 1. shared_diary_id 목록 미리 구하기
         const sharedResponse = await axios.get(
           "https://fombackend.azurewebsites.net/api/shared_diaries/get"
         );
         const sharedData = sharedResponse.data;
 
-        // ✅ 공유된 diary_id 리스트 추출
-        const sharedIds = sharedData.map((entry) => entry.diary_id);
+        // 👉 diary_id 값이 포함되도록 백엔드 응답 추가 필요 (현재는 없음)
+        // 예시: sharedData = [{ diary_id: 1, photo: ..., content: ... }]
+        const sharedDiaryIds = sharedData
+          .filter((entry) => entry.diary_id !== null)
+          .map((entry) => entry.diary_id);
 
-        // ✅ myGallery 구성 (공유 여부 반영)
+        // 2. myGallery 생성 시 공유 여부 반영
         const galleryData = diaryList
-          .filter((entry) => entry.photo) // 이미지가 있는 항목만
+          .filter((entry) => entry.photo)
           .map((entry) => ({
             photo: entry.photo,
             created_at: entry.created_at,
             summary: entry.content,
             diary_id: entry.diary_id,
-            isShared: sharedIds.includes(entry.diary_id), // ✅ 공유 상태 반영
-          }));
+            isShared: sharedDiaryIds.includes(entry.diary_id),
+          }))
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // 🔹 최신순 정렬 추가
 
         setMyGallery(galleryData);
 
         // ✅ sharedGallery 구성
-        const formattedShared = sharedData.map((entry) => ({
-          photo: entry.photo,
-          created_at: new Date(), // 또는 entry.created_at
-          anonymous_summary: entry.content,
-          diary_id: entry.diary_id,
-        }));
+        const formattedShared = sharedData
+          .map((entry) => ({
+            photo: entry.photo,
+            created_at: entry.created_at || new Date(), // 백엔드에 따라 조정
+            anonymous_summary: entry.content,
+            diary_id: entry.diary_id,
+          }))
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // 🔹 최신순 정렬 추가
+
         setSharedGallery(formattedShared);
       } catch (error) {
         console.error("❌ 갤러리 로딩 실패:", error);
@@ -167,7 +174,6 @@ const Gallery = () => {
       prev.filter((item) => !selectedIds.includes(item.diary_id))
     );
 
-    // ✅ 중복 제거: diary_id 또는 photo 기준으로 하나만 유지
     setSharedGallery((prev) =>
       prev.filter((item) => !selectedIds.includes(item.diary_id))
     );
