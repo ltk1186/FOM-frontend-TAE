@@ -27,52 +27,110 @@ const emotionColors = {
     따분: "#A19CA0",
 };
 
+const emotionKeys = [
+    "joy",
+    "sadness",
+    "anger",
+    "fear",
+    "disgust",
+    "anxiety",
+    "envy",
+    "bewilderment",
+    "boredom",
+];
+
 const WeeklyCalendar = ({ onDateEmotionClick }) => {
     const { user } = useContext(UserContext);
     const [weekDays, setWeekDays] = useState([]);
 
     useEffect(() => {
-        // Helper function to generate dates for the last 7 days
         const getLastSevenDays = () => {
             const days = [];
             const today = new Date();
             for (let i = 7; i >= 1; i--) {
                 const date = new Date();
-                date.setDate(today.getDate() - i); // Calculate the date
+                date.setDate(today.getDate() - i);
                 const formattedDate = date
                     .getDate()
                     .toString()
-                    .padStart(2, "0"); // Format as DD
+                    .padStart(2, "0");
+                const dateStr = date.toISOString().slice(0, 10); // YYYY-MM-DD
                 days.push({
-                    day: formattedDate, // Add formatted date
-                    hasActivity: false, // Default value until fetched
-                    emotion: "", // Placeholder for emotion
+                    day: formattedDate,
+                    dateStr,
+                    hasActivity: false,
+                    emotion: "",
                 });
             }
             return days;
         };
 
-        // FastAPI에서 감정 데이터를 가져옵니다
         const fetchFeelings = async () => {
+            const today = new Date();
+
+            const startDate = new Date(today);
+            startDate.setDate(today.getDate() - 7);
+            const endDate = new Date(today);
+            endDate.setDate(today.getDate() - 1);
+
+            const getYYYYMMDD = (date) =>
+                `${String(date.getFullYear()).slice(2)}${String(
+                    date.getMonth() + 1
+                ).padStart(2, "0")}${String(date.getDate()).padStart(2, "0")}`;
+
+            const firstDay = getYYYYMMDD(startDate);
+            const lastDay = getYYYYMMDD(endDate);
+            console.log(firstDay + lastDay);
             try {
                 if (!user || !user.user_id) return;
 
-                const response = await axios.post(
-                    "https://fomeapi.eastus2.cloudapp.azure.com/myfeeling/",
+                const response = await axios.get(
+                    "https://fombackend.azurewebsites.net/api/emotion/read",
                     {
-                        user_id: user.user_id,
+                        params: {
+                            user_id: user.user_id,
+                            selected_date: `${firstDay}${lastDay}`,
+                        },
                     }
                 );
-                const feelings = response.data; // FastAPI에서 반환된 데이터
+                const feelingsArr = response.data;
+                console.log(feelingsArr);
+                const feelingDict = {};
+                feelingsArr.forEach((f) => {
+                    if (f.created_at) {
+                        const d = f.created_at.slice(0, 10);
+                        feelingDict[d] = f;
+                    }
+                });
 
                 const initialDays = getLastSevenDays();
 
-                const updatedWeekDays = initialDays.map((day, index) => ({
-                    ...day,
-                    hasActivity: true,
-                    emotion: emotionTypes[feelings[index] - 1], // FastAPI 인덱스 값은 1 시작
-                }));
-
+                const updatedWeekDays = initialDays.map((dayInfo) => {
+                    const feelingObj = feelingDict[dayInfo.dateStr];
+                    if (feelingObj) {
+                        // 감정 수치 중 최댓값 인덱스 구하기
+                        const values = emotionKeys.map(
+                            (key) => feelingObj[key] ?? 0
+                        );
+                        const maxVal = Math.max(...values);
+                        if (maxVal === 0) {
+                            // 기록은 있는데 전부 0 (거의 없겠지만)
+                            return {
+                                ...dayInfo,
+                                hasActivity: false,
+                                emotion: "",
+                            };
+                        }
+                        const topIdx = values.indexOf(maxVal);
+                        return {
+                            ...dayInfo,
+                            hasActivity: true,
+                            emotion: emotionTypes[topIdx],
+                        };
+                    } else {
+                        return { ...dayInfo, hasActivity: false, emotion: "" };
+                    }
+                });
                 setWeekDays(updatedWeekDays);
             } catch (error) {
                 console.error("Error fetching feelings:", error);
@@ -103,11 +161,12 @@ const WeeklyCalendar = ({ onDateEmotionClick }) => {
                                     day.hasActivity ? styles.active : ""
                                 }`}
                                 style={{
-                                    backgroundColor: emotionColors[day.emotion],
+                                    backgroundColor: day.hasActivity
+                                        ? emotionColors[day.emotion]
+                                        : "#e4e4e4",
                                 }}
-                                // ✅ 클릭 핸들러 추가
                                 onClick={() => {
-                                    if (onDateEmotionClick) {
+                                    if (onDateEmotionClick && day.hasActivity) {
                                         onDateEmotionClick({
                                             day: day.day,
                                             emotion: day.emotion,

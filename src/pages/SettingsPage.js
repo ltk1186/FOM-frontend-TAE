@@ -6,6 +6,7 @@ import styles from "./SettingsPage.module.css"; // ✅ 모듈 import
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 import eyeOpenIcon from "../assets/images/eye-open0.svg";
+import Smiley from "../assets/images/image-50.png";
 
 const SettingsPage = () => {
   const { user, setIsLoading } = useContext(UserContext);
@@ -16,6 +17,8 @@ const SettingsPage = () => {
   const [imageEditable, setImageEditable] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [referenceText, setReferenceText] = useState("");
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
+  const [confirmType, setConfirmType] = useState(null);
   const [customText, setCustomText] = useState("");
   const [selectedStyle, setSelectedStyle] = useState("");
   const [nation, setNation] = useState("");
@@ -296,7 +299,10 @@ const SettingsPage = () => {
               {editable && (
                 <button
                   className={styles["save-button"]}
-                  onClick={handleSaveUserInfo}
+                  onClick={() => {
+                    setConfirmType("login"); // ✅ 구분자
+                    setShowSaveConfirm(true);
+                  }}
                 >
                   저장
                 </button>
@@ -360,7 +366,10 @@ const SettingsPage = () => {
               {imageEditable && (
                 <button
                   className={styles["save-button"]}
-                  onClick={handleSaveImageSetting}
+                  onClick={() => {
+                    setConfirmType("image"); // ✅ 구분자
+                    setShowSaveConfirm(true);
+                  }}
                 >
                   저장
                 </button>
@@ -422,11 +431,58 @@ const SettingsPage = () => {
               </div>
             </div>
             <div className={styles["style-save"]}>
-              <button onClick={handleSaveStyle}>저장</button>
+              <button
+                onClick={() => {
+                  setConfirmType("style"); // ✅ 구분자
+                  setShowSaveConfirm(true);
+                }}
+              >
+                저장
+              </button>
             </div>
           </div>
         </div>
       </div>
+      {showSaveConfirm && (
+        <div
+          className={styles["popup-overlay"]}
+          onClick={() => setShowSaveConfirm(false)}
+        >
+          <div
+            className={styles["popup-confirm-content"]}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={Smiley}
+              alt="삭제 확인"
+              className={styles["popup-image"]}
+            />
+            <div className={styles["popup-info"]}>
+              <span className={styles["popup-message"]}>정말 수정할까요?</span>
+            </div>
+            <div className={styles["popup-actions"]}>
+              <button
+                className={styles["popup-btn-yes"]}
+                onClick={() => {
+                  setShowSaveConfirm(false);
+                  if (confirmType === "login") handleSaveUserInfo();
+                  else if (confirmType === "image") handleSaveImageSetting();
+                  else if (confirmType === "style") handleSaveStyle();
+                }}
+              >
+                예
+              </button>
+
+              <button
+                className={styles["popup-btn-no"]}
+                onClick={() => setShowSaveConfirm(false)}
+              >
+                아니요
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
