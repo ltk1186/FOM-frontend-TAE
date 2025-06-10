@@ -80,7 +80,6 @@ const WeeklyCalendar = ({ onDateEmotionClick }) => {
 
             const firstDay = getYYYYMMDD(startDate);
             const lastDay = getYYYYMMDD(endDate);
-            console.log(firstDay + lastDay);
             try {
                 if (!user || !user.user_id) return;
 
@@ -94,7 +93,6 @@ const WeeklyCalendar = ({ onDateEmotionClick }) => {
                     }
                 );
                 const feelingsArr = response.data;
-                console.log(feelingsArr);
                 const feelingDict = {};
                 feelingsArr.forEach((f) => {
                     if (f.created_at) {

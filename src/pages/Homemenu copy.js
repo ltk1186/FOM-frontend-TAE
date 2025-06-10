@@ -33,7 +33,6 @@ const menuItems = [
         image: homemenu1,
         className: "diary-icon",
         route: "/recorddiary",
-        initPrompt: null,
     },
     {
         id: 2,
@@ -41,7 +40,6 @@ const menuItems = [
         image: homemenu2,
         className: "character-icon",
         route: "/recorddiary",
-        initPrompt: null,
     },
     {
         id: 3,
@@ -49,7 +47,6 @@ const menuItems = [
         image: homemenu3,
         className: "counseling-icon",
         route: "/connselbot",
-        initPrompt: null,
     },
     {
         id: 4,
@@ -57,7 +54,6 @@ const menuItems = [
         image: homemenu4,
         className: "emotion-icon",
         route: "/gallery",
-        initPrompt: null,
     },
     {
         id: 5,
@@ -65,7 +61,6 @@ const menuItems = [
         image: homemenu5,
         className: "target-icon",
         route: "/recorddiary",
-        initPrompt: null,
     },
     {
         id: 6,
@@ -73,7 +68,6 @@ const menuItems = [
         image: homemenu6,
         className: "meditation-icon",
         route: "/calendar",
-        initPrompt: null,
     },
 ];
 
@@ -102,11 +96,9 @@ const Homemenu = () => {
         return null;
     }
 
-    const handleMenuClick = (route, initPrompt) => {
+    const handleMenuClick = (route) => {
         setIsLoading(true);
-        navigate(route, {
-            state: { prompt: initPrompt }, // 초기 메시지 전달
-        });
+        navigate(route);
     };
 
     return (
@@ -188,12 +180,7 @@ const Homemenu = () => {
                             <div
                                 key={item.id}
                                 className={styles["menu-item"]}
-                                onClick={() =>
-                                    handleMenuClick(
-                                        item.route,
-                                        item.initPrompt || ""
-                                    )
-                                } // 초기 메시지 전달
+                                onClick={() => handleMenuClick(item.route)}
                             >
                                 <div className={styles["menu-icon-container"]}>
                                     <div
