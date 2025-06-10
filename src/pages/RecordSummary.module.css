@@ -124,7 +124,6 @@
 }
 
 .summary-buttons button {
-  background: #f08383;
   border: none;
   color: white;
   font-weight: normal;
@@ -135,8 +134,12 @@
   transition: 0.2s ease;
 }
 
-.summary-buttons button:hover {
-  background: #e15a5a;
+.diary-complete {
+  background: rgba(255, 2, 27, 0.658);
+}
+
+.diary-save {
+  background: #ff7f4e;
 }
 
 @media (max-width: 480px) {
