@@ -7,6 +7,7 @@ import HomeButton from "../components/HomeButton";
 import Settings from "../components/Settings";
 import { UserContext } from "./UserContext";
 import trashIcon from "../assets/images/trash.png";
+import Smiley from "../assets/images/image-50.png";
 import axios from "axios";
 
 const RecordEdit = () => {
@@ -216,14 +217,12 @@ const RecordEdit = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={trashIcon}
+              src={Smiley}
               alt="삭제 확인"
               className={styles["popup-image"]}
             />
             <div className={styles["popup-info"]}>
-              <span className={styles["popup-message"]}>
-                정말 삭제하시겠어요?
-              </span>
+              <span className={styles["popup-message"]}>정말 삭제할까요?</span>
             </div>
             <div className={styles["popup-actions"]}>
               <button className={styles["popup-btn"]} onClick={handleDelete}>
