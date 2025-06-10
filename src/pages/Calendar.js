@@ -457,33 +457,45 @@ const CalendarPage = () => {
                         일주일의 나의 감정
                     </div>
                     <div className={styles["chart-bars"]}>
-                      {emotionData.map((e, idx) => {
-                        // 날짜 객체 생성
-                        const date = new Date(e.created_at);
-                        const dayIdx = date.getDay(); // 0(일)~6(토)
-                        const dayName = DAYS[dayIdx];
-                        const dayNum = String(date.getDate()).padStart(2, "0");
-
-                        // 감정 필드(joy, sadness...) 뽑기
+                      {Array.from({ length: 7 }).map((_, idx) => {
+                        const dateStr = (() => {
+                          const today = new Date();
+                          const d = new Date(today);
+                          d.setDate(today.getDate() - 6 + idx);
+                          return d;
+                        })();
+                        const dayName = DAYS[dateStr.getDay()];
+                        const dayNum = String(dateStr.getDate()).padStart(2, "0");
+                        const emotion = emotionData.find(e => {
+                          if (!e.created_at) return false;
+                          const eDate = new Date(e.created_at);
+                          return (
+                            eDate.getFullYear() === dateStr.getFullYear() &&
+                            eDate.getMonth() === dateStr.getMonth() &&
+                            eDate.getDate() === dateStr.getDate()
+                          );
+                        });
                         let offset = 0;
                         return (
-                          <div key={e.created_at || idx} className={styles["chart-column"]}>
-                            {Object.entries(EMOTION_COLORS).map(([emo, color]) => {
-                              const val = e[emo] ?? 0;
-                              const bar = (
-                                <div
-                                  key={emo}
-                                  className={styles.bar}
-                                  style={{
-                                    backgroundColor: color,
-                                    height: `${val}px`,
-                                    bottom: `${offset}px`,
-                                  }}
-                                />
-                              );
-                              offset += val;
-                              return bar;
-                            })}
+                          <div key={dayName + dayNum} className={styles["chart-column"]}>
+                            {emotion
+                              ? Object.entries(EMOTION_COLORS).map(([emo, color]) => {
+                                  const val = emotion[emo] ?? 0;
+                                  const bar = (
+                                    <div
+                                      key={emo}
+                                      className={styles.bar}
+                                      style={{
+                                        backgroundColor: color,
+                                        height: `${val}px`,
+                                        bottom: `${offset}px`,
+                                      }}
+                                    />
+                                  );
+                                  offset += val;
+                                  return bar;
+                                })
+                              : null}
                             <div className={styles["day-label"]}>
                               <div>{dayName}</div>
                               <div className={styles["day-date"]}>{dayNum}일</div>
