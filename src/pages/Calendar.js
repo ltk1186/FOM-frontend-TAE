@@ -231,20 +231,22 @@ const CalendarPage = () => {
     );
 
     /* ──────────────── 오늘 날짜 자동 팝업 ──────────────── */
+    // useEffect(() => {
+    //     if (!user) return;
+    //     const fromState = location.state?.selectedDate;
+    //     if (fromState === null || fromState === "_blank") return;
+    //     const fallbackDate = fromState || getTodayString();
+    //     openPopup(fallbackDate);
+    // }, [user]);
+
     useEffect(() => {
         if (!user) return;
 
-        // 📌 수정된 부분 시작
         const fromState = location.state?.selectedDate;
-
-        // "selectedDate"가 명시적으로 null이거나 "_blank"일 경우 → 팝업 열지 않음
         if (fromState === null || fromState === "_blank") return;
-
-        // 그 외는 날짜로 간주하여 팝업 오픈
         const fallbackDate = fromState || getTodayString();
         openPopup(fallbackDate);
-        // 📌 수정된 부분 끝
-    }, [user]);
+    }, [user, location.state?.selectedDate, openPopup]);
 
     // 🔽 VisualViewport API를 활용한 키보드 감지
     useEffect(() => {
@@ -630,10 +632,11 @@ const CalendarPage = () => {
                                     className={`${styles["popup-button"]} ${styles.save}`}
                                     onClick={() => {
                                         const content =
-                                            diaryPopupContent[0]?.content ?? "";
+                                            originalDiaryContent[0]?.content ??
+                                            "";
                                         const prompt = content.trim()
-                                            ? `${content}\n\n위 내용으로 상담 부탁해`
-                                            : "위 내용으로 상담 부탁해";
+                                            ? `${content}\n\n위 일기 내용으로 상담 부탁해`
+                                            : "\n\n상담 부탁해";
                                         navigate("/connselbot", {
                                             state: { prompt },
                                         });
