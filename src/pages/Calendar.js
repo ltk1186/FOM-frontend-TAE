@@ -37,7 +37,7 @@ const EMOTION_KR = {
     confusion: "당황",
     boredom: "따분",
 };
-const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
+const DAYS = ["월", "화", "수", "목", "금", "토", "일"];
 
 /* ───────────────────────── 유틸 ───────────────────────── */
 const getTodayString = () => {
@@ -48,6 +48,22 @@ const getTodayString = () => {
     )}-${String(d.getDate()).padStart(2, "0")}`;
 };
 
+const getFullWeekDates = () => {
+    const today = new Date();
+    let dow = today.getDay(); // 0(일)‒6
+    dow = dow === 0 ? 7 : dow;
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - (dow - 1));
+    return Array.from({ length: 7 }).map((_, i) => {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+            2,
+            "0"
+        )}-${String(d.getDate()).padStart(2, "0")}`;
+    });
+};
+
 /* ──────────────────────── 컴포넌트 ─────────────────────── */
 const CalendarPage = () => {
     const { user, setIsLoading } = useContext(UserContext);
@@ -55,7 +71,7 @@ const CalendarPage = () => {
     const navigate = useNavigate();
 
     /* ------- states ------- */
-    
+    const [weekDates, setWeekDates] = useState([]);
     const [emotionData, setEmotionData] = useState([]);
     const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -71,9 +87,11 @@ const CalendarPage = () => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
 
+    const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); // 🔹 키보드 열림 여부
+
     /* ------- refs ------- */
     const requestControllerRef = useRef(null); // Axios 취소
-    const psyCache = useRef({}); // 포미의 한마디 캐시
+    const psyCache = useRef({}); // 상담 보고서 캐시
 
     /* ────────────── 라이프사이클: 공통 정리 ────────────── */
     // 스크롤 헤더 효과
@@ -98,53 +116,68 @@ const CalendarPage = () => {
         psyCache.current = {};
     }, [user]);
 
-    //  팝업/삭제 확인창 등장 시 스크롤 제어 (주찬님 코드) 
-    useEffect(() => {
-        if (showDeleteConfirm) {
-            document.body.style.overflow = "hidden";
-        } else if (!selectedDate) {
-            // selectedDate도 false여야 완전히 닫힌 상태 → 스크롤 복원
-            document.body.style.overflow = "auto";
-        }
-        return () => {
-            document.body.style.overflow = "auto";
-        };
-        }, [showDeleteConfirm, selectedDate]);
-
     /* ──────────────── 데이터: 주간 감정 ──────────────── */
     useEffect(() => {
-    if (!user) return;
+        if (!user) return;
 
-    setIsLoading(true);
+        const blankEmotion = Object.fromEntries(
+            Object.keys(EMOTION_COLORS).map((k) => [k, 0])
+        );
+        const mapEmotion = (e) => ({
+            joy: e.joy ?? 0,
+            sadness: e.sadness ?? 0,
+            anger: e.anger ?? 0,
+            fear: e.fear ?? 0,
+            disgust: e.disgust ?? 0,
+            shame: e.shame ?? 0,
+            surprise: e.surprise ?? 0,
+            confusion: e.confusion ?? 0, // confusion 필드 이름도 이걸로
+            boredom: e.boredom ?? 0,
+        });
 
-    // 오늘 날짜 계산
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    // 7일 전 날짜 계산
-    const start = new Date(today);
-    start.setDate(today.getDate() - 6);
-    const startYyyy = start.getFullYear();
-    const startMm = String(start.getMonth() + 1).padStart(2, "0");
-    const startDd = String(start.getDate()).padStart(2, "0");
+        const fetchWeeklyEmotion = async () => {
+            setIsLoading(true);
+            const dates = getFullWeekDates();
+            setWeekDates(dates);
 
-    // API 파라미터: 250603(6월 3일)250609(6월 9일)
-    const selected_date = `${String(startYyyy).slice(2)}${startMm}${startDd}${String(yyyy).slice(2)}${mm}${dd}`;
+            const todayStr = getTodayString();
 
-    axios.get("https://fombackend.azurewebsites.net/api/emotion/read", {
-        params: {
-            user_id: user.user_id,
-            selected_date,
-        },
-    })
-    .then(res => {
-        // res.data: [{...created_at: "2025-06-03T.."}, ...]
-        setEmotionData(res.data);
-    })
-    .catch(() => setEmotionData([]))
-    .finally(() => setIsLoading(false));
-}, [user, setIsLoading]);
+            const promises = dates.map(async (date) => {
+                if (date > todayStr) return blankEmotion;
+                try {
+                    const { data: diaryArr } = await axios.get(
+                        "https://fombackend.azurewebsites.net/api/diary/read",
+                        {
+                            params: {
+                                user_id: user.user_id,
+                                selected_date: date,
+                            },
+                        }
+                    );
+                    if (!diaryArr?.[0]?.diary_id) return blankEmotion;
+
+                    const { data: e } = await axios.get(
+                        "https://fombackend.azurewebsites.net/api/emotion/read",
+                        {
+                            params: {
+                                user_id: user.user_id,
+                                diary_id: diaryArr[0].diary_id,
+                            },
+                        }
+                    );
+                    return mapEmotion(e);
+                } catch {
+                    return blankEmotion;
+                }
+            });
+
+            const resultArr = await Promise.all(promises);
+            setEmotionData(resultArr);
+            setIsLoading(false);
+        };
+
+        fetchWeeklyEmotion();
+    }, [user, setIsLoading]);
 
     /* ──────────────── 팝업 로직 공통 함수 ──────────────── */
     const openPopup = useCallback(
@@ -198,6 +231,14 @@ const CalendarPage = () => {
     );
 
     /* ──────────────── 오늘 날짜 자동 팝업 ──────────────── */
+    // useEffect(() => {
+    //     if (!user) return;
+    //     const fromState = location.state?.selectedDate;
+    //     if (fromState === null || fromState === "_blank") return;
+    //     const fallbackDate = fromState || getTodayString();
+    //     openPopup(fallbackDate);
+    // }, [user]);
+
     useEffect(() => {
         if (!user) return;
 
@@ -205,7 +246,55 @@ const CalendarPage = () => {
         if (fromState === null || fromState === "_blank") return;
         const fallbackDate = fromState || getTodayString();
         openPopup(fallbackDate);
-    }, [user, openPopup, location.state?.selectedDate]);
+    }, [user, location.state?.selectedDate, openPopup]);
+
+    // 🔽 VisualViewport API를 활용한 키보드 감지
+    useEffect(() => {
+        const handleViewportResize = () => {
+            if (window.visualViewport) {
+                const viewportHeight = window.visualViewport.height;
+                const windowHeight = window.innerHeight;
+                setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 100px 여유
+            }
+        };
+
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener(
+                "resize",
+                handleViewportResize
+            );
+            window.visualViewport.addEventListener(
+                "scroll",
+                handleViewportResize
+            );
+            handleViewportResize(); // 초기 감지
+        }
+
+        return () => {
+            if (window.visualViewport) {
+                window.visualViewport.removeEventListener(
+                    "resize",
+                    handleViewportResize
+                );
+                window.visualViewport.removeEventListener(
+                    "scroll",
+                    handleViewportResize
+                );
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        if (showDeleteConfirm) {
+            document.body.style.overflow = "hidden";
+        } else if (!selectedDate) {
+            // selectedDate도 false여야 완전히 닫힌 상태 → 스크롤 복원
+            document.body.style.overflow = "auto";
+        }
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [showDeleteConfirm, selectedDate]);
 
     /* ──────────────── 상담(마스코트) ──────────────── */
     const handleMascotClick = async () => {
@@ -231,7 +320,7 @@ const CalendarPage = () => {
             return;
         }
 
-        setDiaryPopupContent([{ content: "포미의 한마디를 생성 중입니다..." }]);
+        setDiaryPopupContent([{ content: "상담 보고서를 생성 중입니다..." }]);
         setIsLoading(true);
         try {
             const res = await axios.post(
@@ -247,12 +336,12 @@ const CalendarPage = () => {
                 setDiaryPopupContent([{ content: res.data.Fome }]);
             } else {
                 setDiaryPopupContent([
-                    { content: "해당 날짜의 포미의 한마디가 없습니다." },
+                    { content: "해당 날짜의 상담 보고서가 없습니다." },
                 ]);
             }
         } catch {
             setDiaryPopupContent([
-                { content: "포미의 한마디 생성에 실패했습니다." },
+                { content: "상담 보고서 생성에 실패했습니다." },
             ]);
         } finally {
             setIsLoading(false);
@@ -270,13 +359,14 @@ const CalendarPage = () => {
                     { content: draftText }
                 );
             } else {
-                const createUrl = "https://fombackend.azurewebsites.net/api/diary/create";
-                const createdAt = selectedDate + "T00:00:00";
-                await axios.put(createUrl, {
-                    user_id: user.user_id,
-                    content: draftText,
-                    created_at: createdAt,
-                });
+                await axios.post(
+                    "https://fombackend.azurewebsites.net/api/diary/create",
+                    {
+                        user_id: user.user_id,
+                        content: draftText,
+                        created_at: selectedDate + "T09:00:00",
+                    }
+                );
             }
             setDiaryPopupContent([{ content: draftText }]);
             setOriginalDiaryContent([{ content: draftText }]);
@@ -305,33 +395,6 @@ const CalendarPage = () => {
         }
     };
 
-    /* ──────────────── 키보드 열림 감지 ──────────────── */
-    // 주찬님 코드
-    const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); // 🔹 키보드 열림 여부
-
-    useEffect(() => {
-    const handleViewportResize = () => {
-        if (window.visualViewport) {
-        const viewportHeight = window.visualViewport.height;
-        const windowHeight = window.innerHeight;
-        setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 100px 여유
-        }
-    };
-
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener("resize", handleViewportResize);
-        window.visualViewport.addEventListener("scroll", handleViewportResize);
-        handleViewportResize(); // 초기 감지
-    }
-
-    return () => {
-        if (window.visualViewport) {
-        window.visualViewport.removeEventListener("resize", handleViewportResize);
-        window.visualViewport.removeEventListener("scroll", handleViewportResize);
-        }
-    };
-    }, []);
-
     /* ─────────────── 렌더링 ─────────────── */
     /* ---- 캘린더 테이블 (위에서 calendarRows 계산) ---- */
     const year = currentDate.getFullYear();
@@ -339,8 +402,7 @@ const CalendarPage = () => {
     const firstDay = new Date(year, month, 1).getDay();
     const lastDate = new Date(year, month + 1, 0).getDate();
     const calendarRows = [];
-    const todayStr = getTodayString();
-    let day = 1 - firstDay;
+    let day = 1 - (firstDay === 0 ? 6 : firstDay - 1);
     for (let i = 0; i < 6; i++) {
         const row = [];
         let hasValid = false;
@@ -350,13 +412,10 @@ const CalendarPage = () => {
                 2,
                 "0"
             )}-${String(day).padStart(2, "0")}`;
-            const isToday = dateStr === todayStr;
             row.push(
                 <td key={j}>
                     {valid ? (
-                        <button onClick={() => openPopup(dateStr)}
-                        className={isToday ? styles.today : undefined}
-                        >
+                        <button onClick={() => openPopup(dateStr)}>
                             {day}
                         </button>
                     ) : (
@@ -457,52 +516,38 @@ const CalendarPage = () => {
                         일주일의 나의 감정
                     </div>
                     <div className={styles["chart-bars"]}>
-                      {Array.from({ length: 7 }).map((_, idx) => {
-                        const dateStr = (() => {
-                          const today = new Date();
-                          const d = new Date(today);
-                          d.setDate(today.getDate() - 6 + idx);
-                          return d;
-                        })();
-                        const dayName = DAYS[dateStr.getDay()];
-                        const dayNum = String(dateStr.getDate()).padStart(2, "0");
-                        const emotion = emotionData.find(e => {
-                          if (!e.created_at) return false;
-                          const eDate = new Date(e.created_at);
-                          return (
-                            eDate.getFullYear() === dateStr.getFullYear() &&
-                            eDate.getMonth() === dateStr.getMonth() &&
-                            eDate.getDate() === dateStr.getDate()
-                          );
-                        });
-                        let offset = 0;
-                        return (
-                          <div key={dayName + dayNum} className={styles["chart-column"]}>
-                            {emotion
-                              ? Object.entries(EMOTION_COLORS).map(([emo, color]) => {
-                                  const val = emotion[emo] ?? 0;
-                                  const bar = (
-                                    <div
-                                      key={emo}
-                                      className={styles.bar}
-                                      style={{
-                                        backgroundColor: color,
-                                        height: `${val}px`,
-                                        bottom: `${offset}px`,
-                                      }}
-                                    />
-                                  );
-                                  offset += val;
-                                  return bar;
-                                })
-                              : null}
-                            <div className={styles["day-label"]}>
-                              <div>{dayName}</div>
-                              <div className={styles["day-date"]}>{dayNum}일</div>
-                            </div>
-                          </div>
-                        );
-                      })}
+                        {emotionData.map((day, idx) => {
+                            let offset = 0;
+                            return (
+                                <div
+                                    key={idx}
+                                    className={styles["chart-column"]}
+                                >
+                                    {Object.entries(day).map(([emo, val]) => {
+                                        const bar = (
+                                            <div
+                                                key={emo}
+                                                className={styles.bar}
+                                                style={{
+                                                    backgroundColor:
+                                                        EMOTION_COLORS[emo],
+                                                    height: `${val}px`,
+                                                    bottom: `${offset}px`,
+                                                }}
+                                            />
+                                        );
+                                        offset += val;
+                                        return bar;
+                                    })}
+                                    <div className={styles["day-label"]}>
+                                        <div>{DAYS[idx]}</div>
+                                        <div className={styles["day-date"]}>
+                                            {weekDates[idx]?.slice(8, 10)}일
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                     <div className={styles.legend}>
                         {Object.entries(EMOTION_COLORS).map(([k, c]) => (
@@ -548,7 +593,7 @@ const CalendarPage = () => {
                             </div>
                             {isConsulting && (
                                 <div className={styles["popup-subtitle"]}>
-                                    포미의 한마디
+                                    포미의 상담 보고서
                                 </div>
                             )}
                         </div>
@@ -585,7 +630,17 @@ const CalendarPage = () => {
                             {isConsulting ? (
                                 <button
                                     className={`${styles["popup-button"]} ${styles.save}`}
-                                    onClick={() => navigate("/connselbot")}
+                                    onClick={() => {
+                                        const content =
+                                            originalDiaryContent[0]?.content ??
+                                            "";
+                                        const prompt = content.trim()
+                                            ? `${content}\n\n위 일기 내용으로 상담 부탁해`
+                                            : "\n\n상담 부탁해";
+                                        navigate("/connselbot", {
+                                            state: { prompt },
+                                        });
+                                    }}
                                 >
                                     더 상담하기
                                 </button>
@@ -659,18 +714,18 @@ const CalendarPage = () => {
                         />
                         <div className={styles["popup-info"]}>
                             <span className={styles["popup-message"]}>
-                                정말 삭제할까요?
+                                정말 삭제하시겠어요?
                             </span>
                         </div>
                         <div className={styles["popup-actions"]}>
                             <button
-                                className={styles["popup-btn-yes"]}
+                                className={styles["popup-btn"]}
                                 onClick={handleConfirmDelete}
                             >
                                 예
                             </button>
                             <button
-                                className={styles["popup-btn-no"]}
+                                className={styles["popup-btn"]}
                                 onClick={() => setShowDeleteConfirm(false)}
                             >
                                 아니요
