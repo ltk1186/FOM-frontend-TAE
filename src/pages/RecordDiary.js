@@ -28,8 +28,12 @@ const RecordDiary = () => {
         const response = await axios.get(
           `https://fombackend.azurewebsites.net/api/temp_diary/read?user_id=${userID}`
         );
-        setDiaries(response.data);
-        console.log("✅ diaries 데이터 가져오기 성공:", response.data);
+        // 🔽 최신순 정렬 추가
+        const sortedData = [...response.data].sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+        setDiaries(sortedData);
+        console.log("✅ diaries 데이터 가져오기 성공:", sortedData);
       } catch (error) {
         console.error(
           "❌ diaries API 에러:",

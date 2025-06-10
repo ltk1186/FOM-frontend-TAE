@@ -244,7 +244,6 @@
 
 .delete-count-button,
 .cancel-delete-button {
-  background-color: #e25c5c;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -253,6 +252,14 @@
   cursor: pointer;
   font-size: 14px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.delete-count-button {
+  background: rgba(255, 2, 27, 0.658);
+}
+
+.cancel-delete-button {
+  background: #f08383;
 }
 
 .go-generate-btn {

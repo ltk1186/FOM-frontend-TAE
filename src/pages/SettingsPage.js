@@ -16,7 +16,6 @@ const SettingsPage = () => {
   const [editable, setEditable] = useState(false);
   const [imageEditable, setImageEditable] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [referenceText, setReferenceText] = useState("");
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
   const [confirmType, setConfirmType] = useState(null);
   const [customText, setCustomText] = useState("");
@@ -216,10 +215,10 @@ const SettingsPage = () => {
         `https://fombackend.azurewebsites.net/api/users/reference/${user_id}`,
         { reference_text: selectedText }
       );
-      alert("문체가 저장되었습니다.");
+      alert("일기 문체가 수정되었습니다.");
     } catch (error) {
-      console.error("문체 저장 에러:", error);
-      alert("문체 저장 실패");
+      console.error("일기 문체 수정 실패:", error);
+      alert("일기 문체 수정 실패");
     }
     setIsLoading(false);
   };

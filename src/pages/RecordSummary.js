@@ -197,11 +197,12 @@ const RecordSummary = () => {
         onChange={(e) => setSummary(e.target.value)}
       />
       <div className={styles["summary-buttons"]}>
-        {" "}
-        {/* ✅ */}
-        <button onClick={handleAIClick}>AI 일기 완성</button>
-        <button onClick={handleSave}>저장</button>
-        {/* <button onClick={handleGoReport}>포미와 대화</button> */}
+        <button onClick={handleAIClick} className={styles["diary-complete"]}>
+          AI 일기 완성
+        </button>
+        <button onClick={handleSave} className={styles["diary-save"]}>
+          저장
+        </button>
       </div>
     </div>
   );

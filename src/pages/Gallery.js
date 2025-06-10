@@ -1,4 +1,3 @@
-// 🔽 기존 import 유지
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Gallery.module.css";
@@ -6,14 +5,7 @@ import PreviousArrow from "../components/PreviousArrow";
 import Settings from "../components/Settings";
 import HomeButton from "../components/HomeButton";
 import { UserContext } from "./UserContext";
-// import axios from "axios"; // 🔹 실제 백엔드 연동 시 사용
-// 샘플 이미지 import -> 나중에 삭제
-import sample1 from "../assets/images/sample1.jpg";
-import sample2 from "../assets/images/sample2.jpg";
-import sample3 from "../assets/images/sample3.jpg";
-import sample4 from "../assets/images/sample4.jpg";
-import sample5 from "../assets/images/sample5.jpg";
-import sample6 from "../assets/images/sample6.jpg";
+import axios from "axios";
 import TrashIcon from "../assets/images/trash.png"; // ✅ 삭제 아이콘
 import Smiley from "../assets/images/image-50.png"; // ✅ 공유 확인 팝업 이미지
 
@@ -62,25 +54,29 @@ const Gallery = () => {
     const loadGallery = async () => {
       setIsLoading(true);
       try {
-        // 🔽 테스트 코드 시작
-        const sampleImages1 = [
-          sample1,
-          sample2,
-          sample3,
-          sample4,
-          sample5,
-          sample6,
-        ];
-        const mockGallery = sampleImages1.map((img, i) => ({
-          photo: img,
-          created_at: `2025-06-0${i + 1}T10:00:00`,
-          summary: `나의 일기 내용 ${i + 1}`,
-          diary_id: i + 1,
-          isShared: false, // 🔄 초기에는 공유되지 않은 상태로 설정
-        }));
-        setMyGallery(mockGallery);
-        setSharedGallery([]); // 🔄 초기에는 공유된 항목 없음
-        // 🔼 테스트 코드 끝
+        // ✅ user_id와 날짜 범위를 query에 포함
+        const response = await axios.get(
+          `https://fombackend.azurewebsites.net/api/diary/image/read`,
+          {
+            params: {
+              user_id: user?.user_id,
+              selected_date: "250603250610", // 👉 원하는 날짜 범위 문자열 (ex. yymmdd 형식)
+            },
+          }
+        );
+        const diaryList = response.data;
+        console.log("diaryList", diaryList);
+        const galleryData = diaryList
+          .filter((entry) => entry.photo) // 이미지가 있는 항목만
+          .map((entry) => ({
+            photo: entry.photo,
+            created_at: entry.created_at,
+            summary: entry.content, // 또는 summary 필드가 따로 있다면 entry.summary
+            diary_id: entry.diary_id,
+            isShared: false, // 초기엔 공유되지 않은 상태
+          }));
+        setMyGallery(galleryData);
+        setSharedGallery([]); // 공유 갤러리는 다른 API에서 불러오는 경우
       } catch (error) {
         console.error("❌ 갤러리 로딩 실패:", error);
       } finally {
@@ -110,9 +106,19 @@ const Gallery = () => {
     setSharedGallery((prev) =>
       prev.filter((item) => item.diary_id !== diary_id)
     ); // 🔄 공유된 항목도 제거
-    // 🔒 실제 API 예시
-    // await axios.delete(`/api/diary/delete?diary_id=${diary_id}`);
-    // await axios.delete(`/api/share/delete?diary_id=${diary_id}`); // 🔒 공유 테이블에서 삭제
+    await axios.delete(
+      "https://fombackend.azurewebsites.net/api/diary/delete",
+      {
+        params: { diary_id },
+      }
+    );
+    await axios.delete(
+      "https://fombackend.azurewebsites.net/api/share/delete",
+      {
+        params: { diary_id },
+      }
+    );
+
     setPopupData(null);
     setIsLoading(false);
   };
@@ -136,11 +142,21 @@ const Gallery = () => {
     setSharedGallery((prev) =>
       prev.filter((item) => !selectedIds.includes(item.diary_id))
     ); // 🔄 공유된 항목도 함께 제거
-    // 🔒 실제 삭제 API 연동
-    // for (const id of selectedIds) {
-    //   await axios.delete(`/api/diary/delete?diary_id=${id}`);
-    //   await axios.delete(`/api/share/delete?diary_id=${id}`);
-    // }
+    for (const id of selectedIds) {
+      await axios.delete(
+        "https://fombackend.azurewebsites.net/api/diary/delete",
+        {
+          params: { diary_id: id },
+        }
+      );
+      await axios.delete(
+        "https://fombackend.azurewebsites.net/api/share/delete",
+        {
+          params: { diary_id: id },
+        }
+      );
+    }
+
     setSelectedIds([]);
     setIsDeleteMode(false);
     setIsLoading(false);
@@ -148,15 +164,26 @@ const Gallery = () => {
 
   const handleShareConfirm = async () => {
     setIsLoading(true);
-    // 🔽 테스트 코드 시작
-    const newEntry = {
-      diary_id: popupData.diary_id,
-      user_id: user?.user_id,
-      photo: popupData.photo,
-      anonymous_summary: `익명화된 요약: ${popupData.summary}`,
-      created_at: new Date().toISOString(),
-    };
-    setSharedGallery((prev) => [...prev, newEntry]);
+    await axios.post(
+      "https://fombackend.azurewebsites.net/api/share_diary/create",
+      {
+        diary_id: popupData.diary_id,
+        created_at: new Date().toISOString(),
+      }
+    );
+
+    // 갤러리 상태 업데이트
+    setSharedGallery((prev) => [
+      ...prev,
+      {
+        diary_id: popupData.diary_id,
+        photo: popupData.photo,
+        content: popupData.summary, // anonymous_summary 대신 summary
+        created_at: new Date().toISOString(),
+        flag: true,
+      },
+    ]);
+
     setMyGallery((prev) =>
       prev.map((item) =>
         item.diary_id === popupData.diary_id
@@ -164,7 +191,6 @@ const Gallery = () => {
           : item
       )
     );
-    // 🔼 테스트 코드 끝
 
     // 🔒 실제 API 연동 예시
     /*
@@ -194,10 +220,15 @@ const Gallery = () => {
           : item
       )
     );
-    // 🔒 실제 API 연동 예시
-    /*
-    await axios.delete(`/api/share/delete?diary_id=${popupData.diary_id}`);
-    */
+    await axios.delete(
+      "https://fombackend.azurewebsites.net/api/share_diary/delete", // ✅ 수정됨
+      {
+        params: {
+          diary_id: popupData.diary_id,
+        },
+      }
+    );
+
     setPopupData(null);
     setIsLoading(false);
   };
