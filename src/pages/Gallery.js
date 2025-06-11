@@ -54,13 +54,18 @@ const Gallery = () => {
     const loadGallery = async () => {
       setIsLoading(true);
       try {
+        // ✅ 날짜 범위: 1926년 1월 1일부터 오늘까지
+        const today = new Date();
+        const endDate = `${String(today.getFullYear()).slice(2)}${String(
+          today.getMonth() + 1
+        ).padStart(2, "0")}${String(today.getDate()).padStart(2, "0")}`;
         // ✅ diary 데이터 가져오기
         const response = await axios.get(
           `https://fombackend.azurewebsites.net/api/diary/image/read`,
           {
             params: {
               user_id: user?.user_id,
-              selected_date: "250603250610", // 👉 날짜 범위
+              selected_date: `250601${endDate}`, // 👉 날짜 범위
             },
           }
         );
@@ -97,7 +102,7 @@ const Gallery = () => {
           .map((entry) => ({
             photo: entry.photo,
             created_at: entry.created_at || new Date(), // 백엔드에 따라 조정
-            anonymous_summary: entry.content,
+            anonymous_summary: entry.summary,
             diary_id: entry.diary_id,
           }))
           .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // 🔹 최신순 정렬 추가
@@ -136,9 +141,8 @@ const Gallery = () => {
       );
 
       // 그 다음 diary 삭제
-      await axios.delete(
-        "https://fombackend.azurewebsites.net/api/diary/delete",
-        { params: { diary_id } }
+      await axios.put(
+        `https://fombackend.azurewebsites.net/api/image/delete/${diary_id}`
       );
 
       // UI 상태 업데이트
@@ -170,23 +174,29 @@ const Gallery = () => {
 
   const handleBulkDelete = async () => {
     setIsLoading(true);
+
+    // UI 상태를 먼저 반영
     setMyGallery((prev) =>
       prev.filter((item) => !selectedIds.includes(item.diary_id))
     );
-
     setSharedGallery((prev) =>
       prev.filter((item) => !selectedIds.includes(item.diary_id))
     );
 
     for (const id of selectedIds) {
-      await axios.delete(
-        "https://fombackend.azurewebsites.net/api/diary/delete",
-        { params: { diary_id: id } }
-      );
-      await axios.delete(
-        "https://fombackend.azurewebsites.net/api/share/delete",
-        { params: { diary_id: id } }
-      );
+      try {
+        // 공유 취소 먼저 시도 (존재하지 않아도 무시됨)
+        await axios.put(
+          `https://fombackend.azurewebsites.net/api/share_diary/cancel/${id}`
+        );
+
+        // 이미지 삭제 요청
+        await axios.put(
+          `https://fombackend.azurewebsites.net/api/image/delete/${id}`
+        );
+      } catch (error) {
+        console.error(`❌ diary_id ${id} 삭제 실패:`, error);
+      }
     }
 
     setSelectedIds([]);
@@ -251,15 +261,7 @@ const Gallery = () => {
     setIsLoading(false);
   };
 
-  const currentGallery =
-    selectedTab === "my"
-      ? myGallery
-      : sharedGallery.filter((item) => {
-          const today = new Date();
-          const createdAt = new Date(item.created_at);
-          const diff = (today - createdAt) / (1000 * 60 * 60 * 24);
-          return diff <= 1;
-        });
+  const currentGallery = selectedTab === "my" ? myGallery : sharedGallery;
 
   const placeholders =
     6 - currentGallery.length > 0 ? 6 - currentGallery.length : 0;

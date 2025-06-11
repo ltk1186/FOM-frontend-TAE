@@ -75,7 +75,7 @@
 }
 
 .weekly-calendar-frame {
-  position: absolute;
+  position: relative;
   width: 335px;
   height: 107px;
   left: 0;
@@ -179,7 +179,7 @@
 }
 
 .emotion-index-content {
-  position: absolute;
+  position: relative;
   width: 335px;
   height: 72px;
   background: #ffffff;
@@ -187,6 +187,10 @@
   border-radius: 15px;
   padding: 8px 13px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .emotion-question {
@@ -369,19 +373,17 @@
 }
 
 .clicked-emotion-info {
-  margin-top: 14px; /* 주간 달력과의 간격 */
+  display: block;
+  width: 100%;
+  text-align: center;
   padding: 10px 20px;
+  background: #888;
+  color: #fff;
   border-radius: 18px;
   font-weight: bold;
   font-size: 16px;
-  display: inline-block;
-  background: #888; /* 기본값 */
-  color: #fff;
   border: 2px solid #fff;
   text-shadow: -1px -1px 2px #222, 1px -1px 2px #222, -1px 1px 2px #222,
     1px 1px 2px #222;
   cursor: pointer;
-  max-width: 100%;
-  box-sizing: border-box;
-  text-align: center;
 }
