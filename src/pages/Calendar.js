@@ -585,7 +585,17 @@ const CalendarPage = () => {
                             {isConsulting ? (
                                 <button
                                     className={`${styles["popup-button"]} ${styles.save}`}
-                                    onClick={() => navigate("/connselbot")}
+                                    onClick={() => {
+                                        const content =
+                                            originalDiaryContent[0]?.content ??
+                                            "";
+                                        const prompt = content.trim()
+                                            ? `${content}\n\n위 일기 내용으로 상담 부탁해`
+                                            : "\n\n상담 부탁해";
+                                        navigate("/connselbot", {
+                                            state: { prompt },
+                                        });
+                                    }}
                                 >
                                     더 상담하기
                                 </button>
