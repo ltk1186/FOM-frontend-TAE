@@ -151,15 +151,15 @@ const Homemenu = () => {
               background: emotionColors[selectedEmotionInfo.emotion] || "#888",
             }}
           >
-            {selectedEmotionInfo.day}일의 감정은 “{selectedEmotionInfo.emotion}”
-            입니다
+            {selectedEmotionInfo.day}일의 대표 감정 : “
+            {selectedEmotionInfo.emotion}”
           </div>
         )}
 
         <div className={styles["emotion-index-container"]}>
           <div className={styles["emotion-index-content"]}>
             <h3 className={styles["emotion-question"]}>
-              <p>오늘 포미사용자의 감정지수는?</p>
+              <p>오늘 FOM 사용자분들의 감정은?</p>
             </h3>
             <div className={styles["emotion-result"]}>
               <EmotionResult />

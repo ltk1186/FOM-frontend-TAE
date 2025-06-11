@@ -79,10 +79,28 @@ const ImageGen = () => {
     }
     setIsLoading(true);
     try {
+      // ✅ 1. 공유 상태 먼저 확인
+      const sharedResponse = await axios.get(
+        "https://fombackend.azurewebsites.net/api/shared_diaries/get"
+      );
+      const sharedList = sharedResponse.data;
+      const isAlreadyShared = sharedList.some(
+        (entry) => entry.diary_id === diary.diary_id
+      );
+
+      // ✅ 2. 공유되어 있다면 공유 취소 먼저 수행
+      if (isAlreadyShared) {
+        await axios.put(
+          `https://fombackend.azurewebsites.net/api/share_diary/cancel/${diary.diary_id}`
+        );
+      }
+
+      // ✅ 3. 이미지 URL을 diary에 저장
       await axios.put(
         `https://fombackend.azurewebsites.net/api/diary/${diary.diary_id}`,
         { photo: imageUrl }
       );
+
       alert("저장 성공했습니다.");
       navigate("/gallery");
     } catch (err) {
@@ -124,7 +142,7 @@ const ImageGen = () => {
           />
         ) : (
           <div className={styles.placeholder}>
-            {isGenerating ? "이미지 생성중…" : "이미지가 없습니다."}
+            {isGenerating ? "이미지 생성 중…" : "이미지가 없습니다."}
           </div>
         )}
       </div>

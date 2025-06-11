@@ -139,6 +139,17 @@
   border: none;
 }
 
+/* ✅ 오늘 요일 강조 */
+.calendar-table th.todayWeekday {
+  color: #ff7f4e;
+  font-weight: 900;
+}
+
+/* ✅ 요일 강조: th만 더 굵게 */
+.calendar-table th {
+  font-weight: 900;
+}
+
 .calendar-table td:hover {
   background: rgba(171, 171, 171, 0.4);
   cursor: pointer;
@@ -224,11 +235,10 @@
 /* Calendar.module.css */
 
 .today {
-  border: 2px solid #ff4c4c;
   border-radius: 50% !important;
-  color: #000000 !important;
+  color: #ffffff !important; /* ✅ 글자색을 흰색으로 변경 */
   font-weight: bold !important;
-  background: #d63232 !important;
+  background: #ff7f4e !important;
   width: 2.2em !important;
   height: 2.2em !important;
   display: flex !important;
@@ -437,14 +447,22 @@
 }
 
 .popup-header {
-  position: relative;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 16px;
+  position: relative;
+  width: 100%;
 }
 
 .popup-title {
   font-size: 18px;
   font-weight: 700;
+}
+
+.popup-title-area {
+  text-align: center;
+  flex: 1;
 }
 
 .popup-subtitle {
@@ -455,28 +473,31 @@
 
 .popup-close-button,
 .popup-back-button {
-  position: absolute;
-  top: 16px;
+  position: relative;
   background: none;
   border: none;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 500;
   color: #653d00;
   cursor: pointer;
+  opacity: 0.9;
   transition: transform 0.2s, opacity 0.2s;
-}
-
-.popup-close-button {
-  right: 16px;
-}
-
-.popup-back-button {
-  left: 16px;
-  opacity: 0.7;
 }
 
 .popup-close-button:hover,
 .popup-back-button:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.popup-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.popup-icon:hover {
   transform: scale(1.1);
   opacity: 1;
 }

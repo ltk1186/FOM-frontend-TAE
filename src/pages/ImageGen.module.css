@@ -167,10 +167,11 @@
 }
 
 .popup-image {
-  width: 90%;
-  height: 40vh; /* ✅ 높이를 더 크게 설정 */
-  background-color: #dcdcdc; /* ✅ 회색 여백 추가 */
-  object-fit: contain; /* ✅ 이미지 비율 유지하며 회색 여백 생김 */
+  width: 100%;
+  max-width: 90vw;
+  aspect-ratio: 1024 / 576; /* ✅ 실제 이미지 비율 */
+  object-fit: contain; /* ✅ 비율 유지 */
+  background-color: #fff4e0;
   border: 2px solid #fff4e0;
   border-radius: 12px;
 }
