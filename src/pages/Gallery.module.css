@@ -377,17 +377,18 @@
   flex-direction: column;
   align-items: center;
   max-width: 90vw;
-  width: 320px;
+  width: 100%; /* ✅ 혹은 width: auto */
+  padding: 0;
 }
 
 .popup-large-img {
   width: 100%;
-  height: 200px;
-  background-color: #dcdcdc;
+  aspect-ratio: 1024 / 576; /* ✅ 실제 비율에 맞춤 */
   object-fit: contain;
+  background-color: #fff4e0;
   border-radius: 12px;
   margin-bottom: 16px;
-  border: 2px solid #fff4e0; /* ✅ 베이지색 테두리 추가 */
+  border: 2px solid #fff4e0;
 }
 
 .popup-info-bar {
@@ -446,9 +447,9 @@
     font-size: 13px;
   }
 
-  .popup-large-img {
+  /* .popup-large-img {
     height: 160px;
-  }
+  } */
 }
 
 @media (max-width: 400px) {
