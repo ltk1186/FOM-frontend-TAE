@@ -80,7 +80,7 @@ const DiaryList = () => {
 
   // 연/월 선택 옵션
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  const years = Array.from({ length: 100 }, (_, i) => thisYear - i);
+  const years = Array.from({ length: 26 }, (_, i) => thisYear - i);
 
   return (
     <div
